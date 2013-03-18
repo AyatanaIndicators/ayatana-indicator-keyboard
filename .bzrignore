@@ -1,0 +1,15 @@
+*.m4
+*.stamp
+.deps
+.libs
+Makefile
+Makefile.in
+autom4te.cache
+build-aux
+config.log
+config.status
+configure
+indicator-keyboard-service
+indicator-keyboard.service
+libtool
+main.c
