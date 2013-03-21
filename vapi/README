@@ -1,0 +1,7 @@
+To create libgnomekbd.vapi:
+
+vapigen --girdir . --pkg gtk+-3.0 --library libgnomekbd /path/to/Gkbd-3.0.gir
+
+To create docs for libgnomekbd.vapi:
+
+valadoc --girdir . --vapidir /path/to/vapi/dir --pkg Xkl-1.0 --pkg gtk+-3.0 -o libgnomekbd libgnomekbd.vapi

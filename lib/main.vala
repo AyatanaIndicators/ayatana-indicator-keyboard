@@ -32,16 +32,36 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 	[DBus (visible = false)]
 	protected virtual GLib.MenuModel create_menu_model () {
+		IBus.init ();
+		var ibus = new IBus.Bus ();
+		var engines = ibus.list_engines ();
+
 		var menu = new GLib.Menu ();
 
 		var submenu = new GLib.Menu ();
 
 		var section = new GLib.Menu ();
-		section.append ("Chinese - Chewing", null);
-		section.append ("Chinese - Pinyin", null);
-		section.append ("Chinese - tonepy", null);
-		section.append ("USA - Macintosh", null);
-		section.append ("USA - Dvorak", null);
+
+		foreach (var engine in engines) {
+			GLib.stdout.printf ("author = %s\n", engine.author);
+			GLib.stdout.printf ("description = %s\n", engine.description);
+			GLib.stdout.printf ("hotkeys = %s\n", engine.hotkeys);
+			GLib.stdout.printf ("icon = %s\n", engine.icon);
+			GLib.stdout.printf ("language = %s\n", engine.language);
+			GLib.stdout.printf ("layout = %s\n", engine.layout);
+			GLib.stdout.printf ("license = %s\n", engine.license);
+			GLib.stdout.printf ("longname = %s\n", engine.longname);
+			GLib.stdout.printf ("name = %s\n", engine.name);
+			GLib.stdout.printf ("rank = %u\n", engine.rank);
+			GLib.stdout.printf ("setup = %s\n", engine.setup);
+			GLib.stdout.printf ("symbol = %s\n", engine.symbol);
+			GLib.stdout.printf ("---\n");
+		}
+
+		foreach (var engine in engines) {
+			section.append (@"$(engine.language) - $(engine.name)", null);
+		}
+
 		submenu.append_section (null, section);
 
 		section = new GLib.Menu ();
@@ -52,7 +72,7 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 		var indicator = new GLib.MenuItem.submenu ("x", submenu);
 		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
-		indicator.set_detailed_action ("indicator");
+		indicator.set_detailed_action ("indicator.indicator");
 		menu.append_item (indicator);
 
 		return menu;
@@ -60,16 +80,18 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 	[DBus (visible = false)]
 	public GLib.ActionGroup get_action_group () {
-		if (this.action_group == null)
+		if (this.action_group == null) {
 			this.action_group = create_action_group ();
+		}
 
 		return this.action_group;
 	}
 
 	[DBus (visible = false)]
 	public GLib.MenuModel get_menu_model () {
-		if (this.menu_model == null)
+		if (this.menu_model == null) {
 			this.menu_model = create_menu_model ();
+		}
 
 		return this.menu_model;
 	}

@@ -28,6 +28,10 @@ PKG_CHECK_MODULES([GIO], [gio-2.0])
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
 
+PKG_CHECK_MODULES([IBUS], [ibus-1.0])
+AC_SUBST(IBUS_CFLAGS)
+AC_SUBST(IBUS_LIBS)
+
 AC_CONFIG_FILES([Makefile
                  data/Makefile
                  data/indicator-keyboard.service
