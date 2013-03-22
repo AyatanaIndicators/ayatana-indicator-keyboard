@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gkbd", gir_namespace = "Gkbd", gir_version = "3.0", lower_case_cprefix = "gkbd_")]
 namespace Gkbd {
-	[CCode (cheader_filename = "Gkbd-3.0.h", type_id = "gkbd_configuration_get_type ()")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-configuration.h", type_id = "gkbd_configuration_get_type ()")]
 	public class Configuration : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Configuration ();
@@ -38,7 +38,7 @@ namespace Gkbd {
 		public signal void group_changed (int object);
 		public signal void indicators_changed ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", type_id = "gkbd_indicator_get_type ()")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-indicator.h", type_id = "gkbd_indicator_get_type ()")]
 	public class Indicator : Gtk.Notebook, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Indicator ();
@@ -52,7 +52,7 @@ namespace Gkbd {
 		[HasEmitter]
 		public virtual signal void reinit_ui ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", type_id = "gkbd_keyboard_drawing_get_type ()")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", type_id = "gkbd_keyboard_drawing_get_type ()")]
 	public class KeyboardDrawing : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public KeyboardDrawing ();
@@ -73,7 +73,7 @@ namespace Gkbd {
 		public void set_track_modifiers (bool enable);
 		public virtual signal void bad_keycode (uint keycode);
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", type_id = "gkbd_status_get_type ()")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-status.h", type_id = "gkbd_status_get_type ()")]
 	public class Status : Gtk.StatusIcon {
 		[CCode (has_construct_function = false, type = "GtkStatusIcon*")]
 		public Status ();
@@ -83,7 +83,7 @@ namespace Gkbd {
 		public static unowned Xkl.Engine get_xkl_engine ();
 		public void reinit_ui ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-desktop-config.h", has_type_id = false)]
 	public struct DesktopConfig {
 		public int default_group;
 		public bool group_per_app;
@@ -105,7 +105,7 @@ namespace Gkbd {
 		public void stop_listen ();
 		public void term ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-indicator-config.h", has_type_id = false)]
 	public struct IndicatorConfig {
 		public int secondary_groups_mask;
 		public bool show_flags;
@@ -132,7 +132,7 @@ namespace Gkbd {
 		public void stop_listen ();
 		public void term ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-config.h", has_type_id = false)]
 	public struct KeyboardConfig {
 		public weak string model;
 		public weak string layouts_variants;
@@ -158,21 +158,21 @@ namespace Gkbd {
 		public void term ();
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", has_type_id = false)]
 	public struct KeyboardDrawingDoodad {
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", has_type_id = false)]
 	public struct KeyboardDrawingGroupLevel {
 		public int group;
 		public int level;
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", has_type_id = false)]
 	public struct KeyboardDrawingItem {
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", has_type_id = false)]
 	public struct KeyboardDrawingKey {
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", has_type_id = false)]
 	public struct KeyboardDrawingRenderContext {
 		public weak Cairo.Context cr;
 		public int angle;
@@ -182,7 +182,7 @@ namespace Gkbd {
 		public int scale_denominator;
 		public Gdk.RGBA dark_color;
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", cprefix = "GKBD_KEYBOARD_DRAWING_POS_", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", cprefix = "GKBD_KEYBOARD_DRAWING_POS_", has_type_id = false)]
 	public enum KeyboardDrawingGroupLevelPosition {
 		TOPLEFT,
 		TOPRIGHT,
@@ -192,29 +192,29 @@ namespace Gkbd {
 		FIRST,
 		LAST
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", cprefix = "GKBD_KEYBOARD_DRAWING_ITEM_TYPE_", has_type_id = false)]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", cprefix = "GKBD_KEYBOARD_DRAWING_ITEM_TYPE_", has_type_id = false)]
 	public enum KeyboardDrawingItemType {
 		INVALID,
 		KEY,
 		KEY_EXTRA,
 		DOODAD
 	}
-	[CCode (cheader_filename = "Gkbd-3.0.h", cname = "GKBD_DESKTOP_SCHEMA")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-desktop-config.h", cname = "GKBD_DESKTOP_SCHEMA")]
 	public const string DESKTOP_SCHEMA;
-	[CCode (cheader_filename = "Gkbd-3.0.h", cname = "GKBD_KEYBOARD_DRAWING_H")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-drawing.h", cname = "GKBD_KEYBOARD_DRAWING_H")]
 	public const int KEYBOARD_DRAWING_H;
-	[CCode (cheader_filename = "Gkbd-3.0.h", cname = "GKBD_KEYBOARD_SCHEMA")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-keyboard-config.h", cname = "GKBD_KEYBOARD_SCHEMA")]
 	public const string KEYBOARD_SCHEMA;
-	[CCode (cheader_filename = "Gkbd-3.0.h")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static void install_glib_log_appender ();
-	[CCode (cheader_filename = "Gkbd-3.0.h")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static Gdk.Rectangle preview_load_position ();
-	[CCode (cheader_filename = "Gkbd-3.0.h")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static void preview_save_position (Gdk.Rectangle rect);
-	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "Gkbd-3.0.h")]
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static string[] strv_append (string arr, string element);
-	[CCode (cheader_filename = "Gkbd-3.0.h")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static void strv_behead (string arr);
-	[CCode (cheader_filename = "Gkbd-3.0.h")]
+	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static bool strv_remove (string arr, string element);
 }
