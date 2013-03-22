@@ -32,34 +32,46 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 	[DBus (visible = false)]
 	protected virtual GLib.MenuModel create_menu_model () {
-		IBus.init ();
-		var ibus = new IBus.Bus ();
-		var engines = ibus.list_engines ();
-
 		var menu = new GLib.Menu ();
 
 		var submenu = new GLib.Menu ();
 
 		var section = new GLib.Menu ();
 
-		foreach (var engine in engines) {
-			GLib.stdout.printf ("author = %s\n", engine.author);
-			GLib.stdout.printf ("description = %s\n", engine.description);
-			GLib.stdout.printf ("hotkeys = %s\n", engine.hotkeys);
-			GLib.stdout.printf ("icon = %s\n", engine.icon);
-			GLib.stdout.printf ("language = %s\n", engine.language);
-			GLib.stdout.printf ("layout = %s\n", engine.layout);
-			GLib.stdout.printf ("license = %s\n", engine.license);
-			GLib.stdout.printf ("longname = %s\n", engine.longname);
-			GLib.stdout.printf ("name = %s\n", engine.name);
-			GLib.stdout.printf ("rank = %u\n", engine.rank);
-			GLib.stdout.printf ("setup = %s\n", engine.setup);
-			GLib.stdout.printf ("symbol = %s\n", engine.symbol);
-			GLib.stdout.printf ("---\n");
-		}
+		IBus.init ();
+		var ibus = new IBus.Bus ();
+		var engines = ibus.list_active_engines ();
+		var context = IBus.InputContext.get_input_context (ibus.current_input_context (), ibus.get_connection ());
+
+		ibus.connected.connect (() => {
+			GLib.stdout.printf ("connected\n");
+		});
+		ibus.disconnected.connect (() => {
+			GLib.stdout.printf ("disconnected\n");
+		});
+		ibus.global_engine_changed.connect ((name) => {
+			GLib.stdout.printf ("global engine changed %s\n", name);
+		});
+		ibus.name_owner_changed.connect ((name, old_owner, new_owner) => {
+			GLib.stdout.printf ("name owner changed %s %s %s\n", name, old_owner, new_owner);
+		});
+
+		GLib.stdout.printf ("%p\n", context);
+		GLib.stdout.printf ("%d\n", (int) context.is_enabled ());
+		GLib.stdout.printf ("%p\n", context.get_engine ());
+
+		context.set_engine ("emoji-table");
+
+		var configuration = Gkbd.Configuration.get ();
+
+		foreach (var group in configuration.get_group_names ())
+			GLib.stdout.printf ("%s\n", group);
+
+		GLib.stdout.printf ("----------\n");
+		GLib.stdout.printf ("current group = %u\n", configuration.get_current_group ());
 
 		foreach (var engine in engines) {
-			section.append (@"$(engine.language) - $(engine.name)", null);
+			section.append (@"$(engine.language) - $(engine.longname)", null);
 		}
 
 		submenu.append_section (null, section);
