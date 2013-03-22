@@ -1,3 +1,11 @@
+To generate libxklavier.vapi:
+
+vapigen --metadatadir . --pkg x11 --library libxklavier /path/to/Xkl-1.0.gir
+
+To generate libxklavier.vapi docs:
+
+valadoc --vapidir /path/to/vapi/dir --pkg x11 -o libxklavier libxklavier.vapi
+
 To generate libgnomekbd.vapi:
 
 vapigen --metadatadir . --pkg gtk+-3.0 --library libgnomekbd /path/to/Gkbd-3.0.gir

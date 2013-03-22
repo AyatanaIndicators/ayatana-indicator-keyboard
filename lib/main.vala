@@ -64,6 +64,8 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 		var configuration = Gkbd.Configuration.get ();
 
+		GLib.stdout.printf ("----------\n");
+
 		foreach (var group in configuration.get_group_names ())
 			GLib.stdout.printf ("%s\n", group);
 
@@ -125,6 +127,7 @@ public class Indicator.Keyboard.Service : GLib.Object {
 	}
 
 	public static int main (string[] args) {
+		Gtk.init (ref args);
 		new Service ("--force" in args);
 		return 0;
 	}
