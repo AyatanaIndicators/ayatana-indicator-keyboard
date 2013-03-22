@@ -1,4 +1,5 @@
-AM_VALAFLAGS = --vapidir $(top_srcdir)/deps
+AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
+               --vapidir $(top_srcdir)/deps
 
 libexec_PROGRAMS = indicator-keyboard-service
 
@@ -8,11 +9,11 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)   \
                                        --pkg ibus-1.0    \
                                        --pkg libgnomekbd \
                                        --pkg Xkl-1.0
-indicator_keyboard_service_CFLAGS = $(GIO_CFLAGS)         \
+indicator_keyboard_service_CFLAGS = $(GTK_CFLAGS)         \
                                     $(IBUS_CFLAGS)        \
                                     $(LIBGNOMEKBD_CFLAGS) \
                                     $(AM_CFLAGS)
-indicator_keyboard_service_LDFLAGS = $(GIO_LIBS)         \
+indicator_keyboard_service_LDFLAGS = $(GTK_LIBS)         \
                                      $(IBUS_LIBS)        \
                                      $(LIBGNOMEKBD_LIBS) \
                                      $(AM_LDFLAGS)
