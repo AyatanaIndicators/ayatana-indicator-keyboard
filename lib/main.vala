@@ -2,6 +2,7 @@
 public class Indicator.Keyboard.Service : GLib.Object {
 
 	private GLib.MainLoop loop;
+	private GLib.Settings settings;
 	private GLib.ActionGroup action_group;
 	private GLib.MenuModel menu_model;
 
@@ -12,6 +13,8 @@ public class Indicator.Keyboard.Service : GLib.Object {
 		                   this.handle_bus_acquired,
 		                   null,
 		                   this.handle_name_lost);
+
+		this.settings = new GLib.Settings ("org.gnome.desktop.input-sources");
 
 		this.loop = new GLib.MainLoop ();
 		this.loop.run ();
@@ -27,6 +30,10 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 		group.add_entries (entries, null);
 
+		if (this.settings != null) {
+			group.insert (this.settings.create_action ("current"));
+		}
+
 		return group;
 	}
 
@@ -38,42 +45,19 @@ public class Indicator.Keyboard.Service : GLib.Object {
 
 		var section = new GLib.Menu ();
 
-		IBus.init ();
-		var ibus = new IBus.Bus ();
-		var engines = ibus.list_active_engines ();
-		var context = IBus.InputContext.get_input_context (ibus.current_input_context (), ibus.get_connection ());
+		if (this.settings != null) {
+			GLib.VariantIter iter;
+			string type;
+			string name;
+			uint i;
 
-		ibus.connected.connect (() => {
-			GLib.stdout.printf ("connected\n");
-		});
-		ibus.disconnected.connect (() => {
-			GLib.stdout.printf ("disconnected\n");
-		});
-		ibus.global_engine_changed.connect ((name) => {
-			GLib.stdout.printf ("global engine changed %s\n", name);
-		});
-		ibus.name_owner_changed.connect ((name, old_owner, new_owner) => {
-			GLib.stdout.printf ("name owner changed %s %s %s\n", name, old_owner, new_owner);
-		});
+			this.settings.get ("sources", "a(ss)", out iter);
 
-		GLib.stdout.printf ("%p\n", context);
-		GLib.stdout.printf ("%d\n", (int) context.is_enabled ());
-		GLib.stdout.printf ("%p\n", context.get_engine ());
-
-		context.set_engine ("emoji-table");
-
-		var configuration = Gkbd.Configuration.get ();
-
-		GLib.stdout.printf ("----------\n");
-
-		foreach (var group in configuration.get_group_names ())
-			GLib.stdout.printf ("%s\n", group);
-
-		GLib.stdout.printf ("----------\n");
-		GLib.stdout.printf ("current group = %u\n", configuration.get_current_group ());
-
-		foreach (var engine in engines) {
-			section.append (@"$(engine.language) - $(engine.longname)", null);
+			for (i = 0; iter.next ("(ss)", out type, out name); i++) {
+				GLib.MenuItem menu_item = new GLib.MenuItem (name, "indicator.current");
+				menu_item.set_attribute (GLib.Menu.ATTRIBUTE_TARGET, "u", i);
+				section.append_item (menu_item);
+			}
 		}
 
 		submenu.append_section (null, section);
