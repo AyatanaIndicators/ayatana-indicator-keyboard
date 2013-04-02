@@ -5,6 +5,7 @@ public class Indicator.Keyboard.Service : Object {
 	private Settings settings;
 	private ActionGroup action_group;
 	private MenuModel menu_model;
+	private IBus.Bus ibus;
 
 	[DBus (visible = false)]
 	public Service (bool force) {
@@ -43,8 +44,9 @@ public class Indicator.Keyboard.Service : Object {
 			this.settings.get ("sources", "@a(ss)", out array);
 			array.get_child (current, "(ss)", out type, out name);
 
-			if (type == "xkb")
+			if (type == "xkb") {
 				layout = name;
+			}
 		}
 
 		try {
@@ -61,6 +63,17 @@ public class Indicator.Keyboard.Service : Object {
 		} catch {
 			warn_if_reached ();
 		}
+	}
+
+	[DBus (visible = false)]
+	private IBus.Bus get_ibus () {
+		if (this.ibus == null) {
+			IBus.init ();
+
+			this.ibus = new IBus.Bus ();
+		}
+
+		return this.ibus;
 	}
 
 	[DBus (visible = false)]
@@ -92,21 +105,6 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	protected virtual MenuModel create_menu_model () {
-		/* IBus.init (); */
-		/* var bus = new IBus.Bus (); */
-		/* var engines = bus.list_engines (); */
-		/* var context = new IBus.InputContext (bus.current_input_context (), bus.get_connection ()); */
-
-		/* foreach (var engine in engines) { */
-			/* stdout.printf (@"$(engine.name) $(engine.longname)\n"); */
-		/* } */
-
-		/* stdout.printf (@"global engine = $(bus.get_global_engine ().name)\n"); */
-		/* stdout.printf (@"current engine = $(context.get_engine ().name)\n"); */
-
-		/* bus.set_global_engine ("pinyin"); */
-		/* context.set_engine ("pinyin"); */
-
 		var menu = new Menu ();
 
 		var submenu = new Menu ();
@@ -131,6 +129,13 @@ public class Indicator.Keyboard.Service : Object {
 						name = language;
 					else if (country != null)
 						name = country;
+				}
+				else if (type == "ibus") {
+					var ibus = get_ibus ();
+					string[] names = { name, null };
+					var engines = ibus.get_engines_by_names (names);
+
+					name = engines[0].longname;
 				}
 
 				var menu_item = new MenuItem (name, "indicator.current");
