@@ -123,19 +123,30 @@ public class Indicator.Keyboard.Service : Object {
 					var language = Xkl.get_language_name (name);
 					var country = Xkl.get_country_name (name);
 
-					if (language != null && country != null)
+					if (language != null && country != null) {
 						name = @"$language ($country)";
-					else if (language != null)
+					} else if (language != null) {
 						name = language;
-					else if (country != null)
+					} else if (country != null) {
 						name = country;
+					}
 				}
 				else if (type == "ibus") {
 					var ibus = get_ibus ();
 					string[] names = { name, null };
 					var engines = ibus.get_engines_by_names (names);
+					var engine = engines[0];
+					var longname = engine.longname;
+					var language = Xkl.get_language_name (engine.language);
+					var country = Xkl.get_country_name (engine.language);
 
-					name = engines[0].longname;
+					if (language != null) {
+						name = @"$language ($longname)";
+					} else if (country != null) {
+						name = @"$country ($longname)";
+					} else {
+						name = longname;
+					}
 				}
 
 				var menu_item = new MenuItem (name, "indicator.current");
