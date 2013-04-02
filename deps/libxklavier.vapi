@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Xkl", gir_namespace = "Xkl", gir_version = "1.0", lower_case_cprefix = "xkl_")]
 namespace Xkl {
-	[CCode (cheader_filename = "Xkl-1.0.h", type_id = "xkl_config_item_get_type ()")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", type_id = "xkl_config_item_get_type ()")]
 	public class ConfigItem : GLib.Object {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak char[] description;
@@ -16,7 +16,7 @@ namespace Xkl {
 		public void set_name (string? name);
 		public void set_short_description (string? short_description);
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", type_id = "xkl_config_rec_get_type ()")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", type_id = "xkl_config_rec_get_type ()")]
 	public class ConfigRec : GLib.Object {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public weak string[] layouts;
@@ -39,7 +39,7 @@ namespace Xkl {
 		public void set_variants ([CCode (array_length = false, array_null_terminated = true)] string[] new_variants);
 		public static bool write_to_file (Xkl.Engine engine, string file_name, Xkl.ConfigRec data, bool binary);
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", type_id = "xkl_config_registry_get_type ()")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", type_id = "xkl_config_registry_get_type ()")]
 	public class ConfigRegistry : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ConfigRegistry ();
@@ -63,7 +63,7 @@ namespace Xkl {
 		[NoAccessorMethod]
 		public Xkl.Engine engine { owned get; construct; }
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", type_id = "xkl_engine_get_type ()")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", type_id = "xkl_engine_get_type ()")]
 	public class Engine : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Engine ();
@@ -129,13 +129,13 @@ namespace Xkl {
 		public signal void X_new_device ();
 		public signal int new_toplevel_window (long object, long p0);
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "xkl_state_get_type ()")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "xkl_state_get_type ()")]
 	[Compact]
 	public class State {
 		public int32 group;
 		public uint32 indicators;
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", cprefix = "XKLF_", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLF_", has_type_id = false)]
 	[Flags]
 	public enum EngineFeatures {
 		CAN_TOGGLE_INDICATORS,
@@ -145,37 +145,37 @@ namespace Xkl {
 		REQUIRES_MANUAL_LAYOUT_MANAGEMENT,
 		DEVICE_DISCOVERY
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", cprefix = "XKLL_", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "XKLL_", has_type_id = false)]
 	public enum EngineListenModes {
 		MANAGE_WINDOW_STATES,
 		TRACK_KEYBOARD_STATE,
 		MANAGE_LAYOUTS
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", cprefix = "", has_type_id = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cprefix = "", has_type_id = false)]
 	public enum EngineStateChange {
 		[CCode (cname = "GROUP_CHANGED")]
 		ROUP_CHANGED,
 		[CCode (cname = "INDICATORS_CHANGED")]
 		NDICATORS_CHANGED
 	}
-	[CCode (cheader_filename = "Xkl-1.0.h", has_target = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", has_target = false)]
 	public delegate void ConfigItemProcessFunc (Xkl.ConfigRegistry config, Xkl.ConfigItem item, void* data);
-	[CCode (cheader_filename = "Xkl-1.0.h", has_target = false)]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", has_target = false)]
 	public delegate void TwoConfigItemsProcessFunc (Xkl.ConfigRegistry config, Xkl.ConfigItem item, Xkl.ConfigItem subitem, void* data);
-	[CCode (cheader_filename = "Xkl-1.0.h", cname = "XKL_MAX_CI_DESC_LENGTH")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cname = "XKL_MAX_CI_DESC_LENGTH")]
 	public const int MAX_CI_DESC_LENGTH;
-	[CCode (cheader_filename = "Xkl-1.0.h", cname = "XKL_MAX_CI_NAME_LENGTH")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cname = "XKL_MAX_CI_NAME_LENGTH")]
 	public const int MAX_CI_NAME_LENGTH;
-	[CCode (cheader_filename = "Xkl-1.0.h", cname = "XKL_MAX_CI_SHORT_DESC_LENGTH")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h", cname = "XKL_MAX_CI_SHORT_DESC_LENGTH")]
 	public const int MAX_CI_SHORT_DESC_LENGTH;
-	[CCode (cheader_filename = "Xkl-1.0.h")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h")]
 	public static unowned string get_country_name (string code);
-	[CCode (cheader_filename = "Xkl-1.0.h")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h")]
 	public static unowned string get_language_name (string code);
-	[CCode (cheader_filename = "Xkl-1.0.h")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h")]
 	public static unowned string get_last_error ();
-	[CCode (cheader_filename = "Xkl-1.0.h")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h")]
 	public static bool restore_names_prop (Xkl.Engine engine);
-	[CCode (cheader_filename = "Xkl-1.0.h")]
+	[CCode (cheader_filename = "libxklavier/xklavier.h")]
 	public static void set_debug_level (int level);
 }

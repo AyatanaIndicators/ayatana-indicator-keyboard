@@ -32,8 +32,23 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_activate_chart (Variant? parameter) {
+		var layout = "us";
+
+		if (this.settings != null) {
+			Variant array;
+			string type;
+			string name;
+
+			var current = this.settings.get_uint ("current");
+			this.settings.get ("sources", "@a(ss)", out array);
+			array.get_child (current, "(ss)", out type, out name);
+
+			if (type == "xkb")
+				layout = name;
+		}
+
 		try {
-			Process.spawn_command_line_async ("gkbd-keyboard-display -l fr");
+			Process.spawn_command_line_async (@"gkbd-keyboard-display -l $layout");
 		} catch {
 			warn_if_reached ();
 		}
@@ -102,12 +117,23 @@ public class Indicator.Keyboard.Service : Object {
 			VariantIter iter;
 			string type;
 			string name;
-			uint i;
 
 			this.settings.get ("sources", "a(ss)", out iter);
 
-			for (i = 0; iter.next ("(ss)", out type, out name); i++) {
-				MenuItem menu_item = new MenuItem (name, "indicator.current");
+			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
+				if (type == "xkb") {
+					var language = Xkl.get_language_name (name);
+					var country = Xkl.get_country_name (name);
+
+					if (language != null && country != null)
+						name = @"$language ($country)";
+					else if (language != null)
+						name = language;
+					else if (country != null)
+						name = country;
+				}
+
+				var menu_item = new MenuItem (name, "indicator.current");
 				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
 				section.append_item (menu_item);
 			}

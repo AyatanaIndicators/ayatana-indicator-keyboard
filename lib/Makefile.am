@@ -10,10 +10,12 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)   \
                                        --pkg libgnomekbd \
                                        --pkg Xkl-1.0
 indicator_keyboard_service_CFLAGS = $(GTK_CFLAGS)         \
-                                    $(IBUS_CFLAGS)        \
+                                    $(LIBXKLAVIER_CFLAGS) \
                                     $(LIBGNOMEKBD_CFLAGS) \
+                                    $(IBUS_CFLAGS)        \
                                     $(AM_CFLAGS)
 indicator_keyboard_service_LDFLAGS = $(GTK_LIBS)         \
-                                     $(IBUS_LIBS)        \
+                                     $(LIBXKLAVIER_LIBS) \
                                      $(LIBGNOMEKBD_LIBS) \
+                                     $(IBUS_LIBS)        \
                                      $(AM_LDFLAGS)
