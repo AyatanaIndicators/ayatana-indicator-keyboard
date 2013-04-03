@@ -1,4 +1,0 @@
-[Indicator Service]
-Name=indicator-keyboard
-BusName=com.canonical.indicator.keyboard
-ObjectPath=/com/canonical/indicator/keyboard

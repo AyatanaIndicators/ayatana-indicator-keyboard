@@ -42,7 +42,6 @@ AC_SUBST([IBUS_LIBS])
 
 AC_CONFIG_FILES([Makefile
                  data/Makefile
-                 data/indicator-keyboard.service
                  lib/Makefile])
 
 AC_OUTPUT
