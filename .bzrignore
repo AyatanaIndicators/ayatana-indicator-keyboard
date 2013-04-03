@@ -1,5 +1,7 @@
+*.log
 *.m4
 *.stamp
+*.substvars
 .deps
 .libs
 Makefile
@@ -9,7 +11,13 @@ build-aux
 config.log
 config.status
 configure
+debian/autoreconf.after
+debian/autoreconf.before
+debian/files
+debian/indicator-keyboard
+debian/tmp
 indicator-keyboard-service
+indicator-keyboard.indicator
 indicator-keyboard.service
 libtool
 main.c
