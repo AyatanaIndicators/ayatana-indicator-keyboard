@@ -1,0 +1,15 @@
+Source: indicator-keyboard
+Section: gnome
+Priority: extra
+Maintainer: William Hua <william.hua@canonical.com>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev
+Standards-Version: 3.9.4
+Homepage: https://code.launchpad.net/~attente/+junk/indicator-keyboard
+#Vcs-Git: git://git.debian.org/collab-maint/indicator-keyboard.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/indicator-keyboard.git;a=summary
+
+Package: indicator-keyboard
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Keyboard indicator
+ This package contains the keyboard indicator.
