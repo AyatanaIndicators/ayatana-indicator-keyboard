@@ -34,19 +34,16 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_activate_chart (Variant? parameter) {
 		var layout = "us";
+		Variant array;
+		string type;
+		string name;
 
-		if (this.settings != null) {
-			Variant array;
-			string type;
-			string name;
+		var current = this.settings.get_uint ("current");
+		this.settings.get ("sources", "@a(ss)", out array);
+		array.get_child (current, "(ss)", out type, out name);
 
-			var current = this.settings.get_uint ("current");
-			this.settings.get ("sources", "@a(ss)", out array);
-			array.get_child (current, "(ss)", out type, out name);
-
-			if (type == "xkb") {
-				layout = name;
-			}
+		if (type == "xkb") {
+			layout = name;
 		}
 
 		try {
@@ -84,9 +81,7 @@ public class Indicator.Keyboard.Service : Object {
 		var action = new SimpleAction.stateful ("indicator", null, state);
 		group.insert (action);
 
-		if (this.settings != null) {
-			group.insert (this.settings.create_action ("current"));
-		}
+		group.insert (this.settings.create_action ("current"));
 
 		action = new SimpleAction ("map", null);
 		action.activate.connect (this.handle_activate_map);
@@ -111,48 +106,46 @@ public class Indicator.Keyboard.Service : Object {
 
 		var section = new Menu ();
 
-		if (this.settings != null) {
-			VariantIter iter;
-			string type;
-			string name;
+		VariantIter iter;
+		string type;
+		string name;
 
-			this.settings.get ("sources", "a(ss)", out iter);
+		this.settings.get ("sources", "a(ss)", out iter);
 
-			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
-				if (type == "xkb") {
-					var language = Xkl.get_language_name (name);
-					var country = Xkl.get_country_name (name);
+		for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
+			if (type == "xkb") {
+				var language = Xkl.get_language_name (name);
+				var country = Xkl.get_country_name (name);
 
-					if (language != null && country != null) {
-						name = @"$language ($country)";
-					} else if (language != null) {
-						name = language;
-					} else if (country != null) {
-						name = country;
-					}
+				if (language != null && country != null) {
+					name = @"$language ($country)";
+				} else if (language != null) {
+					name = language;
+				} else if (country != null) {
+					name = country;
 				}
-				else if (type == "ibus") {
-					var ibus = get_ibus ();
-					string[] names = { name, null };
-					var engines = ibus.get_engines_by_names (names);
-					var engine = engines[0];
-					var longname = engine.longname;
-					var language = Xkl.get_language_name (engine.language);
-					var country = Xkl.get_country_name (engine.language);
-
-					if (language != null) {
-						name = @"$language ($longname)";
-					} else if (country != null) {
-						name = @"$country ($longname)";
-					} else {
-						name = longname;
-					}
-				}
-
-				var menu_item = new MenuItem (name, "indicator.current");
-				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
-				section.append_item (menu_item);
 			}
+			else if (type == "ibus") {
+				var ibus = get_ibus ();
+				string[] names = { name, null };
+				var engines = ibus.get_engines_by_names (names);
+				var engine = engines[0];
+				var longname = engine.longname;
+				var language = Xkl.get_language_name (engine.language);
+				var country = Xkl.get_country_name (engine.language);
+
+				if (language != null) {
+					name = @"$language ($longname)";
+				} else if (country != null) {
+					name = @"$country ($longname)";
+				} else {
+					name = longname;
+				}
+			}
+
+			var menu_item = new MenuItem (name, "indicator.current");
+			menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
+			section.append_item (menu_item);
 		}
 
 		submenu.append_section (null, section);
