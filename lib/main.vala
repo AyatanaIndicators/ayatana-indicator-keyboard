@@ -23,6 +23,49 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private Gtk.StyleContext get_style_context () {
+		var context = new Gtk.StyleContext ();
+
+		context.set_screen (Gdk.Screen.get_default ());
+
+		var path = new Gtk.WidgetPath ();
+		path.append_type (typeof (Gtk.MenuItem));
+		context.set_path (path);
+
+		return context;
+	}
+
+	[DBus (visible = false)]
+	protected virtual Icon create_icon (string text) {
+		Pango.FontDescription description;
+		var style = get_style_context ();
+		var colour = style.get_color (Gtk.StateFlags.NORMAL);
+		style.get (Gtk.StateFlags.NORMAL, Gtk.STYLE_PROPERTY_FONT, out description);
+
+		var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 20, 20);
+		var context = new Cairo.Context (surface);
+
+		context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
+		context.set_source_rgba (1.0, 0.0, 0.0, 1.0);
+		context.paint ();
+
+		context.set_operator (Cairo.Operator.CLEAR);
+		var layout = Pango.cairo_create_layout (context);
+		layout.set_alignment (Pango.Alignment.CENTER);
+		layout.set_font_description (description);
+		layout.set_text (text, -1);
+		Pango.cairo_update_layout (context, layout);
+		int width;
+		int height;
+		layout.get_pixel_size (out width, out height);
+		context.translate (Posix.floor (10.0 - 0.5 * width), Posix.floor (10.0 - 0.5 * height));
+		Pango.cairo_layout_path (context, layout);
+		context.fill ();
+
+		return Gdk.pixbuf_get_from_surface (surface, 0, 0, 20, 20);
+	}
+
+	[DBus (visible = false)]
 	private void handle_activate_map (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gucharmap");
@@ -63,6 +106,15 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_activate_foo (Variant? parameter) {
+		var window = new Gtk.Window ();
+
+		window.add (new Gtk.Image.from_gicon (create_icon ("US"), Gtk.IconSize.INVALID));
+
+		window.show_all ();
+	}
+
+	[DBus (visible = false)]
 	private IBus.Bus get_ibus () {
 		if (this.ibus == null) {
 			IBus.init ();
@@ -93,6 +145,10 @@ public class Indicator.Keyboard.Service : Object {
 
 		action = new SimpleAction ("settings", null);
 		action.activate.connect (this.handle_activate_settings);
+		group.insert (action);
+
+		action = new SimpleAction ("foo", null);
+		action.activate.connect (this.handle_activate_foo);
 		group.insert (action);
 
 		return group;
@@ -154,6 +210,7 @@ public class Indicator.Keyboard.Service : Object {
 		section.append ("Character Map", "indicator.map");
 		section.append ("Keyboard Layout Chart", "indicator.chart");
 		section.append ("Text Entry Settings...", "indicator.settings");
+		section.append ("foo", "indicator.foo");
 		submenu.append_section (null, section);
 
 		var indicator = new MenuItem.submenu ("x", submenu);
