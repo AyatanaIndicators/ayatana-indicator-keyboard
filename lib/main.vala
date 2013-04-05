@@ -37,17 +37,28 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	protected virtual Icon create_icon (string text) {
+		const int W = 20;
+		const int H = 20;
+		const double R = 2.0;
+
 		Pango.FontDescription description;
 		var style = get_style_context ();
 		var colour = style.get_color (Gtk.StateFlags.NORMAL);
 		style.get (Gtk.StateFlags.NORMAL, Gtk.STYLE_PROPERTY_FONT, out description);
 
-		var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 20, 20);
+		var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, W, H);
 		var context = new Cairo.Context (surface);
+
+		context.new_sub_path ();
+		context.arc (R, R, R, Math.PI, -0.5 * Math.PI);
+		context.arc (W - R, R, R, -0.5 * Math.PI, 0);
+		context.arc (W - R, H - R, R, 0, 0.5 * Math.PI);
+		context.arc (R, H - R, R, 0.5 * Math.PI, Math.PI);
+		context.close_path ();
 
 		context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
 		context.set_source_rgba (1.0, 0.0, 0.0, 1.0);
-		context.paint ();
+		context.fill ();
 
 		context.set_operator (Cairo.Operator.CLEAR);
 		var layout = Pango.cairo_create_layout (context);
@@ -58,11 +69,11 @@ public class Indicator.Keyboard.Service : Object {
 		int width;
 		int height;
 		layout.get_pixel_size (out width, out height);
-		context.translate (Posix.floor (10.0 - 0.5 * width), Posix.floor (10.0 - 0.5 * height));
+		context.translate ((W - width) / 2, (H - height) / 2);
 		Pango.cairo_layout_path (context, layout);
 		context.fill ();
 
-		return Gdk.pixbuf_get_from_surface (surface, 0, 0, 20, 20);
+		return Gdk.pixbuf_get_from_surface (surface, 0, 0, W, H);
 	}
 
 	[DBus (visible = false)]
