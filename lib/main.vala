@@ -4,6 +4,7 @@ public class Indicator.Keyboard.Service : Object {
 	private MainLoop loop;
 	private Settings settings;
 	private ActionGroup action_group;
+	private SimpleAction indicator_action;
 	private MenuModel menu_model;
 	private IBus.Bus ibus;
 
@@ -17,6 +18,7 @@ public class Indicator.Keyboard.Service : Object {
 		              this.handle_name_lost);
 
 		this.settings = new Settings ("org.gnome.desktop.input-sources");
+		this.settings.changed["current"].connect (this.handle_changed_setting);
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
@@ -77,6 +79,11 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_changed_setting (string key) {
+		update_indicator_action ();
+	}
+
+	[DBus (visible = false)]
 	private void handle_activate_map (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gucharmap");
@@ -110,7 +117,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_activate_settings (Variant? parameter) {
 		try {
-			Process.spawn_command_line_async ("gnome-control-center region");
+			Process.spawn_command_line_async ("gnome-control-center region layouts");
 		} catch {
 			warn_if_reached ();
 		}
@@ -137,16 +144,13 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	protected virtual ActionGroup create_action_group () {
+	protected virtual ActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
-		var state = new Variant.parsed ("('x', '', '', true)");
-		var action = new SimpleAction.stateful ("indicator", null, state);
-		group.insert (action);
-
+		group.insert (root_action);
 		group.insert (this.settings.create_action ("current"));
 
-		action = new SimpleAction ("map", null);
+		var action = new SimpleAction ("map", null);
 		action.activate.connect (this.handle_activate_map);
 		group.insert (action);
 
@@ -233,9 +237,34 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void update_indicator_action () {
+		Variant array;
+		string type;
+		string name;
+
+		var current = this.settings.get_uint ("current");
+		this.settings.get ("sources", "@a(ss)", out array);
+		array.get_child (current, "(ss)", out type, out name);
+
+		var state = new Variant.parsed ("(%s, '', '', true)", name);
+		this.indicator_action.set_state (state);
+	}
+
+	[DBus (visible = false)]
+	private SimpleAction get_indicator_action () {
+		if (this.indicator_action == null) {
+			var state = new Variant.parsed ("('', '', '', true)");
+			this.indicator_action = new SimpleAction.stateful ("indicator", null, state);
+			update_indicator_action ();
+		}
+
+		return this.indicator_action;
+	}
+
+	[DBus (visible = false)]
 	public ActionGroup get_action_group () {
 		if (this.action_group == null) {
-			this.action_group = create_action_group ();
+			this.action_group = create_action_group (get_indicator_action ());
 		}
 
 		return this.action_group;
