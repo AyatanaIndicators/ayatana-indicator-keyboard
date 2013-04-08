@@ -2,10 +2,14 @@
 public class Indicator.Keyboard.Service : Object {
 
 	private MainLoop loop;
+
 	private Settings settings;
-	private ActionGroup action_group;
+
+	private SimpleActionGroup action_group;
 	private SimpleAction indicator_action;
 	private MenuModel menu_model;
+	private Menu sources_menu;
+
 	private IBus.Bus ibus;
 
 	[DBus (visible = false)]
@@ -18,7 +22,8 @@ public class Indicator.Keyboard.Service : Object {
 		              this.handle_name_lost);
 
 		this.settings = new Settings ("org.gnome.desktop.input-sources");
-		this.settings.changed["current"].connect (this.handle_changed_setting);
+		this.settings.changed["current"].connect (this.handle_changed_current);
+		this.settings.changed["sources"].connect (this.handle_changed_sources);
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
@@ -79,72 +84,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_changed_setting (string key) {
-		update_indicator_action ();
-	}
-
-	[DBus (visible = false)]
-	private void handle_activate_map (Variant? parameter) {
-		try {
-			Process.spawn_command_line_async ("gucharmap");
-		} catch {
-			warn_if_reached ();
-		}
-	}
-
-	[DBus (visible = false)]
-	private void handle_activate_chart (Variant? parameter) {
-		var layout = "us";
-		Variant array;
-		string type;
-		string name;
-
-		var current = this.settings.get_uint ("current");
-		this.settings.get ("sources", "@a(ss)", out array);
-		array.get_child (current, "(ss)", out type, out name);
-
-		if (type == "xkb") {
-			layout = name;
-		}
-
-		try {
-			Process.spawn_command_line_async (@"gkbd-keyboard-display -l $layout");
-		} catch {
-			warn_if_reached ();
-		}
-	}
-
-	[DBus (visible = false)]
-	private void handle_activate_settings (Variant? parameter) {
-		try {
-			Process.spawn_command_line_async ("gnome-control-center region layouts");
-		} catch {
-			warn_if_reached ();
-		}
-	}
-
-	[DBus (visible = false)]
-	private void handle_activate_foo (Variant? parameter) {
-		var window = new Gtk.Window ();
-
-		window.add (new Gtk.Image.from_gicon (create_icon ("US"), Gtk.IconSize.INVALID));
-
-		window.show_all ();
-	}
-
-	[DBus (visible = false)]
-	private IBus.Bus get_ibus () {
-		if (this.ibus == null) {
-			IBus.init ();
-
-			this.ibus = new IBus.Bus ();
-		}
-
-		return this.ibus;
-	}
-
-	[DBus (visible = false)]
-	protected virtual ActionGroup create_action_group (Action root_action) {
+	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
 		group.insert (root_action);
@@ -170,58 +110,51 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	protected virtual MenuModel create_menu_model () {
+	private void update_indicator_action () {
+		var current = this.settings.get_uint ("current");
+		Variant array;
+		this.settings.get ("sources", "@a(ss)", out array);
+
+		if (current < array.n_children ()) {
+			string type;
+			string name;
+
+			array.get_child (current, "(ss)", out type, out name);
+
+			var state = new Variant.parsed ("(%s, '', '', true)", name);
+			get_indicator_action ().set_state (state);
+		}
+	}
+
+	[DBus (visible = false)]
+	private SimpleAction get_indicator_action () {
+		if (this.indicator_action == null) {
+			var state = new Variant.parsed ("('', '', '', true)");
+			this.indicator_action = new SimpleAction.stateful ("indicator", null, state);
+			update_indicator_action ();
+		}
+
+		return this.indicator_action;
+	}
+
+	[DBus (visible = false)]
+	public SimpleActionGroup get_action_group () {
+		if (this.action_group == null) {
+			this.action_group = create_action_group (get_indicator_action ());
+		}
+
+		return this.action_group;
+	}
+
+	[DBus (visible = false)]
+	protected virtual MenuModel create_menu_model (MenuModel section_menu) {
 		var menu = new Menu ();
 
 		var submenu = new Menu ();
 
+		submenu.append_section (null, section_menu);
+
 		var section = new Menu ();
-
-		VariantIter iter;
-		string type;
-		string name;
-
-		this.settings.get ("sources", "a(ss)", out iter);
-
-		for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
-			if (type == "xkb") {
-				var language = Xkl.get_language_name (name);
-				var country = Xkl.get_country_name (name);
-
-				if (language != null && country != null) {
-					name = @"$language ($country)";
-				} else if (language != null) {
-					name = language;
-				} else if (country != null) {
-					name = country;
-				}
-			}
-			else if (type == "ibus") {
-				var ibus = get_ibus ();
-				string[] names = { name, null };
-				var engines = ibus.get_engines_by_names (names);
-				var engine = engines[0];
-				var longname = engine.longname;
-				var language = Xkl.get_language_name (engine.language);
-				var country = Xkl.get_country_name (engine.language);
-
-				if (language != null) {
-					name = @"$language ($longname)";
-				} else if (country != null) {
-					name = @"$country ($longname)";
-				} else {
-					name = longname;
-				}
-			}
-
-			var menu_item = new MenuItem (name, "indicator.current");
-			menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
-			section.append_item (menu_item);
-		}
-
-		submenu.append_section (null, section);
-
-		section = new Menu ();
 		section.append ("Character Map", "indicator.map");
 		section.append ("Keyboard Layout Chart", "indicator.chart");
 		section.append ("Text Entry Settings...", "indicator.settings");
@@ -237,46 +170,150 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void update_indicator_action () {
-		Variant array;
-		string type;
-		string name;
+	private IBus.Bus get_ibus () {
+		if (this.ibus == null) {
+			IBus.init ();
 
-		var current = this.settings.get_uint ("current");
-		this.settings.get ("sources", "@a(ss)", out array);
-		array.get_child (current, "(ss)", out type, out name);
+			this.ibus = new IBus.Bus ();
+		}
 
-		var state = new Variant.parsed ("(%s, '', '', true)", name);
-		this.indicator_action.set_state (state);
+		return this.ibus;
 	}
 
 	[DBus (visible = false)]
-	private SimpleAction get_indicator_action () {
-		if (this.indicator_action == null) {
-			var state = new Variant.parsed ("('', '', '', true)");
-			this.indicator_action = new SimpleAction.stateful ("indicator", null, state);
-			update_indicator_action ();
-		}
+	private void update_sources_menu () {
+		if (this.sources_menu != null) {
+			var menu = get_sources_menu ();
 
-		return this.indicator_action;
+			while (menu.get_n_items () > 0)
+				menu.remove (0);
+
+			VariantIter iter;
+			string type;
+			string name;
+
+			this.settings.get ("sources", "a(ss)", out iter);
+
+			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
+				if (type == "xkb") {
+					var language = Xkl.get_language_name (name);
+					var country = Xkl.get_country_name (name);
+
+					if (language != null && country != null) {
+						name = @"$language ($country)";
+					} else if (language != null) {
+						name = language;
+					} else if (country != null) {
+						name = country;
+					}
+				}
+				else if (type == "ibus") {
+					var ibus = get_ibus ();
+					string[] names = { name, null };
+					var engines = ibus.get_engines_by_names (names);
+					var engine = engines[0];
+					var longname = engine.longname;
+					var language = Xkl.get_language_name (engine.language);
+					var country = Xkl.get_country_name (engine.language);
+
+					if (language != null) {
+						name = @"$language ($longname)";
+					} else if (country != null) {
+						name = @"$country ($longname)";
+					} else {
+						name = longname;
+					}
+				}
+
+				var menu_item = new MenuItem (name, "indicator.current");
+				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
+				menu.append_item (menu_item);
+			}
+		} else {
+			get_sources_menu ();
+		}
 	}
 
 	[DBus (visible = false)]
-	public ActionGroup get_action_group () {
-		if (this.action_group == null) {
-			this.action_group = create_action_group (get_indicator_action ());
+	private Menu get_sources_menu () {
+		if (this.sources_menu == null) {
+			this.sources_menu = new Menu ();
+			update_sources_menu ();
 		}
 
-		return this.action_group;
+		return this.sources_menu;
 	}
 
 	[DBus (visible = false)]
 	public MenuModel get_menu_model () {
 		if (this.menu_model == null) {
-			this.menu_model = create_menu_model ();
+			this.menu_model = create_menu_model (get_sources_menu ());
 		}
 
 		return this.menu_model;
+	}
+
+	[DBus (visible = false)]
+	private void handle_changed_current (string key) {
+		update_indicator_action ();
+	}
+
+	[DBus (visible = false)]
+	private void handle_changed_sources (string key) {
+		update_sources_menu ();
+	}
+
+	[DBus (visible = false)]
+	private void handle_activate_map (Variant? parameter) {
+		try {
+			Process.spawn_command_line_async ("gucharmap");
+		} catch {
+			warn_if_reached ();
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_activate_chart (Variant? parameter) {
+		var layout = "us";
+
+		var current = this.settings.get_uint ("current");
+		Variant array;
+		this.settings.get ("sources", "@a(ss)", out array);
+
+		if (current < array.n_children ()) {
+			string type;
+			string name;
+
+			array.get_child (current, "(ss)", out type, out name);
+
+			if (type == "xkb") {
+				layout = name;
+			}
+		}
+
+		try {
+			Process.spawn_command_line_async (@"gkbd-keyboard-display -l $layout");
+		} catch {
+			warn_if_reached ();
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_activate_settings (Variant? parameter) {
+		try {
+			Process.spawn_command_line_async ("gnome-control-center region layouts");
+		} catch {
+			warn_if_reached ();
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_activate_foo (Variant? parameter) {
+		var window = new Gtk.Window ();
+
+		window.add (new Gtk.Image.from_gicon (create_icon ("US"), Gtk.IconSize.INVALID));
+
+		window.show_all ();
 	}
 
 	[DBus (visible = false)]
