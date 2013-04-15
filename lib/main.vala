@@ -48,8 +48,6 @@ public class Indicator.Keyboard.Service : Object {
 		const int H = 20;
 		const double R = 2.0;
 
-		Icon icon = null;
-
 		Pango.FontDescription description;
 		var style = get_style_context ();
 		var colour = style.get_color (Gtk.StateFlags.NORMAL);
@@ -82,12 +80,14 @@ public class Indicator.Keyboard.Service : Object {
 		Pango.cairo_layout_path (context, layout);
 		context.fill ();
 
+		var buffer = new ByteArray ();
+
 		surface.write_to_png_stream ((data) => {
-			icon = new BytesIcon (new Bytes (data));
-			return icon != null ? Cairo.Status.SUCCESS : Cairo.Status.NULL_POINTER;
+			buffer.append (data);
+			return Cairo.Status.SUCCESS;
 		});
 
-		return icon;
+		return new BytesIcon (ByteArray.free_to_bytes ((owned) buffer));
 	}
 
 	[DBus (visible = false)]
