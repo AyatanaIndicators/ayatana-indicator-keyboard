@@ -2,15 +2,15 @@
 public class Indicator.Keyboard.Service : Object {
 
 	private MainLoop loop;
-
 	private Settings settings;
+	private IBus.Bus ibus;
 
 	private SimpleActionGroup action_group;
 	private SimpleAction indicator_action;
 	private MenuModel menu_model;
 	private Menu sources_menu;
 
-	private IBus.Bus ibus;
+	private Icon[] icons;
 
 	[DBus (visible = false)]
 	public Service (bool force) {
@@ -48,6 +48,8 @@ public class Indicator.Keyboard.Service : Object {
 		const int H = 20;
 		const double R = 2.0;
 
+		Icon icon = null;
+
 		Pango.FontDescription description;
 		var style = get_style_context ();
 		var colour = style.get_color (Gtk.StateFlags.NORMAL);
@@ -80,7 +82,42 @@ public class Indicator.Keyboard.Service : Object {
 		Pango.cairo_layout_path (context, layout);
 		context.fill ();
 
-		return Gdk.pixbuf_get_from_surface (surface, 0, 0, W, H);
+		surface.write_to_png_stream ((data) => {
+			icon = new BytesIcon (new Bytes (data));
+			return icon != null ? Cairo.Status.SUCCESS : Cairo.Status.NULL_POINTER;
+		});
+
+		return icon;
+	}
+
+	[DBus (visible = false)]
+	private Icon get_icon (uint index) {
+		Icon icon = null;
+		Variant array = null;
+
+		if (this.icons == null) {
+			this.settings.get ("sources", "@a(ss)", out array);
+			this.icons = new Icon[array.n_children ()];
+		}
+
+		if (index < this.icons.length) {
+			icon = this.icons[index];
+
+			if (icon == null) {
+				if (array == null) {
+					this.settings.get ("sources", "@a(ss)", out array);
+				}
+
+				string type;
+				string name;
+
+				array.get_child (index, "(ss)", out type, out name);
+				this.icons[index] = create_icon (name);
+				icon = this.icons[index];
+			}
+		}
+
+		return icon;
 	}
 
 	[DBus (visible = false)]
@@ -227,6 +264,7 @@ public class Indicator.Keyboard.Service : Object {
 
 				var menu_item = new MenuItem (name, "indicator.current");
 				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
+				menu_item.set_icon (get_icon (i));
 				menu.append_item (menu_item);
 			}
 		} else {
