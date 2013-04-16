@@ -1,3 +1,9 @@
+indicator-keyboard (0.0.0-0ubuntu2) raring; urgency=low
+
+  * GBytesIcon support.
+
+ -- William Hua <william.hua@canonical.com>  Tue, 16 Apr 2013 10:45:34 -0400
+
 indicator-keyboard (0.0.0-0ubuntu1) raring; urgency=low
 
   * Initial Release.
