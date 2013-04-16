@@ -64,7 +64,6 @@ public class Indicator.Keyboard.Service : Object {
 		context.close_path ();
 
 		context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
-		context.set_source_rgba (1.0, 0.0, 0.0, 1.0);
 		context.fill ();
 
 		context.set_operator (Cairo.Operator.CLEAR);
@@ -139,26 +138,16 @@ public class Indicator.Keyboard.Service : Object {
 		action.activate.connect (this.handle_activate_settings);
 		group.insert (action);
 
-		action = new SimpleAction ("foo", null);
-		action.activate.connect (this.handle_activate_foo);
-		group.insert (action);
-
 		return group;
 	}
 
 	[DBus (visible = false)]
 	private void update_indicator_action () {
 		var current = this.settings.get_uint ("current");
-		Variant array;
-		this.settings.get ("sources", "@a(ss)", out array);
+		var icon = get_icon (current);
 
-		if (current < array.n_children ()) {
-			string type;
-			string name;
-
-			array.get_child (current, "(ss)", out type, out name);
-
-			var state = new Variant.parsed ("(%s, '', '', true)", name);
+		if (icon != null) {
+			var state = new Variant.parsed ("('', %s, '', true)", icon.to_string ());
 			get_indicator_action ().set_state (state);
 		}
 	}
@@ -195,7 +184,6 @@ public class Indicator.Keyboard.Service : Object {
 		section.append ("Character Map", "indicator.map");
 		section.append ("Keyboard Layout Chart", "indicator.chart");
 		section.append ("Text Entry Settings...", "indicator.settings");
-		section.append ("foo", "indicator.foo");
 		submenu.append_section (null, section);
 
 		var indicator = new MenuItem.submenu ("x", submenu);
@@ -343,15 +331,6 @@ public class Indicator.Keyboard.Service : Object {
 		} catch {
 			warn_if_reached ();
 		}
-	}
-
-	[DBus (visible = false)]
-	private void handle_activate_foo (Variant? parameter) {
-		var window = new Gtk.Window ();
-
-		window.add (new Gtk.Image.from_gicon (create_icon ("US"), Gtk.IconSize.INVALID));
-
-		window.show_all ();
 	}
 
 	[DBus (visible = false)]
