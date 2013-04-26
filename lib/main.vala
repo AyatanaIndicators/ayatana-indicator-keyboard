@@ -147,7 +147,7 @@ public class Indicator.Keyboard.Service : Object {
 		var icon = get_icon (current);
 
 		if (icon != null) {
-			var state = new Variant.parsed ("('', %s, '', true)", icon.to_string ());
+			var state = new Variant.parsed ("{ 'icon' : %v, 'visible' : <true> }", icon.serialize ());
 			get_indicator_action ().set_state (state);
 		}
 	}
@@ -155,7 +155,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private SimpleAction get_indicator_action () {
 		if (this.indicator_action == null) {
-			var state = new Variant.parsed ("('', '', '', true)");
+			var state = new Variant.parsed ("{ 'visible' : <true> }");
 			this.indicator_action = new SimpleAction.stateful ("indicator", null, state);
 			update_indicator_action ();
 		}
