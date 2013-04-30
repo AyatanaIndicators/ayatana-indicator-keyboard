@@ -2,6 +2,7 @@
 *.m4
 *.stamp
 *.substvars
+*.valid
 .deps
 .libs
 Makefile

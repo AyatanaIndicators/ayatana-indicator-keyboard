@@ -2,7 +2,8 @@
 public class Indicator.Keyboard.Service : Object {
 
 	private MainLoop loop;
-	private Settings settings;
+	private Settings indicator_settings;
+	private Settings source_settings;
 	private IBus.Bus ibus;
 
 	private SimpleActionGroup action_group;
@@ -21,9 +22,12 @@ public class Indicator.Keyboard.Service : Object {
 		              null,
 		              this.handle_name_lost);
 
-		this.settings = new Settings ("org.gnome.desktop.input-sources");
-		this.settings.changed["current"].connect (this.handle_changed_current);
-		this.settings.changed["sources"].connect (this.handle_changed_sources);
+		this.indicator_settings = new Settings ("com.canonical.indicator.keyboard");
+		this.indicator_settings.changed["visible"].connect (this.handle_changed_visible);
+
+		this.source_settings = new Settings ("org.gnome.desktop.input-sources");
+		this.source_settings.changed["current"].connect (this.handle_changed_current);
+		this.source_settings.changed["sources"].connect (this.handle_changed_sources);
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
@@ -95,7 +99,7 @@ public class Indicator.Keyboard.Service : Object {
 		Variant array = null;
 
 		if (this.icons == null) {
-			this.settings.get ("sources", "@a(ss)", out array);
+			this.source_settings.get ("sources", "@a(ss)", out array);
 			this.icons = new Icon[array.n_children ()];
 		}
 
@@ -104,7 +108,7 @@ public class Indicator.Keyboard.Service : Object {
 
 			if (icon == null) {
 				if (array == null) {
-					this.settings.get ("sources", "@a(ss)", out array);
+					this.source_settings.get ("sources", "@a(ss)", out array);
 				}
 
 				string type;
@@ -124,7 +128,7 @@ public class Indicator.Keyboard.Service : Object {
 		var group = new SimpleActionGroup ();
 
 		group.insert (root_action);
-		group.insert (this.settings.create_action ("current"));
+		group.insert (this.source_settings.create_action ("current"));
 
 		var action = new SimpleAction ("map", null);
 		action.activate.connect (this.handle_activate_map);
@@ -143,19 +147,24 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_indicator_action () {
-		var current = this.settings.get_uint ("current");
+		var visible = this.indicator_settings.get_boolean ("visible");
+		var current = this.source_settings.get_uint ("current");
 		var icon = get_icon (current);
+		Variant state;
 
 		if (icon != null) {
-			var state = new Variant.parsed ("{ 'icon' : %v, 'visible' : <true> }", icon.serialize ());
-			get_indicator_action ().set_state (state);
+			state = new Variant.parsed ("{ 'visible' : <%b>, 'icon' : %v }", visible, icon.serialize ());
+		} else {
+			state = new Variant.parsed ("{ 'visible' : <%b> }", visible);
 		}
+
+		get_indicator_action ().set_state (state);
 	}
 
 	[DBus (visible = false)]
 	private SimpleAction get_indicator_action () {
 		if (this.indicator_action == null) {
-			var state = new Variant.parsed ("{ 'visible' : <true> }");
+			var state = new Variant.parsed ("{ 'visible' : <false> }");
 			this.indicator_action = new SimpleAction.stateful ("indicator", null, state);
 			update_indicator_action ();
 		}
@@ -217,7 +226,7 @@ public class Indicator.Keyboard.Service : Object {
 			string type;
 			string name;
 
-			this.settings.get ("sources", "a(ss)", out iter);
+			this.source_settings.get ("sources", "a(ss)", out iter);
 
 			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
 				if (type == "xkb") {
@@ -280,13 +289,20 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_changed_visible (string key) {
+		update_indicator_action ();
+	}
+
+	[DBus (visible = false)]
 	private void handle_changed_current (string key) {
 		update_indicator_action ();
 	}
 
 	[DBus (visible = false)]
 	private void handle_changed_sources (string key) {
+		this.icons = null;
 		update_sources_menu ();
+		update_indicator_action ();
 	}
 
 	[DBus (visible = false)]
@@ -302,9 +318,9 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_activate_chart (Variant? parameter) {
 		var layout = "us";
 
-		var current = this.settings.get_uint ("current");
+		var current = this.source_settings.get_uint ("current");
 		Variant array;
-		this.settings.get ("sources", "@a(ss)", out array);
+		this.source_settings.get ("sources", "@a(ss)", out array);
 
 		if (current < array.n_children ()) {
 			string type;
