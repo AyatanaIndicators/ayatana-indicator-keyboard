@@ -1,0 +1,3 @@
+usr/lib/*/indicator-keyboard-service
+usr/share/dbus-1/services/indicator-keyboard.service
+usr/share/unity/indicators/indicator-keyboard.indicator

@@ -1,3 +1,9 @@
+indicator-keyboard (0.0.0-0ubuntu4) raring; urgency=low
+
+  * Add indicator visibility schema.
+
+ -- William Hua <william.hua@canonical.com>  Wed, 01 May 2013 14:53:34 -0700
+
 indicator-keyboard (0.0.0-0ubuntu3) raring; urgency=low
 
   * Use dictionary action state.
