@@ -4,6 +4,7 @@ public class Indicator.Keyboard.Service : Object {
 	private MainLoop loop;
 	private Settings indicator_settings;
 	private Settings source_settings;
+	private Gnome.XkbInfo xkb_info;
 	private IBus.Bus ibus;
 
 	private SimpleActionGroup action_group;
@@ -28,6 +29,8 @@ public class Indicator.Keyboard.Service : Object {
 		this.source_settings = new Settings ("org.gnome.desktop.input-sources");
 		this.source_settings.changed["current"].connect (this.handle_changed_current);
 		this.source_settings.changed["sources"].connect (this.handle_changed_sources);
+
+		this.xkb_info = new Gnome.XkbInfo ();
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
@@ -115,7 +118,22 @@ public class Indicator.Keyboard.Service : Object {
 				string name;
 
 				array.get_child (index, "(ss)", out type, out name);
-				this.icons[index] = create_icon (name);
+
+				if (type == "xkb") {
+					this.icons[index] = create_icon (name);
+				} else if (type == "ibus") {
+					var ibus = get_ibus ();
+					string[] names = { name, null };
+					var engines = ibus.get_engines_by_names (names);
+					var engine = engines[0];
+
+					try {
+						this.icons[index] = Icon.new_for_string (engine.get_icon ());
+					} catch {
+						warn_if_reached ();
+					}
+				}
+
 				icon = this.icons[index];
 			}
 		}
@@ -230,15 +248,24 @@ public class Indicator.Keyboard.Service : Object {
 
 			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
 				if (type == "xkb") {
-					var language = Xkl.get_language_name (name);
-					var country = Xkl.get_country_name (name);
+					string display_name;
+					string layout_name;
 
-					if (language != null && country != null) {
-						name = @"$language ($country)";
-					} else if (language != null) {
-						name = language;
-					} else if (country != null) {
-						name = country;
+					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
+
+					if (display_name == null) {
+						var language = Xkl.get_language_name (layout_name);
+						var country = Xkl.get_country_name (layout_name);
+
+						if (language != null && country != null) {
+							name = @"$language ($country)";
+						} else if (language != null) {
+							name = language;
+						} else if (country != null) {
+							name = country;
+						}
+					} else {
+						name = display_name;
 					}
 				}
 				else if (type == "ibus") {
@@ -246,16 +273,19 @@ public class Indicator.Keyboard.Service : Object {
 					string[] names = { name, null };
 					var engines = ibus.get_engines_by_names (names);
 					var engine = engines[0];
-					var longname = engine.longname;
-					var language = Xkl.get_language_name (engine.language);
-					var country = Xkl.get_country_name (engine.language);
+					var language = engine.get_language ();
+					var display_name = engine.get_longname ();
 
 					if (language != null) {
-						name = @"$language ($longname)";
-					} else if (country != null) {
-						name = @"$country ($longname)";
-					} else {
-						name = longname;
+						language = Xkl.get_language_name (language);
+					}
+
+					if (language != null && display_name != null) {
+						name = @"$language ($display_name)";
+					} else if (language != null) {
+						name = language;
+					} else if (display_name != null) {
+						name = display_name;
 					}
 				}
 
@@ -317,6 +347,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_activate_chart (Variant? parameter) {
 		var layout = "us";
+		string variant = null;
 
 		var current = this.source_settings.get_uint ("current");
 		Variant array;
@@ -329,12 +360,28 @@ public class Indicator.Keyboard.Service : Object {
 			array.get_child (current, "(ss)", out type, out name);
 
 			if (type == "xkb") {
-				layout = name;
+				this.xkb_info.get_layout_info (name, null, null, out layout, out variant);
+			} else if (type == "ibus") {
+				var ibus = get_ibus ();
+				string[] names = { name, null };
+				var engines = ibus.get_engines_by_names (names);
+				var engine = engines[0];
+
+				layout = engine.get_layout ();
+				variant = engine.get_layout_variant ();
 			}
 		}
 
 		try {
-			Process.spawn_command_line_async (@"gkbd-keyboard-display -l $layout");
+			string command;
+
+			if (variant != null) {
+				command = @"gkbd-keyboard-display -l \"$layout\t$variant\"";
+			} else {
+				command = @"gkbd-keyboard-display -l $layout";
+			}
+
+			Process.spawn_command_line_async (command);
 		} catch {
 			warn_if_reached ();
 		}
