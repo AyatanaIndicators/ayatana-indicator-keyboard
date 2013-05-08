@@ -13,6 +13,8 @@ public class Indicator.Keyboard.Service : Object {
 	private Menu sources_menu;
 
 	private Icon[] icons;
+	private string[] icon_strings;
+	private uint[] icon_string_subscripts;
 
 	[DBus (visible = false)]
 	public Service (bool force) {
@@ -50,10 +52,12 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	protected virtual Icon create_icon (string text) {
+	protected virtual Icon create_icon (string text, uint subscript) {
 		const int W = 20;
 		const int H = 20;
 		const double R = 2.0;
+		const double TEXT_SIZE = 12.0;
+		const double SUBSCRIPT_SIZE = 10.0;
 
 		Pango.FontDescription description;
 		var style = get_style_context ();
@@ -72,19 +76,44 @@ public class Indicator.Keyboard.Service : Object {
 
 		context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
 		context.fill ();
-
 		context.set_operator (Cairo.Operator.CLEAR);
-		var layout = Pango.cairo_create_layout (context);
-		layout.set_alignment (Pango.Alignment.CENTER);
-		layout.set_font_description (description);
-		layout.set_text (text, -1);
-		Pango.cairo_update_layout (context, layout);
-		int width;
-		int height;
-		layout.get_pixel_size (out width, out height);
-		context.translate ((W - width) / 2, (H - height) / 2);
-		Pango.cairo_layout_path (context, layout);
-		context.fill ();
+
+		var text_layout = Pango.cairo_create_layout (context);
+		text_layout.set_alignment (Pango.Alignment.CENTER);
+		description.set_absolute_size (Pango.units_from_double (TEXT_SIZE));
+		text_layout.set_font_description (description);
+		text_layout.set_text (text, -1);
+		Pango.cairo_update_layout (context, text_layout);
+		int text_width;
+		int text_height;
+		text_layout.get_pixel_size (out text_width, out text_height);
+
+		if (subscript > 1) {
+			var subscript_layout = Pango.cairo_create_layout (context);
+			subscript_layout.set_alignment (Pango.Alignment.CENTER);
+			description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
+			subscript_layout.set_font_description (description);
+			subscript_layout.set_text (@"$subscript", -1);
+			Pango.cairo_update_layout (context, subscript_layout);
+			int subscript_width;
+			int subscript_height;
+			subscript_layout.get_pixel_size (out subscript_width, out subscript_height);
+
+			context.identity_matrix ();
+			context.translate ((W - (text_width + subscript_width)) / 2, (H - text_height) / 2);
+			Pango.cairo_layout_path (context, text_layout);
+			context.fill ();
+
+			context.identity_matrix ();
+			context.translate ((W + (text_width - subscript_width)) / 2, (H + text_height) / 2 - subscript_height);
+			Pango.cairo_layout_path (context, subscript_layout);
+			context.fill ();
+		} else {
+			context.identity_matrix ();
+			context.translate ((W - text_width) / 2, (H - text_height) / 2);
+			Pango.cairo_layout_path (context, text_layout);
+			context.fill ();
+		}
 
 		var buffer = new ByteArray ();
 
@@ -94,6 +123,130 @@ public class Indicator.Keyboard.Service : Object {
 		});
 
 		return new BytesIcon (ByteArray.free_to_bytes ((owned) buffer));
+	}
+
+	[DBus (visible = false)]
+	private string abbreviate_display_name (string display_name) {
+		string abbreviation = null;
+
+		if (display_name != null) {
+			char letters[2];
+			var index = 0;
+
+			for (var i = 0; i < display_name.length && index < 2; i++) {
+				if (display_name[i].isupper ()) {
+					letters[index++] = display_name[i];
+				}
+			}
+
+			if (index < 2) {
+				index = 0;
+
+				for (var i = 0; i < display_name.length && index < 2; i++) {
+					if (display_name[i].isalpha () && (i == 0 || !display_name[i - 1].isalpha ())) {
+						letters[index++] = display_name[i++].toupper ();
+					}
+				}
+
+				if (index < 2) {
+					index = 0;
+
+					for (var i = 0; i < display_name.length && index < 2; i++) {
+						if (display_name[i].isalpha ()) {
+							letters[index++] = display_name[i];
+						}
+					}
+				}
+			}
+
+			if (index == 1) {
+				abbreviation = @"$(letters[0])";
+			} else if (index == 2) {
+				abbreviation = @"$(letters[0])$(letters[1])";
+			}
+		}
+
+		return abbreviation;
+	}
+
+	[DBus (visible = false)]
+	private uint get_icon_string_subscript (uint index) {
+		uint icon_string_subscript = 0;
+		Variant array = null;
+
+		if (this.icon_string_subscripts == null) {
+			this.source_settings.get ("sources", "@a(ss)", out array);
+			this.icon_string_subscripts = new uint[array.n_children ()];
+		}
+
+		if (index < this.icon_string_subscripts.length) {
+			icon_string_subscript = this.icon_string_subscripts[index];
+
+			if (icon_string_subscript == 0) {
+				this.icon_string_subscripts[index] = 1;
+
+				for (var i = (int) index - 1; i >= 0 && this.icon_string_subscripts[index] == 1; i--) {
+					if (get_icon_string (i) == get_icon_string (index)) {
+						this.icon_string_subscripts[index] = get_icon_string_subscript (i) + 1;
+					}
+				}
+
+				icon_string_subscript = this.icon_string_subscripts[index];
+			}
+		}
+
+		return icon_string_subscript;
+	}
+
+	[DBus (visible = false)]
+	private string get_icon_string (uint index) {
+		string icon_string = null;
+		Variant array = null;
+
+		if (this.icon_strings == null) {
+			this.source_settings.get ("sources", "@a(ss)", out array);
+			this.icon_strings = new string[array.n_children ()];
+		}
+
+		if (index < this.icon_strings.length) {
+			icon_string = this.icon_strings[index];
+
+			if (icon_string == null) {
+				if (array == null) {
+					this.source_settings.get ("sources", "@a(ss)", out array);
+				}
+
+				string type;
+				string name;
+
+				array.get_child (index, "(ss)", out type, out name);
+
+				if (type == "xkb") {
+					string display_name;
+					string layout_name;
+
+					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
+
+					if (display_name == null) {
+						var language = Xkl.get_language_name (layout_name);
+						var country = Xkl.get_country_name (layout_name);
+
+						if (language != null && country != null) {
+							display_name = @"$language ($country)";
+						} else if (language != null) {
+							display_name = language;
+						} else if (country != null) {
+							display_name = country;
+						}
+					}
+
+					this.icon_strings[index] = abbreviate_display_name (display_name);
+					icon_string = this.icon_strings[index];
+				}
+			}
+		}
+
+		return icon_string;
 	}
 
 	[DBus (visible = false)]
@@ -120,7 +273,7 @@ public class Indicator.Keyboard.Service : Object {
 				array.get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
-					this.icons[index] = create_icon (name);
+					this.icons[index] = create_icon (get_icon_string (index), get_icon_string_subscript (index));
 				} else if (type == "ibus") {
 					var ibus = get_ibus ();
 					string[] names = { name, null };
@@ -330,7 +483,10 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_changed_sources (string key) {
+		this.icon_string_subscripts = null;
+		this.icon_strings = null;
 		this.icons = null;
+
 		update_sources_menu ();
 		update_indicator_action ();
 	}
