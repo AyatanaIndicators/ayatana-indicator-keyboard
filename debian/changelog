@@ -1,3 +1,15 @@
+indicator-keyboard (0.0.0-0ubuntu6) saucy; urgency=low
+
+  * Require vala 0.20.
+
+ -- William Hua <william.hua@canonical.com>  Wed, 15 May 2013 16:57:51 -0400
+
+indicator-keyboard (0.0.0-0ubuntu5) saucy; urgency=low
+
+  * Fix icon rendering.
+
+ -- William Hua <william.hua@canonical.com>  Wed, 08 May 2013 17:01:09 -0400
+
 indicator-keyboard (0.0.0-0ubuntu4) raring; urgency=low
 
   * Add indicator visibility schema.
