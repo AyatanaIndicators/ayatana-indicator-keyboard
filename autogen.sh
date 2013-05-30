@@ -2,5 +2,5 @@
 
 mkdir -p m4
 autoreconf -i
-glib-gettextize -c -f
+intltoolize -c -f
 test -n "$NOCONFIGURE" || ./configure "$@"
