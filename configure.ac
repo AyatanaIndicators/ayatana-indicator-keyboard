@@ -27,6 +27,8 @@ AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indica
 AC_SUBST([DBUS_SERVICE_DIR], [$with_dbus_service_dir])
 AC_SUBST([INDICATOR_DIR], [$with_indicator_dir])
 
+AM_GLIB_GNU_GETTEXT
+
 GLIB_GSETTINGS
 
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
@@ -55,6 +57,7 @@ AC_SUBST([IBUS_LIBS])
 
 AC_CONFIG_FILES([Makefile
                  data/Makefile
-                 lib/Makefile])
+                 lib/Makefile
+                 po/Makefile.in])
 
 AC_OUTPUT
