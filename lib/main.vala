@@ -361,9 +361,9 @@ public class Indicator.Keyboard.Service : Object {
 		submenu.append_section (null, section_menu);
 
 		var section = new Menu ();
-		section.append ("Character Map", "indicator.map");
-		section.append ("Keyboard Layout Chart", "indicator.chart");
-		section.append ("Text Entry Settings...", "indicator.settings");
+		section.append (_ ("Character Map"), "indicator.map");
+		section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
+		section.append (_ ("Text Entry Settings..."), "indicator.settings");
 		submenu.append_section (null, section);
 
 		var indicator = new MenuItem.submenu ("x", submenu);

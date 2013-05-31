@@ -27,6 +27,10 @@ AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indica
 AC_SUBST([DBUS_SERVICE_DIR], [$with_dbus_service_dir])
 AC_SUBST([INDICATOR_DIR], [$with_indicator_dir])
 
+GETTEXT_PACKAGE=indicator-keyboard
+AC_SUBST([GETTEXT_PACKAGE])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [The prefix for our gettext translation domains.])
+AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL
 
 GLIB_GSETTINGS
