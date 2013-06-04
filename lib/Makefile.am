@@ -16,17 +16,17 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
                                        --pkg Xkl-1.0           \
                                        --pkg libgnomekbd       \
                                        --pkg ibus-1.0
-indicator_keyboard_service_CFLAGS = $(GTK_CFLAGS)           \
+indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)            \
+                                    $(GTK_CFLAGS)           \
                                     $(PANGOCAIRO_CFLAGS)    \
                                     $(GNOME_DESKTOP_CFLAGS) \
                                     $(LIBXKLAVIER_CFLAGS)   \
                                     $(LIBGNOMEKBD_CFLAGS)   \
-                                    $(IBUS_CFLAGS)          \
-                                    $(AM_CFLAGS)
-indicator_keyboard_service_LDFLAGS = $(GTK_LIBS)           \
+                                    $(IBUS_CFLAGS)
+indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)         \
+                                     $(GTK_LIBS)           \
                                      $(PANGOCAIRO_LIBS)    \
                                      $(GNOME_DESKTOP_LIBS) \
                                      $(LIBXKLAVIER_LIBS)   \
                                      $(LIBGNOMEKBD_LIBS)   \
-                                     $(IBUS_LIBS)          \
-                                     $(AM_LDFLAGS)
+                                     $(IBUS_LIBS)

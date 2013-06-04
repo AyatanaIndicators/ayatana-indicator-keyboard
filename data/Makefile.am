@@ -1,3 +1,29 @@
+AM_CFLAGS = -DGNOME_DESKTOP_USE_UNSTABLE_API
+AM_LDFLAGS = -lm
+AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
+               --vapidir $(top_srcdir)/deps
+
+noinst_PROGRAMS = indicator-keyboard-icon-generator
+
+indicator_keyboard_icon_generator_SOURCES = main.vala                     \
+                                            $(top_srcdir)/lib/common.vala
+indicator_keyboard_icon_generator_VALAFLAGS = $(AM_VALAFLAGS)         \
+                                              --pkg gee-1.0           \
+                                              --pkg gtk+-3.0          \
+                                              --pkg GDesktopEnums-3.0 \
+                                              --pkg gnome-desktop-3.0 \
+                                              --pkg Xkl-1.0
+indicator_keyboard_icon_generator_CFLAGS = $(AM_CFLAGS)            \
+                                           $(GEE_CFLAGS)           \
+                                           $(GTK_CFLAGS)           \
+                                           $(GNOME_DESKTOP_CFLAGS) \
+                                           $(LIBXKLAVIER_CFLAGS)
+indicator_keyboard_icon_generator_LDFLAGS = $(AM_LDFLAGS)         \
+                                            $(GEE_LIBS)           \
+                                            $(GTK_LIBS)           \
+                                            $(GNOME_DESKTOP_LIBS) \
+                                            $(LIBXKLAVIER_LIBS)
+
 servicedir = $(DBUS_SERVICE_DIR)
 dist_service_DATA = indicator-keyboard.service
 

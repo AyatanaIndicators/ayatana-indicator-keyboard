@@ -1,3 +1,4 @@
+*.c
 *.log
 *.m4
 *.stamp
@@ -13,16 +14,15 @@ build-aux
 config.log
 config.status
 configure
+data/indicator-keyboard-icon-generator
+data/indicator-keyboard.indicator
+data/indicator-keyboard.service
 debian/autoreconf.after
 debian/autoreconf.before
 debian/files
 debian/indicator-keyboard
 debian/tmp
-indicator-keyboard-service
-indicator-keyboard.indicator
-indicator-keyboard.service
-lib/common.c
-lib/main.c
+lib/indicator-keyboard-service
 libtool
 po/POTFILES
 po/stamp-it
