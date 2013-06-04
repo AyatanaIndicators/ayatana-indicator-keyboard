@@ -5,7 +5,8 @@ AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
 
 libexec_PROGRAMS = indicator-keyboard-service
 
-indicator_keyboard_service_SOURCES = main.vala
+indicator_keyboard_service_SOURCES = main.vala   \
+                                     common.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
                                        --pkg posix             \
                                        --pkg pangocairo        \

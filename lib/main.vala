@@ -126,50 +126,6 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private string abbreviate_display_name (string display_name) {
-		string abbreviation = null;
-
-		if (display_name != null) {
-			char letters[2];
-			var index = 0;
-
-			for (var i = 0; i < display_name.length && index < 2; i++) {
-				if (display_name[i].isupper ()) {
-					letters[index++] = display_name[i];
-				}
-			}
-
-			if (index < 2) {
-				index = 0;
-
-				for (var i = 0; i < display_name.length && index < 2; i++) {
-					if (display_name[i].isalpha () && (i == 0 || !display_name[i - 1].isalpha ())) {
-						letters[index++] = display_name[i++].toupper ();
-					}
-				}
-
-				if (index < 2) {
-					index = 0;
-
-					for (var i = 0; i < display_name.length && index < 2; i++) {
-						if (display_name[i].isalpha ()) {
-							letters[index++] = display_name[i];
-						}
-					}
-				}
-			}
-
-			if (index == 1) {
-				abbreviation = @"$(letters[0])";
-			} else if (index == 2) {
-				abbreviation = @"$(letters[0])$(letters[1])";
-			}
-		}
-
-		return abbreviation;
-	}
-
-	[DBus (visible = false)]
 	private uint get_icon_string_subscript (uint index) {
 		uint icon_string_subscript = 0;
 		Variant array = null;
@@ -228,19 +184,10 @@ public class Indicator.Keyboard.Service : Object {
 					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
 
 					if (display_name == null) {
-						var language = Xkl.get_language_name (layout_name);
-						var country = Xkl.get_country_name (layout_name);
-
-						if (language != null && country != null) {
-							display_name = @"$language ($country)";
-						} else if (language != null) {
-							display_name = language;
-						} else if (country != null) {
-							display_name = country;
-						}
+						display_name = get_display_name (layout_name);
 					}
 
-					this.icon_strings[index] = abbreviate_display_name (display_name);
+					this.icon_strings[index] = get_abbreviation (display_name);
 					icon_string = this.icon_strings[index];
 				}
 			}
@@ -407,16 +354,7 @@ public class Indicator.Keyboard.Service : Object {
 					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
 
 					if (display_name == null) {
-						var language = Xkl.get_language_name (layout_name);
-						var country = Xkl.get_country_name (layout_name);
-
-						if (language != null && country != null) {
-							name = @"$language ($country)";
-						} else if (language != null) {
-							name = language;
-						} else if (country != null) {
-							name = country;
-						}
+						name = get_display_name (layout_name);
 					} else {
 						name = display_name;
 					}

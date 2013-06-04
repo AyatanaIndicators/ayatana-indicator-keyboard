@@ -21,7 +21,8 @@ debian/tmp
 indicator-keyboard-service
 indicator-keyboard.indicator
 indicator-keyboard.service
+lib/common.c
+lib/main.c
 libtool
-main.c
 po/POTFILES
 po/stamp-it
