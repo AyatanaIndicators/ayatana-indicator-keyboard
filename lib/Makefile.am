@@ -10,6 +10,7 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
                                        --pkg posix             \
                                        --pkg pangocairo        \
                                        --pkg gtk+-3.0          \
+                                       --pkg GDesktopEnums-3.0 \
                                        --pkg gnome-desktop-3.0 \
                                        --pkg Xkl-1.0           \
                                        --pkg libgnomekbd       \
