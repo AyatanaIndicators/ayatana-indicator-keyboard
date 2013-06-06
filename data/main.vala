@@ -1,13 +1,13 @@
 int main (string[] args) {
 	var force = false;
-	var width = 220.0;
-	var height = 220.0;
-	var radius = 40.0;
-	var colour = "grey";
+	var width = 22.0;
+	var height = 22.0;
+	var radius = 4.0;
+	var colour = "white";
 	var font = "Ubuntu";
 	var weight = 500;
-	var layout_size = 120;
-	var subscript_size = 80;
+	var layout_size = 12;
+	var subscript_size = 8;
 	string output_path = null;
 	string no_subscript_path = null;
 	string with_subscript_path = null;
@@ -18,7 +18,7 @@ int main (string[] args) {
 	options[2] = { "height", 'h', 0, OptionArg.DOUBLE, ref height, "Icon height", "DOUBLE" };
 	options[3] = { "radius", 'r', 0, OptionArg.DOUBLE, ref radius, "Icon radius", "DOUBLE" };
 	options[4] = { "colour", 'c', 0, OptionArg.STRING, ref colour, "Icon colour", "COLOUR" };
-	options[5] = { "font", 'f', 0, OptionArg.STRING, ref font, "Font family", "NAME" };
+	options[5] = { "font", 'F', 0, OptionArg.STRING, ref font, "Font family", "NAME" };
 	options[6] = { "weight", 'W', 0, OptionArg.INT, ref weight, "Font weight (100 to 1000)", "INT" };
 	options[7] = { "layout-size", 's', 0, OptionArg.INT, ref layout_size, "Layout font size", "INT" };
 	options[8] = { "subscript-size", 'S', 0, OptionArg.INT, ref subscript_size, "Subscript font size", "INT" };
