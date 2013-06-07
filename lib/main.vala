@@ -14,6 +14,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	private Icon[] icons;
 	private string[] icon_strings;
+	private int[] icon_string_uniques;
 	private uint[] icon_string_subscripts;
 
 	[DBus (visible = false)]
@@ -57,7 +58,7 @@ public class Indicator.Keyboard.Service : Object {
 		const int H = 20;
 		const double R = 2.0;
 		const double TEXT_SIZE = 12.0;
-		const double SUBSCRIPT_SIZE = 10.0;
+		const double SUBSCRIPT_SIZE = 8.0;
 
 		Pango.FontDescription description;
 		var style = get_style_context ();
@@ -88,7 +89,7 @@ public class Indicator.Keyboard.Service : Object {
 		int text_height;
 		text_layout.get_pixel_size (out text_width, out text_height);
 
-		if (subscript > 1) {
+		if (subscript > 0) {
 			var subscript_layout = Pango.cairo_create_layout (context);
 			subscript_layout.set_alignment (Pango.Alignment.CENTER);
 			description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
@@ -123,35 +124,6 @@ public class Indicator.Keyboard.Service : Object {
 		});
 
 		return new BytesIcon (ByteArray.free_to_bytes ((owned) buffer));
-	}
-
-	[DBus (visible = false)]
-	private uint get_icon_string_subscript (uint index) {
-		uint icon_string_subscript = 0;
-		Variant array = null;
-
-		if (this.icon_string_subscripts == null) {
-			this.source_settings.get ("sources", "@a(ss)", out array);
-			this.icon_string_subscripts = new uint[array.n_children ()];
-		}
-
-		if (index < this.icon_string_subscripts.length) {
-			icon_string_subscript = this.icon_string_subscripts[index];
-
-			if (icon_string_subscript == 0) {
-				this.icon_string_subscripts[index] = 1;
-
-				for (var i = (int) index - 1; i >= 0 && this.icon_string_subscripts[index] == 1; i--) {
-					if (get_icon_string (i) == get_icon_string (index)) {
-						this.icon_string_subscripts[index] = get_icon_string_subscript (i) + 1;
-					}
-				}
-
-				icon_string_subscript = this.icon_string_subscripts[index];
-			}
-		}
-
-		return icon_string_subscript;
 	}
 
 	[DBus (visible = false)]
@@ -197,6 +169,68 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private bool is_icon_string_unique (uint index) {
+		bool icon_string_unique = true;
+		Variant array = null;
+
+		if (this.icon_string_uniques == null) {
+			this.source_settings.get ("sources", "@a(ss)", out array);
+			this.icon_string_uniques = new int[array.n_children ()];
+
+			for (var i = 0; i < this.icon_string_uniques.length; i++) {
+				this.icon_string_uniques[i] = -1;
+			}
+		}
+
+		if (index < this.icon_string_uniques.length) {
+			if (this.icon_string_uniques[index] == -1) {
+				this.icon_string_uniques[index] = 1;
+
+				var icon_string = get_icon_string (index);
+
+				for (var i = 0; i < this.icon_string_uniques.length && this.icon_string_uniques[index] == 1; i++) {
+					if (i != index && get_icon_string (i) == icon_string) {
+						this.icon_string_uniques[index] = 0;
+					}
+				}
+			}
+
+			icon_string_unique = this.icon_string_uniques[index] != 0;
+		}
+
+		return icon_string_unique;
+	}
+
+	[DBus (visible = false)]
+	private uint get_icon_string_subscript (uint index) {
+		uint icon_string_subscript = 0;
+		Variant array = null;
+
+		if (this.icon_string_subscripts == null) {
+			this.source_settings.get ("sources", "@a(ss)", out array);
+			this.icon_string_subscripts = new uint[array.n_children ()];
+		}
+
+		if (index < this.icon_string_subscripts.length) {
+			icon_string_subscript = this.icon_string_subscripts[index];
+
+			if (icon_string_subscript == 0) {
+				this.icon_string_subscripts[index] = 1;
+
+				for (var i = (int) index - 1; i >= 0 && this.icon_string_subscripts[index] == 1; i--) {
+					if (get_icon_string (i) == get_icon_string (index)) {
+						this.icon_string_subscripts[index] = get_icon_string_subscript (i) + 1;
+					}
+				}
+
+				icon_string_subscript = this.icon_string_subscripts[index];
+			}
+		}
+
+		return icon_string_subscript;
+	}
+
+	[DBus (visible = false)]
 	private Icon get_icon (uint index) {
 		Icon icon = null;
 		Variant array = null;
@@ -220,7 +254,35 @@ public class Indicator.Keyboard.Service : Object {
 				array.get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
-					this.icons[index] = create_icon (get_icon_string (index), get_icon_string_subscript (index));
+					var icon_string = get_icon_string (index);
+					var icon_unique = is_icon_string_unique (index);
+					var icon_subscript = get_icon_string_subscript (index);
+					string icon_name;
+
+					if (icon_unique) {
+						icon_name = @"$icon_string";
+					} else {
+						icon_name = @"$icon_string-$icon_subscript";
+					}
+
+					var icon_theme = Gtk.IconTheme.get_default ();
+					var icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
+
+					if (icon_info != null) {
+						try {
+							this.icons[index] = Icon.new_for_string (icon_info.get_filename ());
+						} catch (Error error) {
+							this.icons[index] = null;
+						}
+					}
+
+					if (this.icons[index] == null) {
+						if (icon_unique) {
+							this.icons[index] = create_icon (get_icon_string (index), 0);
+						} else {
+							this.icons[index] = create_icon (get_icon_string (index), get_icon_string_subscript (index));
+						}
+					}
 				} else if (type == "ibus") {
 					var ibus = get_ibus ();
 					string[] names = { name, null };
@@ -422,6 +484,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_changed_sources (string key) {
 		this.icon_string_subscripts = null;
+		this.icon_string_uniques = null;
 		this.icon_strings = null;
 		this.icons = null;
 

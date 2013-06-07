@@ -2,8 +2,10 @@ int main (string[] args) {
 	var force = false;
 	var width = 22.0;
 	var height = 22.0;
-	var radius = 4.0;
-	var colour = "white";
+	var icon_width = 20.0;
+	var icon_height = 20.0;
+	var radius = 2.0;
+	var colour = "black";
 	var font = "Ubuntu";
 	var weight = 500;
 	var layout_size = 12;
@@ -12,20 +14,22 @@ int main (string[] args) {
 	string no_subscript_path = null;
 	string with_subscript_path = null;
 
-	OptionEntry[] options = new OptionEntry[13];
+	OptionEntry[] options = new OptionEntry[15];
 	options[0] = { "force", 'f', 0, OptionArg.NONE, ref force, "Overwrite existing files" };
-	options[1] = { "width", 'w', 0, OptionArg.DOUBLE, ref width, "Icon width", "DOUBLE" };
-	options[2] = { "height", 'h', 0, OptionArg.DOUBLE, ref height, "Icon height", "DOUBLE" };
-	options[3] = { "radius", 'r', 0, OptionArg.DOUBLE, ref radius, "Icon radius", "DOUBLE" };
-	options[4] = { "colour", 'c', 0, OptionArg.STRING, ref colour, "Icon colour", "COLOUR" };
-	options[5] = { "font", 'F', 0, OptionArg.STRING, ref font, "Font family", "NAME" };
-	options[6] = { "weight", 'W', 0, OptionArg.INT, ref weight, "Font weight (100 to 1000)", "INT" };
-	options[7] = { "layout-size", 's', 0, OptionArg.INT, ref layout_size, "Layout font size", "INT" };
-	options[8] = { "subscript-size", 'S', 0, OptionArg.INT, ref subscript_size, "Subscript font size", "INT" };
-	options[9] = { "output", 'o', 0, OptionArg.FILENAME, ref output_path, "Output directory", "PATH" };
-	options[10] = { "no-subscript", 'i', 0, OptionArg.FILENAME, ref no_subscript_path, "Icon template", "PATH" };
-	options[11] = { "with-subscript", 'I', 0, OptionArg.FILENAME, ref with_subscript_path, "Subscript icon template", "PATH" };
-	options[12] = { null };
+	options[1] = { "width", 'w', 0, OptionArg.DOUBLE, ref width, "Template width", "DOUBLE" };
+	options[2] = { "height", 'h', 0, OptionArg.DOUBLE, ref height, "Template height", "DOUBLE" };
+	options[3] = { "icon-width", 'W', 0, OptionArg.DOUBLE, ref icon_width, "Icon width", "DOUBLE" };
+	options[4] = { "icon-height", 'H', 0, OptionArg.DOUBLE, ref icon_height, "Icon height", "DOUBLE" };
+	options[5] = { "radius", 'r', 0, OptionArg.DOUBLE, ref radius, "Icon radius", "DOUBLE" };
+	options[6] = { "colour", 'c', 0, OptionArg.STRING, ref colour, "Icon colour", "COLOUR" };
+	options[7] = { "font", 'F', 0, OptionArg.STRING, ref font, "Font family", "NAME" };
+	options[8] = { "weight", 'G', 0, OptionArg.INT, ref weight, "Font weight (100 to 1000)", "INT" };
+	options[9] = { "layout-size", 's', 0, OptionArg.INT, ref layout_size, "Layout font size", "INT" };
+	options[10] = { "subscript-size", 'S', 0, OptionArg.INT, ref subscript_size, "Subscript font size", "INT" };
+	options[11] = { "output", 'o', 0, OptionArg.FILENAME, ref output_path, "Output directory", "PATH" };
+	options[12] = { "no-subscript", 'i', 0, OptionArg.FILENAME, ref no_subscript_path, "Icon template", "PATH" };
+	options[13] = { "with-subscript", 'I', 0, OptionArg.FILENAME, ref with_subscript_path, "Subscript icon template", "PATH" };
+	options[14] = { null };
 
 	try {
 		var context = new OptionContext ("- generate keyboard layout icons");
@@ -92,6 +96,8 @@ int main (string[] args) {
 	try {
 		uint8[] contents;
 
+		var icon_x = 0.5 * (width - icon_width);
+		var icon_y = 0.5 * (height - icon_height);
 		var layout_font = @"font-family:$font;font-weight:$weight;font-size:$layout_size";
 		var subscript_font = @"font-family:$font;font-weight:$weight;font-size:$subscript_size";
 
@@ -99,6 +105,10 @@ int main (string[] args) {
 		no_subscript_data = (string) contents;
 		no_subscript_data = no_subscript_data.replace ("@WIDTH@", @"$width");
 		no_subscript_data = no_subscript_data.replace ("@HEIGHT@", @"$height");
+		no_subscript_data = no_subscript_data.replace ("@ICON_X@", @"$icon_x");
+		no_subscript_data = no_subscript_data.replace ("@ICON_Y@", @"$icon_y");
+		no_subscript_data = no_subscript_data.replace ("@ICON_WIDTH@", @"$icon_width");
+		no_subscript_data = no_subscript_data.replace ("@ICON_HEIGHT@", @"$icon_height");
 		no_subscript_data = no_subscript_data.replace ("@RADIUS@", @"$radius");
 		no_subscript_data = no_subscript_data.replace ("@COLOUR@", colour);
 		no_subscript_data = no_subscript_data.replace ("@LAYOUT_FONT@", layout_font);
@@ -108,6 +118,10 @@ int main (string[] args) {
 		with_subscript_data = (string) contents;
 		with_subscript_data = with_subscript_data.replace ("@WIDTH@", @"$width");
 		with_subscript_data = with_subscript_data.replace ("@HEIGHT@", @"$height");
+		with_subscript_data = with_subscript_data.replace ("@ICON_X@", @"$icon_x");
+		with_subscript_data = with_subscript_data.replace ("@ICON_Y@", @"$icon_y");
+		with_subscript_data = with_subscript_data.replace ("@ICON_WIDTH@", @"$icon_width");
+		with_subscript_data = with_subscript_data.replace ("@ICON_HEIGHT@", @"$icon_height");
 		with_subscript_data = with_subscript_data.replace ("@RADIUS@", @"$radius");
 		with_subscript_data = with_subscript_data.replace ("@COLOUR@", colour);
 		with_subscript_data = with_subscript_data.replace ("@LAYOUT_FONT@", layout_font);
