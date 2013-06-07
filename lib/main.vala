@@ -260,9 +260,9 @@ public class Indicator.Keyboard.Service : Object {
 					string icon_name;
 
 					if (icon_unique) {
-						icon_name = @"$icon_string";
+						icon_name = @"indicator-keyboard-$icon_string";
 					} else {
-						icon_name = @"$icon_string-$icon_subscript";
+						icon_name = @"indicator-keyboard-$icon_string-$icon_subscript";
 					}
 
 					var icon_theme = Gtk.IconTheme.get_default ();

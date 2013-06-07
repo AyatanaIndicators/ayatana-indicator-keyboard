@@ -150,7 +150,7 @@ int main (string[] args) {
 	foreach (var entry in occurrences.entries) {
 		var layout = entry.key;
 		var count = entry.value;
-		var file = File.new_for_path (@"$output_path/$layout.svg");
+		var file = File.new_for_path (@"$output_path/indicator-keyboard-$layout.svg");
 
 		if (force || !file.query_exists (null)) {
 			int layout_width;
@@ -193,7 +193,7 @@ int main (string[] args) {
 			partial_data = partial_data.replace ("@LAYOUT_Y@", @"$layout_y");
 
 			for (var i = 1; i <= count; i++) {
-				file = File.new_for_path (@"$output_path/$layout-$i.svg");
+				file = File.new_for_path (@"$output_path/indicator-keyboard-$layout-$i.svg");
 
 				if (force || !file.query_exists (null)) {
 					var subscript = @"$i";
