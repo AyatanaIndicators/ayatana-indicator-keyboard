@@ -8,7 +8,6 @@
 .libs
 Makefile
 Makefile.in
-Makefile.in.in
 autom4te.cache
 build-aux
 config.log
