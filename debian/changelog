@@ -1,3 +1,10 @@
+indicator-keyboard (0.0.0-0ubuntu7) saucy; urgency=low
+
+  * Translations.
+  * Use icons from theme.
+
+ -- William Hua <william.hua@canonical.com>  Mon, 10 Jun 2013 12:11:14 -0400
+
 indicator-keyboard (0.0.0-0ubuntu6) saucy; urgency=low
 
   * Require vala 0.20.
