@@ -1,6 +1,7 @@
 *.c
 *.log
 *.m4
+*.pyc
 *.stamp
 *.substvars
 *.valid

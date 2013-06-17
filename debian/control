@@ -35,3 +35,13 @@ Depends: ${shlibs:Depends},
          ${misc:Depends}
 Description: Keyboard indicator schema
  This package contains the keyboard indicator schema.
+
+Package: indicator-keyboard-autopilot
+Architecture: all
+Depends: ${misc:Depends},
+         indicator-keyboard (>= ${source:Version}),
+         libautopilot-gtk,
+         python-pyatspi,
+         python-autopilot
+Description: Keyboard indicator autopilot tests
+ This package provides autopilot integration tests for indicator-keyboard.
