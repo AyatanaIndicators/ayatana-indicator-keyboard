@@ -1,3 +1,9 @@
+indicator-keyboard (0.0.0-0ubuntu12) saucy; urgency=low
+
+  * Remove indicator-keyboard-schema.
+
+ -- William Hua <william.hua@canonical.com>  Wed, 19 Jun 2013 10:15:00 -0400
+
 indicator-keyboard (0.0.0-0ubuntu11) saucy; urgency=low
 
   * Per-window fixes.

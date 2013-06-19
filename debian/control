@@ -25,17 +25,9 @@ Vcs-Browser: https://bazaar.launchpad.net/~attente/indicator-keyboard/trunk/file
 Package: indicator-keyboard
 Architecture: any
 Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         indicator-keyboard-schema (= ${source:Version})
+         ${misc:Depends}
 Description: Keyboard indicator
  This package contains the keyboard indicator.
-
-Package: indicator-keyboard-schema
-Architecture: all
-Depends: ${shlibs:Depends},
-         ${misc:Depends}
-Description: Keyboard indicator schema
- This package contains the keyboard indicator schema.
 
 Package: indicator-keyboard-autopilot
 Architecture: all
