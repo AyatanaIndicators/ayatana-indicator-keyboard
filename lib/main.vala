@@ -4,8 +4,11 @@ public class Indicator.Keyboard.Service : Object {
 	private MainLoop loop;
 	private Settings indicator_settings;
 	private Settings source_settings;
+	private Settings per_window_settings;
 	private Gnome.XkbInfo xkb_info;
 	private IBus.Bus ibus;
+	private Bamf.Matcher matcher;
+	private Gee.HashMap <string, uint> window_sources;
 
 	private SimpleActionGroup action_group;
 	private SimpleAction indicator_action;
@@ -33,10 +36,56 @@ public class Indicator.Keyboard.Service : Object {
 		this.source_settings.changed["current"].connect (this.handle_changed_current);
 		this.source_settings.changed["sources"].connect (this.handle_changed_sources);
 
+		this.per_window_settings = new Settings ("org.gnome.libgnomekbd.desktop");
+		this.per_window_settings.changed["group-per-window"].connect (this.handle_changed_group_per_window);
+
 		this.xkb_info = new Gnome.XkbInfo ();
+
+		update_window_sources ();
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
+	}
+
+	[DBus (visible = false)]
+	private void update_window_sources () {
+		var group_per_window = this.per_window_settings.get_boolean ("group-per-window");
+
+		if (group_per_window != (this.window_sources != null)) {
+			if (group_per_window) {
+				this.window_sources = new Gee.HashMap <string, uint> ();
+				this.matcher = Bamf.Matcher.get_default ();
+				this.matcher.active_window_changed.connect (this.handle_active_window_changed);
+			} else {
+				this.matcher.active_window_changed.disconnect (this.handle_active_window_changed);
+				this.matcher = null;
+				this.window_sources = null;
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_changed_group_per_window (string key) {
+		update_window_sources ();
+	}
+
+	[DBus (visible = false)]
+	private void handle_active_window_changed (Bamf.View? old_view, Bamf.View? new_view) {
+		if (old_view != null) {
+			this.window_sources[old_view.path] = this.source_settings.get_uint ("current");
+		}
+
+		if (new_view != null) {
+			if (!this.window_sources.has_key (new_view.path)) {
+				var default_group = this.per_window_settings.get_int ("default-group");
+
+				if (default_group >= 0) {
+					this.source_settings.set_uint ("current", (uint) default_group);
+				}
+			} else {
+				this.source_settings.set_uint ("current", this.window_sources[new_view.path]);
+			}
+		}
 	}
 
 	[DBus (visible = false)]

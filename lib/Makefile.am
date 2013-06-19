@@ -8,6 +8,7 @@ libexec_PROGRAMS = indicator-keyboard-service
 indicator_keyboard_service_SOURCES = main.vala   \
                                      common.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
+                                       --pkg gee-1.0           \
                                        --pkg posix             \
                                        --pkg pangocairo        \
                                        --pkg gtk+-3.0          \
@@ -15,18 +16,23 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
                                        --pkg gnome-desktop-3.0 \
                                        --pkg Xkl-1.0           \
                                        --pkg libgnomekbd       \
-                                       --pkg ibus-1.0
+                                       --pkg ibus-1.0          \
+                                       --pkg libbamf3
 indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)            \
+                                    $(GEE_CFLAGS)           \
                                     $(PANGOCAIRO_CFLAGS)    \
                                     $(GTK_CFLAGS)           \
                                     $(GNOME_DESKTOP_CFLAGS) \
                                     $(LIBXKLAVIER_CFLAGS)   \
                                     $(LIBGNOMEKBD_CFLAGS)   \
-                                    $(IBUS_CFLAGS)
+                                    $(IBUS_CFLAGS)          \
+                                    $(BAMF_CFLAGS)
 indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)         \
+                                     $(GEE_LIBS)           \
                                      $(PANGOCAIRO_LIBS)    \
                                      $(GTK_LIBS)           \
                                      $(GNOME_DESKTOP_LIBS) \
                                      $(LIBXKLAVIER_LIBS)   \
                                      $(LIBGNOMEKBD_LIBS)   \
-                                     $(IBUS_LIBS)
+                                     $(IBUS_LIBS)          \
+                                     $(BAMF_LIBS)

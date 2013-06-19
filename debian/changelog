@@ -1,3 +1,9 @@
+indicator-keyboard (0.0.0-0ubuntu11) saucy; urgency=low
+
+  * Per-window fixes.
+
+ -- William Hua <william.hua@canonical.com>  Wed, 19 Jun 2013 08:52:36 -0400
+
 indicator-keyboard (0.0.0-0ubuntu10) saucy; urgency=low
 
   * Build depend on dh-translations.

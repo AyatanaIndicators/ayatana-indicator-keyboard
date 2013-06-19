@@ -37,3 +37,7 @@ valadoc --metadatadir . --vapidir /path/to/vapi/dir --pkg gtk+-3.0 --pkg Xkl-1.0
 To generate ibus-1.0.vapi docs:
 
 valadoc --vapidir /path/to/vapi/dir -o ibus-1.0 /path/to/ibus-1.0.vapi
+
+To generate libbamf3.vapi:
+
+vapigen --library libbamf3 /path/to/Bamf-3.gir

@@ -35,6 +35,8 @@ IT_PROG_INTLTOOL
 
 GLIB_GSETTINGS
 
+AM_PATH_PYTHON
+
 PKG_CHECK_MODULES([GEE], [gee-1.0])
 AC_SUBST([GEE_CFLAGS])
 AC_SUBST([GEE_LIBS])
@@ -67,9 +69,15 @@ PKG_CHECK_MODULES([IBUS], [ibus-1.0])
 AC_SUBST([IBUS_CFLAGS])
 AC_SUBST([IBUS_LIBS])
 
+PKG_CHECK_MODULES([BAMF], [libbamf3])
+AC_SUBST([BAMF_CFLAGS])
+AC_SUBST([BAMF_LIBS])
+
 AC_CONFIG_FILES([Makefile
                  data/Makefile
                  lib/Makefile
-                 po/Makefile.in])
+                 po/Makefile.in
+                 tests/Makefile
+                 tests/autopilot/Makefile])
 
 AC_OUTPUT
