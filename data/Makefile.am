@@ -39,13 +39,15 @@ indicator-keyboard.service:
 	            mv $@.tmp $@
 
 indicatordir = $(INDICATOR_DIR)
-dist_indicator_DATA = indicator-keyboard.indicator
+dist_indicator_DATA = com.canonical.indicator.keyboard
 
-indicator-keyboard.indicator:
-	$(AM_V_GEN) (echo '[Indicator Service]';                                      \
-	             echo 'Name=indicator-keyboard';                                  \
-	             echo 'BusName=com.canonical.indicator.keyboard';                 \
-	             echo 'ObjectPath=/com/canonical/indicator/keyboard') > $@.tmp && \
+com.canonical.indicator.keyboard:
+	$(AM_V_GEN) (echo '[Indicator Service]';                                              \
+	             echo 'Name=indicator-keyboard';                                          \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard';                     \
+	             echo '';                                                                 \
+	             echo '[desktop]';                                                        \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
 	            mv $@.tmp $@
 
 EXTRA_DIST = $(dist_service_DATA)   \
