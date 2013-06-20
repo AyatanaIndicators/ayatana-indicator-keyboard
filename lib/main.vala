@@ -41,10 +41,59 @@ public class Indicator.Keyboard.Service : Object {
 
 		this.xkb_info = new Gnome.XkbInfo ();
 
+		migrate_keyboard_layouts ();
+
 		update_window_sources ();
 
 		this.loop = new MainLoop ();
 		this.loop.run ();
+	}
+
+	[DBus (visible = false)]
+	private void migrate_keyboard_layouts () {
+		if (!this.indicator_settings.get_boolean ("migrated")) {
+			var builder = new VariantBuilder (new VariantType ("a(ss)"));
+			var length = 0;
+
+			var layout_settings = new Settings ("org.gnome.libgnomekbd.keyboard");
+			var layouts = layout_settings.get_strv ("layouts");
+
+			foreach (var layout in layouts) {
+				var source = layout;
+
+				source = source.replace (" ", "+");
+				source = source.replace ("\t", "+");
+
+				builder.add ("(ss)", "xkb", source);
+				length++;
+			}
+
+			var ibus = get_ibus ();
+			var engines = ibus.list_active_engines ();
+
+			foreach (var engine in engines) {
+				if (length == 0) {
+					var source = "us";
+					var layout = engine.get_layout ();
+					var variant = engine.get_layout_variant ();
+
+					if (layout != null && variant != null) {
+						source = @"$layout+$variant";
+					} else if (layout != null) {
+						source = layout;
+					}
+
+					builder.add ("(ss)", "xkb", source);
+				}
+
+				builder.add ("(ss)", "ibus", engine.name);
+				length++;
+			}
+
+			this.source_settings.set_value ("sources", builder.end ());
+
+			this.indicator_settings.set_boolean ("migrated", true);
+		}
 	}
 
 	[DBus (visible = false)]

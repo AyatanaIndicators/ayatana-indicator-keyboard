@@ -19,8 +19,8 @@ namespace Gkbd {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_group_names ();
 		public string get_image_filename (uint group);
-		public Gkbd.IndicatorConfig get_indicator_config ();
-		public Gkbd.KeyboardConfig get_keyboard_config ();
+		public unowned Gkbd.IndicatorConfig? get_indicator_config ();
+		public unowned Gkbd.KeyboardConfig? get_keyboard_config ();
 		public bool get_num_lock_state ();
 		public bool get_scroll_lock_state ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -208,7 +208,7 @@ namespace Gkbd {
 	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static void install_glib_log_appender ();
 	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
-	public static Gdk.Rectangle preview_load_position ();
+	public static Gdk.Rectangle? preview_load_position ();
 	[CCode (cheader_filename = "libgnomekbd/gkbd-util.h")]
 	public static void preview_save_position (Gdk.Rectangle rect);
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "libgnomekbd/gkbd-util.h")]
