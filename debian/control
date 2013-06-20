@@ -13,7 +13,8 @@ Build-Depends: debhelper (>= 9.0.0),
                libgnome-desktop-3-dev,
                libgnomekbd-dev,
                libibus-1.0-dev (>= 1.5.0),
-               libbamf3-dev
+               libbamf3-dev,
+               python-support
 Standards-Version: 3.9.4
 Homepage: https://code.launchpad.net/indicator-keyboard
 # If you aren't a member of ~indicator-applet-developers but need to upload
@@ -32,9 +33,10 @@ Description: Keyboard indicator
 Package: indicator-keyboard-autopilot
 Architecture: all
 Depends: ${misc:Depends},
+         ${python:Depends},
          indicator-keyboard (>= ${source:Version}),
          libautopilot-gtk,
-         python-pyatspi,
-         python-autopilot
+         python-autopilot,
+         python-pyatspi
 Description: Keyboard indicator autopilot tests
  This package provides autopilot integration tests for indicator-keyboard.
