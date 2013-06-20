@@ -72,10 +72,18 @@ public class Indicator.Keyboard.Service : Object {
 			var engines = ibus.list_active_engines ();
 
 			foreach (var engine in engines) {
-				if (length == 0) {
+				if (length == 0 || engine.name.has_prefix ("xkb")) {
 					var source = "us";
 					var layout = engine.get_layout ();
 					var variant = engine.get_layout_variant ();
+
+					if (layout != null && layout.length == 0) {
+						layout = null;
+					}
+
+					if (variant != null && variant.length == 0) {
+						variant = null;
+					}
 
 					if (layout != null && variant != null) {
 						source = @"$layout+$variant";
@@ -84,10 +92,13 @@ public class Indicator.Keyboard.Service : Object {
 					}
 
 					builder.add ("(ss)", "xkb", source);
+					length++;
 				}
 
-				builder.add ("(ss)", "ibus", engine.name);
-				length++;
+				if (!engine.name.has_prefix ("xkb")) {
+					builder.add ("(ss)", "ibus", engine.name);
+					length++;
+				}
 			}
 
 			this.source_settings.set_value ("sources", builder.end ());
