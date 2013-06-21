@@ -259,16 +259,10 @@ public class Indicator.Keyboard.Service : Object {
 				array.get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
-					string display_name;
-					string layout_name;
+					string short_name;
 
-					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
-
-					if (display_name == null) {
-						display_name = get_display_name (layout_name);
-					}
-
-					this.icon_strings[index] = get_abbreviation (display_name);
+					this.xkb_info.get_layout_info (name, null, out short_name, null, null);
+					this.icon_strings[index] = get_abbreviation (short_name);
 					icon_string = this.icon_strings[index];
 				}
 			}
@@ -501,6 +495,24 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		return this.ibus;
+	}
+
+	[DBus (visible = false)]
+	private string get_display_name (string layout) {
+		var language = Xkl.get_language_name (layout);
+		var country = Xkl.get_country_name (layout);
+		var has_language = language != null && language.get_char () != '\0';
+		var has_country = country != null && country.get_char () != '\0';
+
+		if (has_language && has_country) {
+			return @"$language ($country)";
+		} else if (has_language) {
+			return language;
+		} else if (has_country) {
+			return country;
+		} else {
+			return "";
+		}
 	}
 
 	[DBus (visible = false)]

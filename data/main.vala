@@ -72,16 +72,11 @@ int main (string[] args) {
 	var occurrences = new Gee.HashMap <string, int> ();
 
 	layouts.foreach ((name) => {
-		string display;
-		string layout;
+		string short_name;
 
-		info.get_layout_info (name, out display, null, out layout, null);
+		info.get_layout_info (name, null, out short_name, null, null);
 
-		if (display == null) {
-			display = get_display_name (layout);
-		}
-
-		var abbreviation = get_abbreviation (display);
+		var abbreviation = get_abbreviation (short_name);
 
 		if (!occurrences.has_key (abbreviation)) {
 			occurrences[abbreviation] = 1;

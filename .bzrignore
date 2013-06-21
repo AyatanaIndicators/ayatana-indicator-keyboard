@@ -14,8 +14,8 @@ build-aux
 config.log
 config.status
 configure
+data/com.canonical.indicator.keyboard
 data/indicator-keyboard-icon-generator
-data/indicator-keyboard.indicator
 data/indicator-keyboard.service
 debian/autoreconf.after
 debian/autoreconf.before
