@@ -1,6 +1,7 @@
 AM_CFLAGS = -DGNOME_DESKTOP_USE_UNSTABLE_API
 AM_LDFLAGS = -lm
-AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
+AM_VALAFLAGS = --enable-experimental-non-null   \
+               --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
 noinst_PROGRAMS = indicator-keyboard-icon-generator

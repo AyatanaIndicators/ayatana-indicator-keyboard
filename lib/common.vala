@@ -5,9 +5,9 @@ string get_abbreviation (string name) {
 
 	if (name.get_next_char (ref index, out first)) {
 		if (name.get_next_char (ref index, out second)) {
-			return @"$(first.toupper ())$second";
+			return @"$((!) first.toupper ().to_string ())$((!) second.to_string ())";
 		} else {
-			return @"$(first.toupper ())";
+			return (!) first.toupper ().to_string ();
 		}
 	} else {
 		return "";

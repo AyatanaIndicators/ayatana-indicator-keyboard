@@ -10,9 +10,9 @@ int main (string[] args) {
 	var weight = 500;
 	var layout_size = 12;
 	var subscript_size = 8;
-	string output_path = null;
-	string no_subscript_path = null;
-	string with_subscript_path = null;
+	string? output_path = null;
+	string? no_subscript_path = null;
+	string? with_subscript_path = null;
 
 	OptionEntry[] options = new OptionEntry[15];
 	options[0] = { "force", 'f', 0, OptionArg.NONE, ref force, "Overwrite existing files" };
@@ -29,7 +29,7 @@ int main (string[] args) {
 	options[11] = { "output", 'o', 0, OptionArg.FILENAME, ref output_path, "Output directory", "PATH" };
 	options[12] = { "no-subscript", 'i', 0, OptionArg.FILENAME, ref no_subscript_path, "Icon template", "PATH" };
 	options[13] = { "with-subscript", 'I', 0, OptionArg.FILENAME, ref with_subscript_path, "Subscript icon template", "PATH" };
-	options[14] = { null };
+	options[14] = { };
 
 	try {
 		var context = new OptionContext ("- generate keyboard layout icons");
@@ -51,7 +51,7 @@ int main (string[] args) {
 	}
 
 	if (output_path != null) {
-		var file = File.new_for_path (output_path);
+		var file = File.new_for_path ((!) output_path);
 
 		if (!file.query_exists (null)) {
 			try {
@@ -72,16 +72,20 @@ int main (string[] args) {
 	var occurrences = new Gee.HashMap <string, int> ();
 
 	layouts.foreach ((name) => {
-		string short_name;
+		string? short_name;
 
 		info.get_layout_info (name, null, out short_name, null, null);
 
-		var abbreviation = get_abbreviation (short_name);
+		if (short_name != null) {
+			var abbreviation = get_abbreviation ((!) short_name);
 
-		if (!occurrences.has_key (abbreviation)) {
-			occurrences[abbreviation] = 1;
-		} else {
-			occurrences[abbreviation] = occurrences[abbreviation] + 1;
+			if (abbreviation.get_char () != '\0') {
+				if (!occurrences.has_key (abbreviation)) {
+					occurrences[abbreviation] = 1;
+				} else {
+					occurrences[abbreviation] = occurrences[abbreviation] + 1;
+				}
+			}
 		}
 	});
 
@@ -96,7 +100,7 @@ int main (string[] args) {
 		var layout_font = @"font-family:$font;font-weight:$weight;font-size:$layout_size";
 		var subscript_font = @"font-family:$font;font-weight:$weight;font-size:$subscript_size";
 
-		File.new_for_path (no_subscript_path).load_contents (null, out contents, null);
+		File.new_for_path ((!) no_subscript_path).load_contents (null, out contents, null);
 		no_subscript_data = (string) contents;
 		no_subscript_data = no_subscript_data.replace ("@WIDTH@", @"$width");
 		no_subscript_data = no_subscript_data.replace ("@HEIGHT@", @"$height");
@@ -109,7 +113,7 @@ int main (string[] args) {
 		no_subscript_data = no_subscript_data.replace ("@LAYOUT_FONT@", layout_font);
 		no_subscript_data = no_subscript_data.replace ("@SUBSCRIPT_FONT@", subscript_font);
 
-		File.new_for_path (with_subscript_path).load_contents (null, out contents, null);
+		File.new_for_path ((!) with_subscript_path).load_contents (null, out contents, null);
 		with_subscript_data = (string) contents;
 		with_subscript_data = with_subscript_data.replace ("@WIDTH@", @"$width");
 		with_subscript_data = with_subscript_data.replace ("@HEIGHT@", @"$height");
@@ -145,7 +149,7 @@ int main (string[] args) {
 	foreach (var entry in occurrences.entries) {
 		var layout = entry.key;
 		var count = entry.value;
-		var file = File.new_for_path (@"$output_path/indicator-keyboard-$layout.svg");
+		var file = File.new_for_path (@"$((!) output_path)/indicator-keyboard-$layout.svg");
 
 		if (force || !file.query_exists (null)) {
 			int layout_width;
@@ -188,7 +192,7 @@ int main (string[] args) {
 			partial_data = partial_data.replace ("@LAYOUT_Y@", @"$layout_y");
 
 			for (var i = 1; i <= count; i++) {
-				file = File.new_for_path (@"$output_path/indicator-keyboard-$layout-$i.svg");
+				file = File.new_for_path (@"$((!) output_path)/indicator-keyboard-$layout-$i.svg");
 
 				if (force || !file.query_exists (null)) {
 					var subscript = @"$i";
