@@ -69,7 +69,7 @@ int main (string[] args) {
 
 	var info = new Gnome.XkbInfo ();
 	var layouts = info.get_all_layouts ();
-	var occurrences = new Gee.HashMap <string, int> ();
+	var occurrences = new Gee.HashMap<string, int> ();
 
 	layouts.foreach ((name) => {
 		string? short_name;

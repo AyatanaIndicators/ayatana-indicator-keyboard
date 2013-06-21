@@ -1,24 +1,24 @@
 [DBus (name = "com.canonical.indicator.keyboard")]
 public class Indicator.Keyboard.Service : Object {
 
-	private MainLoop loop;
+	private MainLoop? loop;
 	private Settings indicator_settings;
 	private Settings source_settings;
 	private Settings per_window_settings;
 	private Gnome.XkbInfo xkb_info;
-	private IBus.Bus ibus;
-	private Bamf.Matcher matcher;
-	private Gee.HashMap <string, uint> window_sources;
+	private IBus.Bus? ibus;
+	private Bamf.Matcher? matcher;
+	private Gee.HashMap<string, uint>? window_sources;
 
-	private SimpleActionGroup action_group;
-	private SimpleAction indicator_action;
-	private MenuModel menu_model;
-	private Menu sources_menu;
+	private SimpleActionGroup? action_group;
+	private SimpleAction? indicator_action;
+	private MenuModel? menu_model;
+	private Menu? sources_menu;
 
-	private Icon[] icons;
-	private string[] icon_strings;
-	private int[] icon_string_uniques;
-	private uint[] icon_string_subscripts;
+	private Icon?[]? icons;
+	private string[]? icon_strings;
+	private int[]? icon_string_uniques;
+	private uint[]? icon_string_subscripts;
 
 	[DBus (visible = false)]
 	public Service (bool force) {
@@ -46,7 +46,17 @@ public class Indicator.Keyboard.Service : Object {
 		update_window_sources ();
 
 		this.loop = new MainLoop ();
-		this.loop.run ();
+		((!) this.loop).run ();
+	}
+
+	[DBus (visible = false)]
+	private IBus.Bus get_ibus () {
+		if (this.ibus == null) {
+			IBus.init ();
+			this.ibus = new IBus.Bus ();
+		}
+
+		return (!) this.ibus;
 	}
 
 	[DBus (visible = false)]
@@ -68,27 +78,26 @@ public class Indicator.Keyboard.Service : Object {
 				length++;
 			}
 
-			var ibus = get_ibus ();
-			var engines = ibus.list_active_engines ();
+			var engines = get_ibus ().list_active_engines ();
 
 			foreach (var engine in engines) {
 				if (length == 0 || engine.name.has_prefix ("xkb")) {
 					var source = "us";
-					var layout = engine.get_layout ();
-					var variant = engine.get_layout_variant ();
+					string? layout = engine.get_layout ();
+					string? variant = engine.get_layout_variant ();
 
-					if (layout != null && layout.length == 0) {
+					if (layout != null && ((!) layout).length == 0) {
 						layout = null;
 					}
 
-					if (variant != null && variant.length == 0) {
+					if (variant != null && ((!) variant).length == 0) {
 						variant = null;
 					}
 
 					if (layout != null && variant != null) {
-						source = @"$layout+$variant";
+						source = @"$((!) layout)+$((!) variant)";
 					} else if (layout != null) {
-						source = layout;
+						source = (!) layout;
 					}
 
 					builder.add ("(ss)", "xkb", source);
@@ -113,11 +122,11 @@ public class Indicator.Keyboard.Service : Object {
 
 		if (group_per_window != (this.window_sources != null)) {
 			if (group_per_window) {
-				this.window_sources = new Gee.HashMap <string, uint> ();
+				this.window_sources = new Gee.HashMap<string, uint> ();
 				this.matcher = Bamf.Matcher.get_default ();
-				this.matcher.active_window_changed.connect (this.handle_active_window_changed);
+				((!) this.matcher).active_window_changed.connect (this.handle_active_window_changed);
 			} else {
-				this.matcher.active_window_changed.disconnect (this.handle_active_window_changed);
+				((!) this.matcher).active_window_changed.disconnect (this.handle_active_window_changed);
 				this.matcher = null;
 				this.window_sources = null;
 			}
@@ -132,18 +141,18 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_active_window_changed (Bamf.View? old_view, Bamf.View? new_view) {
 		if (old_view != null) {
-			this.window_sources[old_view.path] = this.source_settings.get_uint ("current");
+			((!) this.window_sources)[((!) old_view).path] = this.source_settings.get_uint ("current");
 		}
 
 		if (new_view != null) {
-			if (!this.window_sources.has_key (new_view.path)) {
+			if (!((!) this.window_sources).has_key (((!) new_view).path)) {
 				var default_group = this.per_window_settings.get_int ("default-group");
 
 				if (default_group >= 0) {
 					this.source_settings.set_uint ("current", (uint) default_group);
 				}
 			} else {
-				this.source_settings.set_uint ("current", this.window_sources[new_view.path]);
+				this.source_settings.set_uint ("current", ((!) this.window_sources)[((!) new_view).path]);
 			}
 		}
 	}
@@ -162,7 +171,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	protected virtual Icon create_icon (string text, uint subscript) {
+	protected virtual Icon create_icon (string? text, uint subscript) {
 		const int W = 20;
 		const int H = 20;
 		const double R = 2.0;
@@ -188,41 +197,43 @@ public class Indicator.Keyboard.Service : Object {
 		context.fill ();
 		context.set_operator (Cairo.Operator.CLEAR);
 
-		var text_layout = Pango.cairo_create_layout (context);
-		text_layout.set_alignment (Pango.Alignment.CENTER);
-		description.set_absolute_size (Pango.units_from_double (TEXT_SIZE));
-		text_layout.set_font_description (description);
-		text_layout.set_text (text, -1);
-		Pango.cairo_update_layout (context, text_layout);
-		int text_width;
-		int text_height;
-		text_layout.get_pixel_size (out text_width, out text_height);
+		if (text != null) {
+			var text_layout = Pango.cairo_create_layout (context);
+			text_layout.set_alignment (Pango.Alignment.CENTER);
+			description.set_absolute_size (Pango.units_from_double (TEXT_SIZE));
+			text_layout.set_font_description (description);
+			text_layout.set_text ((!) text, -1);
+			Pango.cairo_update_layout (context, text_layout);
+			int text_width;
+			int text_height;
+			text_layout.get_pixel_size (out text_width, out text_height);
 
-		if (subscript > 0) {
-			var subscript_layout = Pango.cairo_create_layout (context);
-			subscript_layout.set_alignment (Pango.Alignment.CENTER);
-			description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
-			subscript_layout.set_font_description (description);
-			subscript_layout.set_text (@"$subscript", -1);
-			Pango.cairo_update_layout (context, subscript_layout);
-			int subscript_width;
-			int subscript_height;
-			subscript_layout.get_pixel_size (out subscript_width, out subscript_height);
+			if (subscript > 0) {
+				var subscript_layout = Pango.cairo_create_layout (context);
+				subscript_layout.set_alignment (Pango.Alignment.CENTER);
+				description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
+				subscript_layout.set_font_description (description);
+				subscript_layout.set_text (@"$subscript", -1);
+				Pango.cairo_update_layout (context, subscript_layout);
+				int subscript_width;
+				int subscript_height;
+				subscript_layout.get_pixel_size (out subscript_width, out subscript_height);
 
-			context.identity_matrix ();
-			context.translate ((W - (text_width + subscript_width)) / 2, (H - text_height) / 2);
-			Pango.cairo_layout_path (context, text_layout);
-			context.fill ();
+				context.identity_matrix ();
+				context.translate ((W - (text_width + subscript_width)) / 2, (H - text_height) / 2);
+				Pango.cairo_layout_path (context, text_layout);
+				context.fill ();
 
-			context.identity_matrix ();
-			context.translate ((W + (text_width - subscript_width)) / 2, (H + text_height) / 2 - subscript_height);
-			Pango.cairo_layout_path (context, subscript_layout);
-			context.fill ();
-		} else {
-			context.identity_matrix ();
-			context.translate ((W - text_width) / 2, (H - text_height) / 2);
-			Pango.cairo_layout_path (context, text_layout);
-			context.fill ();
+				context.identity_matrix ();
+				context.translate ((W + (text_width - subscript_width)) / 2, (H + text_height) / 2 - subscript_height);
+				Pango.cairo_layout_path (context, subscript_layout);
+				context.fill ();
+			} else {
+				context.identity_matrix ();
+				context.translate ((W - text_width) / 2, (H - text_height) / 2);
+				Pango.cairo_layout_path (context, text_layout);
+				context.fill ();
+			}
 		}
 
 		var buffer = new ByteArray ();
@@ -236,16 +247,21 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private string get_icon_string (uint index) {
-		string icon_string = null;
-		Variant array = null;
+	private string? get_icon_string (uint index) {
+		string? icon_string = null;
+		Variant? array = null;
 
 		if (this.icon_strings == null) {
 			this.source_settings.get ("sources", "@a(ss)", out array);
-			this.icon_strings = new string[array.n_children ()];
+
+			if (array != null) {
+				this.icon_strings = new string[((!) array).n_children ()];
+			} else {
+				this.icon_strings = new string[0];
+			}
 		}
 
-		if (index < this.icon_strings.length) {
+		if (index < ((!) this.icon_strings).length) {
 			icon_string = this.icon_strings[index];
 
 			if (icon_string == null) {
@@ -256,14 +272,17 @@ public class Indicator.Keyboard.Service : Object {
 				string type;
 				string name;
 
-				array.get_child (index, "(ss)", out type, out name);
+				((!) array).get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
-					string short_name;
+					string? short_name;
 
 					this.xkb_info.get_layout_info (name, null, out short_name, null, null);
-					this.icon_strings[index] = get_abbreviation (short_name);
-					icon_string = this.icon_strings[index];
+
+					if (short_name != null) {
+						this.icon_strings[index] = get_abbreviation ((!) short_name);
+						icon_string = this.icon_strings[index];
+					}
 				}
 			}
 		}
@@ -274,24 +293,29 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private bool is_icon_string_unique (uint index) {
 		bool icon_string_unique = true;
-		Variant array = null;
 
 		if (this.icon_string_uniques == null) {
+			Variant? array;
 			this.source_settings.get ("sources", "@a(ss)", out array);
-			this.icon_string_uniques = new int[array.n_children ()];
 
-			for (var i = 0; i < this.icon_string_uniques.length; i++) {
+			if (array != null) {
+				this.icon_string_uniques = new int[((!) array).n_children ()];
+			} else {
+				this.icon_string_uniques = new int[0];
+			}
+
+			for (var i = 0; i < ((!) this.icon_string_uniques).length; i++) {
 				this.icon_string_uniques[i] = -1;
 			}
 		}
 
-		if (index < this.icon_string_uniques.length) {
+		if (index < ((!) this.icon_string_uniques).length) {
 			if (this.icon_string_uniques[index] == -1) {
 				this.icon_string_uniques[index] = 1;
 
 				var icon_string = get_icon_string (index);
 
-				for (var i = 0; i < this.icon_string_uniques.length && this.icon_string_uniques[index] == 1; i++) {
+				for (var i = 0; i < ((!) this.icon_string_uniques).length && this.icon_string_uniques[index] == 1; i++) {
 					if (i != index && get_icon_string (i) == icon_string) {
 						this.icon_string_uniques[index] = 0;
 					}
@@ -307,14 +331,19 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private uint get_icon_string_subscript (uint index) {
 		uint icon_string_subscript = 0;
-		Variant array = null;
 
 		if (this.icon_string_subscripts == null) {
+			Variant? array = null;
 			this.source_settings.get ("sources", "@a(ss)", out array);
-			this.icon_string_subscripts = new uint[array.n_children ()];
+
+			if (array != null) {
+				this.icon_string_subscripts = new uint[((!) array).n_children ()];
+			} else {
+				this.icon_string_subscripts = new uint[0];
+			}
 		}
 
-		if (index < this.icon_string_subscripts.length) {
+		if (index < ((!) this.icon_string_subscripts).length) {
 			icon_string_subscript = this.icon_string_subscripts[index];
 
 			if (icon_string_subscript == 0) {
@@ -334,16 +363,21 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private Icon get_icon (uint index) {
-		Icon icon = null;
-		Variant array = null;
+	private Icon? get_icon (uint index) {
+		Icon? icon = null;
+		Variant? array = null;
 
 		if (this.icons == null) {
 			this.source_settings.get ("sources", "@a(ss)", out array);
-			this.icons = new Icon[array.n_children ()];
+
+			if (array != null) {
+				this.icons = new Icon?[((!) array).n_children ()];
+			} else {
+				this.icons = new Icon?[0];
+			}
 		}
 
-		if (index < this.icons.length) {
+		if (index < ((!) this.icons).length) {
 			icon = this.icons[index];
 
 			if (icon == null) {
@@ -354,42 +388,45 @@ public class Indicator.Keyboard.Service : Object {
 				string type;
 				string name;
 
-				array.get_child (index, "(ss)", out type, out name);
+				((!) array).get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
 					var icon_string = get_icon_string (index);
 					var icon_unique = is_icon_string_unique (index);
 					var icon_subscript = get_icon_string_subscript (index);
-					string icon_name;
 
-					if (icon_unique) {
-						icon_name = @"indicator-keyboard-$icon_string";
-					} else {
-						icon_name = @"indicator-keyboard-$icon_string-$icon_subscript";
-					}
+					if (icon_string != null) {
+						string icon_name;
 
-					var icon_theme = Gtk.IconTheme.get_default ();
-					var icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
+						if (icon_unique) {
+							icon_name = @"indicator-keyboard-$((!) icon_string)";
+						} else {
+							icon_name = @"indicator-keyboard-$((!) icon_string)-$icon_subscript";
+						}
 
-					if (icon_info != null) {
-						try {
-							this.icons[index] = Icon.new_for_string (icon_info.get_filename ());
-						} catch (Error error) {
-							this.icons[index] = null;
+						var icon_theme = Gtk.IconTheme.get_default ();
+						Gtk.IconInfo? icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
+
+						if (icon_info != null) {
+							try {
+								this.icons[index] = Icon.new_for_string (((!) icon_info).get_filename ());
+							} catch (Error error) {
+								this.icons[index] = null;
+							}
 						}
 					}
 
 					if (this.icons[index] == null) {
 						if (icon_unique) {
-							this.icons[index] = create_icon (get_icon_string (index), 0);
+							this.icons[index] = create_icon (icon_string, 0);
 						} else {
-							this.icons[index] = create_icon (get_icon_string (index), get_icon_string_subscript (index));
+							this.icons[index] = create_icon (icon_string, icon_subscript);
 						}
 					}
 				} else if (type == "ibus") {
-					var ibus = get_ibus ();
-					string[] names = { name, null };
-					var engines = ibus.get_engines_by_names (names);
+					var names = new string[2];
+					names[0] = name;
+					var engines = get_ibus ().get_engines_by_names (names);
 					var engine = engines[0];
 
 					try {
@@ -436,7 +473,7 @@ public class Indicator.Keyboard.Service : Object {
 		Variant state;
 
 		if (icon != null) {
-			state = new Variant.parsed ("{ 'visible' : <%b>, 'icon' : %v }", visible, icon.serialize ());
+			state = new Variant.parsed ("{ 'visible' : <%b>, 'icon' : %v }", visible, ((!) icon).serialize ());
 		} else {
 			state = new Variant.parsed ("{ 'visible' : <%b> }", visible);
 		}
@@ -452,7 +489,7 @@ public class Indicator.Keyboard.Service : Object {
 			update_indicator_action ();
 		}
 
-		return this.indicator_action;
+		return (!) this.indicator_action;
 	}
 
 	[DBus (visible = false)]
@@ -461,7 +498,7 @@ public class Indicator.Keyboard.Service : Object {
 			this.action_group = create_action_group (get_indicator_action ());
 		}
 
-		return this.action_group;
+		return (!) this.action_group;
 	}
 
 	[DBus (visible = false)]
@@ -487,29 +524,18 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private IBus.Bus get_ibus () {
-		if (this.ibus == null) {
-			IBus.init ();
-
-			this.ibus = new IBus.Bus ();
-		}
-
-		return this.ibus;
-	}
-
-	[DBus (visible = false)]
 	private string get_display_name (string layout) {
-		var language = Xkl.get_language_name (layout);
-		var country = Xkl.get_country_name (layout);
-		var has_language = language != null && language.get_char () != '\0';
-		var has_country = country != null && country.get_char () != '\0';
+		string? language = Xkl.get_language_name (layout);
+		string? country = Xkl.get_country_name (layout);
+		var has_language = language != null && ((!) language).get_char () != '\0';
+		var has_country = country != null && ((!) country).get_char () != '\0';
 
 		if (has_language && has_country) {
-			return @"$language ($country)";
+			return @"$((!) language) ($((!) country))";
 		} else if (has_language) {
-			return language;
+			return (!) language;
 		} else if (has_country) {
-			return country;
+			return (!) country;
 		} else {
 			return "";
 		}
@@ -531,41 +557,41 @@ public class Indicator.Keyboard.Service : Object {
 
 			for (var i = 0; iter.next ("(ss)", out type, out name); i++) {
 				if (type == "xkb") {
-					string display_name;
-					string layout_name;
+					string? display_name;
+					string? layout_name;
 
 					this.xkb_info.get_layout_info (name, out display_name, null, out layout_name, null);
 
-					if (display_name == null) {
-						name = get_display_name (layout_name);
-					} else {
-						name = display_name;
+					if (display_name != null) {
+						name = (!) display_name;
+					} else if (layout_name != null) {
+						name = get_display_name ((!) layout_name);
 					}
 				}
 				else if (type == "ibus") {
-					var ibus = get_ibus ();
-					string[] names = { name, null };
-					var engines = ibus.get_engines_by_names (names);
+					var names = new string[2];
+					names[0] = name;
+					var engines = get_ibus ().get_engines_by_names (names);
 					var engine = engines[0];
-					var language = engine.get_language ();
-					var display_name = engine.get_longname ();
+					string? language = engine.get_language ();
+					string? display_name = engine.get_longname ();
 
 					if (language != null) {
-						language = Xkl.get_language_name (language);
+						language = Xkl.get_language_name ((!) language);
 					}
 
 					if (language != null && display_name != null) {
-						name = @"$language ($display_name)";
+						name = @"$((!) language) ($((!) display_name))";
 					} else if (language != null) {
-						name = language;
+						name = (!) language;
 					} else if (display_name != null) {
-						name = display_name;
+						name = (!) display_name;
 					}
 				}
 
 				var menu_item = new MenuItem (name, "indicator.current");
 				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
-				menu_item.set_icon (get_icon (i));
+				menu_item.set_icon ((!) get_icon (i));
 				menu.append_item (menu_item);
 			}
 		} else {
@@ -580,7 +606,7 @@ public class Indicator.Keyboard.Service : Object {
 			update_sources_menu ();
 		}
 
-		return this.sources_menu;
+		return (!) this.sources_menu;
 	}
 
 	[DBus (visible = false)]
@@ -589,7 +615,7 @@ public class Indicator.Keyboard.Service : Object {
 			this.menu_model = create_menu_model (get_sources_menu ());
 		}
 
-		return this.menu_model;
+		return (!) this.menu_model;
 	}
 
 	[DBus (visible = false)]
@@ -625,7 +651,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_activate_chart (Variant? parameter) {
 		var layout = "us";
-		string variant = null;
+		string? variant = null;
 
 		var current = this.source_settings.get_uint ("current");
 		Variant array;
@@ -640,9 +666,9 @@ public class Indicator.Keyboard.Service : Object {
 			if (type == "xkb") {
 				this.xkb_info.get_layout_info (name, null, null, out layout, out variant);
 			} else if (type == "ibus") {
-				var ibus = get_ibus ();
-				string[] names = { name, null };
-				var engines = ibus.get_engines_by_names (names);
+				var names = new string[2];
+				names[0] = name;
+				var engines = get_ibus ().get_engines_by_names (names);
 				var engine = engines[0];
 
 				layout = engine.get_layout ();
@@ -654,7 +680,7 @@ public class Indicator.Keyboard.Service : Object {
 			string command;
 
 			if (variant != null) {
-				command = @"gkbd-keyboard-display -l \"$layout\t$variant\"";
+				command = @"gkbd-keyboard-display -l \"$layout\t$((!) variant)\"";
 			} else {
 				command = @"gkbd-keyboard-display -l $layout";
 			}
@@ -686,7 +712,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_name_lost (DBusConnection connection, string name) {
-		this.loop.quit ();
+		((!) this.loop).quit ();
 		this.loop = null;
 	}
 
