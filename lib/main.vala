@@ -249,7 +249,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private string? get_icon_string (uint index) {
 		string? icon_string = null;
-		Variant? array = null;
+		Variant? array;
 
 		if (this.icon_strings == null) {
 			this.source_settings.get ("sources", "@a(ss)", out array);
@@ -333,7 +333,7 @@ public class Indicator.Keyboard.Service : Object {
 		uint icon_string_subscript = 0;
 
 		if (this.icon_string_subscripts == null) {
-			Variant? array = null;
+			Variant? array;
 			this.source_settings.get ("sources", "@a(ss)", out array);
 
 			if (array != null) {
@@ -365,7 +365,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Icon? get_icon (uint index) {
 		Icon? icon = null;
-		Variant? array = null;
+		Variant? array;
 
 		if (this.icons == null) {
 			this.source_settings.get ("sources", "@a(ss)", out array);
