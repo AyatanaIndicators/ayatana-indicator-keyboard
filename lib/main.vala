@@ -249,30 +249,22 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private string? get_icon_string (uint index) {
 		string? icon_string = null;
-		Variant? array;
 
 		if (this.icon_strings == null) {
-			this.source_settings.get ("sources", "@a(ss)", out array);
-
-			if (array != null) {
-				this.icon_strings = new string[((!) array).n_children ()];
-			} else {
-				this.icon_strings = new string[0];
-			}
+			var array = this.source_settings.get_value ("sources");
+			this.icon_strings = new string[array.n_children ()];
 		}
 
 		if (index < ((!) this.icon_strings).length) {
 			icon_string = this.icon_strings[index];
 
 			if (icon_string == null) {
-				if (array == null) {
-					this.source_settings.get ("sources", "@a(ss)", out array);
-				}
+				var array = this.source_settings.get_value ("sources");
 
 				string type;
 				string name;
 
-				((!) array).get_child (index, "(ss)", out type, out name);
+				array.get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
 					string? short_name;
@@ -295,14 +287,8 @@ public class Indicator.Keyboard.Service : Object {
 		bool icon_string_unique = true;
 
 		if (this.icon_string_uniques == null) {
-			Variant? array;
-			this.source_settings.get ("sources", "@a(ss)", out array);
-
-			if (array != null) {
-				this.icon_string_uniques = new int[((!) array).n_children ()];
-			} else {
-				this.icon_string_uniques = new int[0];
-			}
+			var array = this.source_settings.get_value ("sources");
+			this.icon_string_uniques = new int[array.n_children ()];
 
 			for (var i = 0; i < ((!) this.icon_string_uniques).length; i++) {
 				this.icon_string_uniques[i] = -1;
@@ -333,14 +319,8 @@ public class Indicator.Keyboard.Service : Object {
 		uint icon_string_subscript = 0;
 
 		if (this.icon_string_subscripts == null) {
-			Variant? array;
-			this.source_settings.get ("sources", "@a(ss)", out array);
-
-			if (array != null) {
-				this.icon_string_subscripts = new uint[((!) array).n_children ()];
-			} else {
-				this.icon_string_subscripts = new uint[0];
-			}
+			var array = this.source_settings.get_value ("sources");
+			this.icon_string_subscripts = new uint[array.n_children ()];
 		}
 
 		if (index < ((!) this.icon_string_subscripts).length) {
@@ -365,30 +345,22 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Icon? get_icon (uint index) {
 		Icon? icon = null;
-		Variant? array;
 
 		if (this.icons == null) {
-			this.source_settings.get ("sources", "@a(ss)", out array);
-
-			if (array != null) {
-				this.icons = new Icon?[((!) array).n_children ()];
-			} else {
-				this.icons = new Icon?[0];
-			}
+			var array = this.source_settings.get_value ("sources");
+			this.icons = new Icon?[array.n_children ()];
 		}
 
 		if (index < ((!) this.icons).length) {
 			icon = this.icons[index];
 
 			if (icon == null) {
-				if (array == null) {
-					this.source_settings.get ("sources", "@a(ss)", out array);
-				}
+				var array = this.source_settings.get_value ("sources");
 
 				string type;
 				string name;
 
-				((!) array).get_child (index, "(ss)", out type, out name);
+				array.get_child (index, "(ss)", out type, out name);
 
 				if (type == "xkb") {
 					var icon_string = get_icon_string (index);
@@ -659,8 +631,7 @@ public class Indicator.Keyboard.Service : Object {
 		string? variant = null;
 
 		var current = this.source_settings.get_uint ("current");
-		Variant array;
-		this.source_settings.get ("sources", "@a(ss)", out array);
+		var array = this.source_settings.get_value ("sources");
 
 		if (current < array.n_children ()) {
 			string type;
