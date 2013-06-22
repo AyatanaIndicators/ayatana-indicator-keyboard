@@ -1,4 +1,4 @@
-AM_CFLAGS = -DGNOME_DESKTOP_USE_UNSTABLE_API
+AM_CFLAGS = -w -DGNOME_DESKTOP_USE_UNSTABLE_API
 AM_LDFLAGS = -lm
 AM_VALAFLAGS = --enable-experimental-non-null   \
                --metadatadir $(top_srcdir)/deps \

@@ -591,7 +591,12 @@ public class Indicator.Keyboard.Service : Object {
 
 				var menu_item = new MenuItem (name, "indicator.current");
 				menu_item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
-				menu_item.set_icon ((!) get_icon (i));
+
+				var icon = get_icon (i);
+				if (icon != null) {
+					menu_item.set_icon ((!) icon);
+				}
+
 				menu.append_item (menu_item);
 			}
 		} else {
