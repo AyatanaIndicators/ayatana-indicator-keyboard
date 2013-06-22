@@ -247,7 +247,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private string? get_icon_string (uint index) {
+	private string get_icon_string (uint index) {
 		string? icon_string = null;
 
 		if (this.icon_strings == null) {
@@ -279,7 +279,11 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
-		return icon_string;
+		if (icon_string == null) {
+			icon_string = "";
+		}
+
+		return (!) icon_string;
 	}
 
 	[DBus (visible = false)]
@@ -367,7 +371,7 @@ public class Indicator.Keyboard.Service : Object {
 					var icon_unique = is_icon_string_unique (index);
 					var icon_subscript = get_icon_string_subscript (index);
 
-					if (icon_string != null) {
+					if (icon_string.get_char () != '\0') {
 						string icon_name;
 
 						if (icon_unique) {
@@ -655,7 +659,7 @@ public class Indicator.Keyboard.Service : Object {
 		try {
 			string command;
 
-			if (variant != null) {
+			if (variant != null && ((!) variant).get_char () != '\0') {
 				command = @"gkbd-keyboard-display -l \"$layout\t$((!) variant)\"";
 			} else {
 				command = @"gkbd-keyboard-display -l $layout";
