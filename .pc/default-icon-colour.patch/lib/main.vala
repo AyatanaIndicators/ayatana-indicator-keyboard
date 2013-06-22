@@ -183,7 +183,6 @@ public class Indicator.Keyboard.Service : Object {
 		Pango.FontDescription description;
 		var style = get_style_context ();
 		var colour = style.get_color (Gtk.StateFlags.NORMAL);
-		colour = { 0.5, 0.5, 0.5, 1.0 };
 		style.get (Gtk.StateFlags.NORMAL, Gtk.STYLE_PROPERTY_FONT, out description);
 
 		var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, W, H);
