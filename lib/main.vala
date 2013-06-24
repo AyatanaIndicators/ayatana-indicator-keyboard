@@ -410,13 +410,17 @@ public class Indicator.Keyboard.Service : Object {
 				} else if (type == "ibus") {
 					var names = new string[2];
 					names[0] = name;
-					var engines = get_ibus ().get_engines_by_names (names);
-					var engine = engines[0];
 
-					try {
-						this.icons[index] = Icon.new_for_string (engine.get_icon ());
-					} catch {
-						warn_if_reached ();
+					var engines = get_ibus ().get_engines_by_names (names);
+
+					if (engines.length > 0) {
+						var engine = engines[0];
+
+						try {
+							this.icons[index] = Icon.new_for_string (engine.get_icon ());
+						} catch {
+							warn_if_reached ();
+						}
 					}
 				}
 
@@ -555,21 +559,25 @@ public class Indicator.Keyboard.Service : Object {
 				else if (type == "ibus") {
 					var names = new string[2];
 					names[0] = name;
+
 					var engines = get_ibus ().get_engines_by_names (names);
-					var engine = engines[0];
-					string? language = engine.get_language ();
-					string? display_name = engine.get_longname ();
 
-					if (language != null) {
-						language = Xkl.get_language_name ((!) language);
-					}
+					if (engines.length > 0) {
+						var engine = engines[0];
+						string? language = engine.get_language ();
+						string? display_name = engine.get_longname ();
 
-					if (language != null && display_name != null) {
-						name = @"$((!) language) ($((!) display_name))";
-					} else if (language != null) {
-						name = (!) language;
-					} else if (display_name != null) {
-						name = (!) display_name;
+						if (language != null) {
+							language = Xkl.get_language_name ((!) language);
+						}
+
+						if (language != null && display_name != null) {
+							name = @"$((!) language) ($((!) display_name))";
+						} else if (language != null) {
+							name = (!) language;
+						} else if (display_name != null) {
+							name = (!) display_name;
+						}
 					}
 				}
 
@@ -656,11 +664,15 @@ public class Indicator.Keyboard.Service : Object {
 			} else if (type == "ibus") {
 				var names = new string[2];
 				names[0] = name;
-				var engines = get_ibus ().get_engines_by_names (names);
-				var engine = engines[0];
 
-				layout = engine.get_layout ();
-				variant = engine.get_layout_variant ();
+				var engines = get_ibus ().get_engines_by_names (names);
+
+				if (engines.length > 0) {
+					var engine = engines[0];
+
+					layout = engine.get_layout ();
+					variant = engine.get_layout_variant ();
+				}
 			}
 		}
 
