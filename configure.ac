@@ -33,8 +33,6 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [The prefix for our 
 AM_GLIB_GNU_GETTEXT
 IT_PROG_INTLTOOL
 
-AM_PATH_PYTHON
-
 PKG_CHECK_MODULES([GEE], [gee-1.0])
 AC_SUBST([GEE_CFLAGS])
 AC_SUBST([GEE_LIBS])
@@ -75,7 +73,6 @@ AC_CONFIG_FILES([Makefile
                  data/Makefile
                  lib/Makefile
                  po/Makefile.in
-                 tests/Makefile
-                 tests/autopilot/Makefile])
+                 tests/Makefile])
 
 AC_OUTPUT

@@ -1,3 +1,9 @@
+indicator-keyboard (0.0.0-0ubuntu16) saucy; urgency=low
+
+  * Remove autopilot support.
+
+ -- William Hua <william.hua@canonical.com>  Mon, 24 Jun 2013 17:13:03 -0400
+
 indicator-keyboard (0.0.0-0ubuntu15) saucy; urgency=low
 
   * Experimental non-null support.
