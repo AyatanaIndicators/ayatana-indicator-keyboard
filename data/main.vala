@@ -37,13 +37,11 @@ int main (string[] args) {
 		context.set_help_enabled (true);
 		context.parse (ref args);
 	} catch (OptionError error) {
-		stderr.printf ("error: %s\n", error.message);
-		return 1;
+		GLib.error ("error: %s", error.message);
 	}
 
 	if (no_subscript_path == null && with_subscript_path == null) {
-		stderr.printf ("error: No icon template\n");
-		return 2;
+		error ("error: No icon template");
 	} else if (no_subscript_path == null) {
 		no_subscript_path = with_subscript_path;
 	} else if (with_subscript_path == null) {
@@ -57,8 +55,7 @@ int main (string[] args) {
 			try {
 				file.make_directory_with_parents (null);
 			} catch (Error error) {
-				stderr.printf ("error: %s\n", error.message);
-				return 3;
+				GLib.error ("error: %s", error.message);
 			}
 		}
 	} else {
@@ -126,8 +123,7 @@ int main (string[] args) {
 		with_subscript_data = with_subscript_data.replace ("@LAYOUT_FONT@", layout_font);
 		with_subscript_data = with_subscript_data.replace ("@SUBSCRIPT_FONT@", subscript_font);
 	} catch (Error error) {
-		stderr.printf ("error: %s\n", error.message);
-		return 4;
+		GLib.error ("error: %s", error.message);
 	}
 
 	var font_map = new PangoFT2.FontMap ();
@@ -173,7 +169,7 @@ int main (string[] args) {
 			try {
 				file.replace_contents (output_data.data, null, false, FileCreateFlags.REPLACE_DESTINATION, null, null);
 			} catch (Error error) {
-				stderr.printf ("error: %s\n", error.message);
+				GLib.error ("error: %s", error.message);
 			}
 		}
 
@@ -217,7 +213,7 @@ int main (string[] args) {
 					try {
 						file.replace_contents (output_data.data, null, false, FileCreateFlags.REPLACE_DESTINATION, null, null);
 					} catch (Error error) {
-						stderr.printf ("error: %s\n", error.message);
+						GLib.error ("error: %s", error.message);
 					}
 				}
 			}

@@ -3,6 +3,7 @@
 *.m4
 *.pyc
 *.stamp
+*.stamp-t
 *.substvars
 *.valid
 .deps
@@ -27,3 +28,7 @@ lib/indicator-keyboard-service
 libtool
 po/POTFILES
 po/stamp-it
+tests/config.vala
+tests/indicator-keyboard-service
+tests/indicator-keyboard-test
+tests/services/indicator-keyboard.service

@@ -418,8 +418,8 @@ public class Indicator.Keyboard.Service : Object {
 
 						try {
 							this.icons[index] = Icon.new_for_string (engine.get_icon ());
-						} catch {
-							warn_if_reached ();
+						} catch (Error error) {
+							warning ("error: %s", error.message);
 						}
 					}
 				}
@@ -640,8 +640,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_activate_map (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gucharmap");
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -686,8 +686,8 @@ public class Indicator.Keyboard.Service : Object {
 			}
 
 			Process.spawn_command_line_async (command);
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -695,8 +695,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_activate_settings (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gnome-control-center region layouts");
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -705,8 +705,8 @@ public class Indicator.Keyboard.Service : Object {
 		try {
 			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_menu_model ());
-		} catch {
-			warn_if_reached ();
+		} catch (Error error) {
+			warning ("error: %s", error.message);
 		}
 	}
 

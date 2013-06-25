@@ -1,0 +1,4 @@
+#!/bin/sh
+
+PATH="@abs_top_builddir@/tests/external:$PATH"
+@abs_top_builddir@/lib/indicator-keyboard-service

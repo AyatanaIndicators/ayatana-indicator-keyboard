@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-31 09:17-0400\n"
+"POT-Creation-Date: 2013-06-25 16:02-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/main.vala:364
+#: ../lib/main.c:2209 ../lib/main.vala:501
 msgid "Character Map"
 msgstr ""
 
-#: ../lib/main.vala:365
+#: ../lib/main.c:2211 ../lib/main.vala:502
 msgid "Keyboard Layout Chart"
 msgstr ""
 
-#: ../lib/main.vala:366
+#: ../lib/main.c:2213 ../lib/main.vala:503
 msgid "Text Entry Settings..."
 msgstr ""

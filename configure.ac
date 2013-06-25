@@ -37,6 +37,10 @@ PKG_CHECK_MODULES([GEE], [gee-1.0])
 AC_SUBST([GEE_CFLAGS])
 AC_SUBST([GEE_LIBS])
 
+PKG_CHECK_MODULES([GIO], [gio-2.0])
+AC_SUBST([GIO_CFLAGS])
+AC_SUBST([GIO_LIBS])
+
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
@@ -73,6 +77,10 @@ AC_CONFIG_FILES([Makefile
                  data/Makefile
                  lib/Makefile
                  po/Makefile.in
-                 tests/Makefile])
+                 tests/Makefile
+                 tests/config.vala
+                 tests/indicator-keyboard-service
+                 tests/services/indicator-keyboard.service],
+                [chmod +x tests/indicator-keyboard-service])
 
 AC_OUTPUT
