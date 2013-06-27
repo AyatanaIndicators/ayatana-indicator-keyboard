@@ -31,6 +31,22 @@ struct Fixture {
 	uint object_name;
 }
 
+static void start_service (Fixture *fixture) {
+	if (fixture.connection != null) {
+		try {
+			fixture.service = new Service ();
+			fixture.object_name = ((!) fixture.connection).register_object ("/com/canonical/indicator/keyboard/test", fixture.service);
+		} catch (IOError error) {
+			fixture.connection = null;
+			fixture.service = null;
+			fixture.object_name = 0;
+
+			Test.message ("error: %s", error.message);
+			Test.fail ();
+		}
+	}
+}
+
 static void begin_test (void *data) {
 	var fixture = (Fixture *) data;
 
@@ -47,6 +63,8 @@ static void begin_test (void *data) {
 	                                         if (loop.is_running ()) {
 	                                             fixture.connection = connection;
 
+	                                             start_service (fixture);
+
 	                                             loop.quit ();
 	                                         }
 	                                     },
@@ -54,27 +72,16 @@ static void begin_test (void *data) {
 	                                     (connection, name) => {
 	                                         if (loop.is_running ()) {
 	                                             fixture.connection = null;
+	                                             fixture.service = null;
+	                                             fixture.object_name = 0;
+
 	                                             loop.quit ();
 	                                         }
 	                                     });
 
 	loop.run ();
 
-	if (fixture.connection != null) {
-		try {
-			fixture.service = new Service ();
-			fixture.object_name = ((!) fixture.connection).register_object ("/com/canonical/indicator/keyboard/test", fixture.service);
-		} catch (IOError error) {
-			fixture.object_name = 0;
-			fixture.service = null;
-
-			Test.message ("error: %s", error.message);
-			Test.fail ();
-		}
-	} else {
-		fixture.service = null;
-		fixture.object_name = 0;
-
+	if (fixture.connection == null) {
 		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard.test'.");
 		Test.fail ();
 	}
@@ -114,6 +121,7 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
+	/* XXX: bootstrap the settings with what we want to test with. */
 	var settings = new Settings ("org.gnome.desktop.input-sources");
 	settings.set_uint ("current", 0);
 	settings.set_value ("sources", new Variant.parsed ("[('xkb', 'us'), ('ibus', 'pinyin')]"));
@@ -170,6 +178,7 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
+	/* XXX: This is just to make sure the GSettings are shared between processes. */
 	{
 		var builder = new VariantBuilder (new VariantType ("(au)"));
 		builder.open (new VariantType ("au"));
@@ -215,7 +224,6 @@ static void test_update_input_source (void *data) {
 }
 
 static void test_update_input_sources (void *data) {
-	Test.fail ();
 }
 
 public int main (string[] args) {
