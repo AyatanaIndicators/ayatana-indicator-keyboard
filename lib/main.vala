@@ -711,7 +711,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_name_lost (DBusConnection connection, string name) {
+	private void handle_name_lost (DBusConnection? connection, string name) {
 		((!) this.loop).quit ();
 		this.loop = null;
 	}

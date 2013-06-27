@@ -46,6 +46,7 @@ static void begin_test (void *data) {
 	                                     (connection, name) => {
 	                                         if (loop.is_running ()) {
 	                                             fixture.connection = connection;
+
 	                                             loop.quit ();
 	                                         }
 	                                     },
@@ -87,13 +88,13 @@ static void end_test (void *data) {
 		fixture.object_name = 0;
 	}
 
-	fixture.service = null;
-	fixture.connection = null;
-
 	if (fixture.service_name != 0) {
 		Bus.unown_name (fixture.service_name);
 		fixture.service_name = 0;
 	}
+
+	fixture.service = null;
+	fixture.connection = null;
 
 	if (fixture.bus != null) {
 		((!) fixture.bus).down ();
@@ -112,6 +113,10 @@ static void test_activate_character_map (void *data) {
 		Test.fail ();
 		return;
 	}
+
+	var settings = new Settings ("org.gnome.desktop.input-sources");
+	settings.set_uint ("current", 0);
+	settings.set_value ("sources", new Variant.parsed ("[('xkb', 'us'), ('ibus', 'pinyin')]"));
 
 	var cancellable = new Cancellable ();
 	DBusProxy action_proxy;
@@ -165,6 +170,17 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
+	{
+		var builder = new VariantBuilder (new VariantType ("(au)"));
+		builder.open (new VariantType ("au"));
+		builder.add ("u", 0);
+		builder.add ("u", 1);
+		builder.close ();
+		var variant = builder.end ();
+		stdout.printf ("%s\n", menu_proxy.call_sync ("Start", variant, DBusCallFlags.NONE, SHORT_TIMEOUT).print (true));
+		menu_proxy.call_sync ("End", variant, DBusCallFlags.NONE, SHORT_TIMEOUT);
+	}
+
 	var loop = new MainLoop (null, false);
 
 	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
@@ -199,9 +215,12 @@ static void test_update_input_source (void *data) {
 }
 
 static void test_update_input_sources (void *data) {
+	Test.fail ();
 }
 
 public int main (string[] args) {
+	Environment.set_variable ("DCONF_PROFILE", DCONF_PROFILE, true);
+
 	Test.init (ref args, null);
 
 	var suite = new TestSuite ("indicator-keyboard");
