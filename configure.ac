@@ -18,11 +18,8 @@ AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG([0.26])
 
-AC_ARG_ENABLE([local-install], AS_HELP_STRING([--enable-local-install], [Enable local install]))
-AS_IF([test "x$enable_local_install" = "xyes"], [dbus_service_dir=$prefix/share/dbus-1/services], [dbus_service_dir=`pkg-config --variable=session_bus_services_dir dbus-1`])
-
-AC_ARG_WITH([dbus-service-dir], [AS_HELP_STRING([--with-dbus-service-dir=DIR], [D-Bus service directory [default=$dbus_service_dir]])], [], [with_dbus_service_dir=$dbus_service_dir])
-AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indicator directory [default=$prefix/share/unity/indicators]])], [], [with_indicator_dir=$prefix/share/unity/indicators])
+AC_ARG_WITH([dbus-service-dir], [AS_HELP_STRING([--with-dbus-service-dir=DIR], [D-Bus service directory [default=$datadir/dbus-1/services]])], [], [with_dbus_service_dir=$datadir/dbus-1/services])
+AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indicator directory [default=$datadir/unity/indicators]])], [], [with_indicator_dir=$datadir/unity/indicators])
 
 AC_SUBST([DBUS_SERVICE_DIR], [$with_dbus_service_dir])
 AC_SUBST([INDICATOR_DIR], [$with_indicator_dir])
