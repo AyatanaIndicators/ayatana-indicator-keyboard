@@ -409,13 +409,17 @@ public class Indicator.Keyboard.Service : Object {
 				} else if (type == "ibus") {
 					var names = new string[2];
 					names[0] = name;
-					var engines = get_ibus ().get_engines_by_names (names);
-					var engine = engines[0];
 
-					try {
-						this.icons[index] = Icon.new_for_string (engine.get_icon ());
-					} catch {
-						warn_if_reached ();
+					var engines = get_ibus ().get_engines_by_names (names);
+
+					if (engines.length > 0) {
+						var engine = engines[0];
+
+						try {
+							this.icons[index] = Icon.new_for_string (engine.get_icon ());
+						} catch (Error error) {
+							warning ("error: %s", error.message);
+						}
 					}
 				}
 
@@ -554,21 +558,25 @@ public class Indicator.Keyboard.Service : Object {
 				else if (type == "ibus") {
 					var names = new string[2];
 					names[0] = name;
+
 					var engines = get_ibus ().get_engines_by_names (names);
-					var engine = engines[0];
-					string? language = engine.get_language ();
-					string? display_name = engine.get_longname ();
 
-					if (language != null) {
-						language = Xkl.get_language_name ((!) language);
-					}
+					if (engines.length > 0) {
+						var engine = engines[0];
+						string? language = engine.get_language ();
+						string? display_name = engine.get_longname ();
 
-					if (language != null && display_name != null) {
-						name = @"$((!) language) ($((!) display_name))";
-					} else if (language != null) {
-						name = (!) language;
-					} else if (display_name != null) {
-						name = (!) display_name;
+						if (language != null) {
+							language = Xkl.get_language_name ((!) language);
+						}
+
+						if (language != null && display_name != null) {
+							name = @"$((!) language) ($((!) display_name))";
+						} else if (language != null) {
+							name = (!) language;
+						} else if (display_name != null) {
+							name = (!) display_name;
+						}
 					}
 				}
 
@@ -631,8 +639,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_activate_map (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gucharmap");
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -655,11 +663,15 @@ public class Indicator.Keyboard.Service : Object {
 			} else if (type == "ibus") {
 				var names = new string[2];
 				names[0] = name;
-				var engines = get_ibus ().get_engines_by_names (names);
-				var engine = engines[0];
 
-				layout = engine.get_layout ();
-				variant = engine.get_layout_variant ();
+				var engines = get_ibus ().get_engines_by_names (names);
+
+				if (engines.length > 0) {
+					var engine = engines[0];
+
+					layout = engine.get_layout ();
+					variant = engine.get_layout_variant ();
+				}
 			}
 		}
 
@@ -673,8 +685,8 @@ public class Indicator.Keyboard.Service : Object {
 			}
 
 			Process.spawn_command_line_async (command);
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -682,8 +694,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_activate_settings (Variant? parameter) {
 		try {
 			Process.spawn_command_line_async ("gnome-control-center region layouts");
-		} catch {
-			warn_if_reached ();
+		} catch (SpawnError error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
@@ -692,13 +704,13 @@ public class Indicator.Keyboard.Service : Object {
 		try {
 			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_menu_model ());
-		} catch {
-			warn_if_reached ();
+		} catch (Error error) {
+			warning ("error: %s", error.message);
 		}
 	}
 
 	[DBus (visible = false)]
-	private void handle_name_lost (DBusConnection connection, string name) {
+	private void handle_name_lost (DBusConnection? connection, string name) {
 		((!) this.loop).quit ();
 		this.loop = null;
 	}
