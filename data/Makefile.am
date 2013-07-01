@@ -51,5 +51,10 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
 	            mv $@.tmp $@
 
+gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
+
+@GSETTINGS_RULES@
+
 EXTRA_DIST = $(dist_service_DATA)   \
-	     $(dist_indicator_DATA)
+	     $(dist_indicator_DATA) \
+	     $(gsettings_SCHEMAS)
