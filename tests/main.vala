@@ -1,4 +1,4 @@
-const int LONG_TIMEOUT = 10;
+const int LONG_TIMEOUT = 1;
 const int SHORT_TIMEOUT = 1000;
 
 [DBus (name = "com.canonical.indicator.keyboard.test")]
@@ -110,6 +110,98 @@ static void end_test (void *data) {
 }
 
 static void test_activate_input_source (void *data) {
+	var fixture = (Fixture *) data;
+
+	if (fixture.object_name == 0) {
+		Test.message ("Invalid test fixture.");
+		Test.fail ();
+		return;
+	}
+
+	try {
+		var current = 0;
+		var sources = "[('xkb', 'us'), ('xkb', 'ca+eng'), ('xkb', 'epo'), ('ibus', 'pinyin')]";
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	var cancellable = new Cancellable ();
+	DBusProxy action_proxy;
+	DBusProxy menu_proxy;
+
+	var source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		action_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                           DBusProxyFlags.NONE,
+		                                           null,
+		                                           "com.canonical.indicator.keyboard",
+		                                           "/com/canonical/indicator/keyboard",
+		                                           "org.gtk.Actions",
+		                                           cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		menu_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                         DBusProxyFlags.NONE,
+		                                         null,
+		                                         "com.canonical.indicator.keyboard",
+		                                         "/com/canonical/indicator/keyboard/desktop",
+		                                         "org.gtk.Menus",
+		                                         cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	try {
+		var builder = new VariantBuilder (new VariantType ("(sava{sv})"));
+		builder.add ("s", "current");
+		builder.add_value (new Variant.parsed ("[<@u 2>]"));
+		builder.add_value (new Variant.parsed ("@a{sv} {}"));
+		action_proxy.call_sync ("Activate", builder.end (), DBusCallFlags.NONE, SHORT_TIMEOUT);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	try {
+		string current;
+		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out current);
+		assert (strcmp (current, "uint32 2\n") == 0);
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
 }
 
 static void test_activate_character_map (void *data) {
@@ -384,6 +476,12 @@ static void test_activate_text_entry_settings (void *data) {
 	assert (strcmp ((!) ((!) fixture.service).command, "'gnome-control-center region layouts'") == 0);
 }
 
+static void test_migration (void *data) {
+}
+
+static void test_update_visible (void *data) {
+}
+
 static void test_update_input_source (void *data) {
 }
 
@@ -401,6 +499,8 @@ public int main (string[] args) {
 	suite.add (new TestCase ("activate-character-map", begin_test, test_activate_character_map, end_test, sizeof (Fixture)));
 	suite.add (new TestCase ("activate-keyboard-layout-chart", begin_test, test_activate_keyboard_layout_chart, end_test, sizeof (Fixture)));
 	suite.add (new TestCase ("activate-text-entry-settings", begin_test, test_activate_text_entry_settings, end_test, sizeof (Fixture)));
+	suite.add (new TestCase ("migration", begin_test, test_migration, end_test, sizeof (Fixture)));
+	suite.add (new TestCase ("update-visible", begin_test, test_update_visible, end_test, sizeof (Fixture)));
 	suite.add (new TestCase ("update-input-source", begin_test, test_update_input_source, end_test, sizeof (Fixture)));
 	suite.add (new TestCase ("update-input-sources", begin_test, test_update_input_sources, end_test, sizeof (Fixture)));
 
