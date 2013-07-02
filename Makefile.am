@@ -1,3 +1,3 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = po lib data
+SUBDIRS = po lib data tests

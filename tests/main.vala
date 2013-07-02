@@ -121,10 +121,103 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
-	/* XXX: bootstrap the settings with what we want to test with. */
-	var settings = new Settings ("org.gnome.desktop.input-sources");
-	settings.set_uint ("current", 0);
-	settings.set_value ("sources", new Variant.parsed ("[('xkb', 'us'), ('ibus', 'pinyin')]"));
+	var cancellable = new Cancellable ();
+	DBusProxy action_proxy;
+	DBusProxy menu_proxy;
+
+	var source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		action_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                           DBusProxyFlags.NONE,
+		                                           null,
+		                                           "com.canonical.indicator.keyboard",
+		                                           "/com/canonical/indicator/keyboard",
+		                                           "org.gtk.Actions",
+		                                           cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		menu_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                         DBusProxyFlags.NONE,
+		                                         null,
+		                                         "com.canonical.indicator.keyboard",
+		                                         "/com/canonical/indicator/keyboard/desktop",
+		                                         "org.gtk.Menus",
+		                                         cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	var loop = new MainLoop (null, false);
+
+	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
+		loop.quit ();
+	});
+
+	try {
+		var builder = new VariantBuilder (new VariantType ("(sava{sv})"));
+		builder.add ("s", "map");
+		builder.add_value (new Variant.parsed ("@av []"));
+		builder.add_value (new Variant.parsed ("@a{sv} {}"));
+		action_proxy.call_sync ("Activate", builder.end (), DBusCallFlags.NONE, SHORT_TIMEOUT);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (LONG_TIMEOUT, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	((!) fixture.service).disconnect (signal_name);
+
+	assert (strcmp ((!) ((!) fixture.service).command, "'gucharmap '") == 0);
+}
+
+static void test_activate_keyboard_layout_chart (void *data) {
+	var fixture = (Fixture *) data;
+
+	if (fixture.object_name == 0) {
+		Test.message ("Invalid test fixture.");
+		Test.fail ();
+		return;
+	}
+
+	try {
+		var current = 1;
+		var sources = "[('xkb', 'us'), ('xkb', 'ca+eng'), ('xkb', 'epo'), ('ibus', 'pinyin')]";
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
 
 	var cancellable = new Cancellable ();
 	DBusProxy action_proxy;
@@ -178,18 +271,6 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
-	/* XXX: This is just to make sure the GSettings are shared between processes. */
-	{
-		var builder = new VariantBuilder (new VariantType ("(au)"));
-		builder.open (new VariantType ("au"));
-		builder.add ("u", 0);
-		builder.add ("u", 1);
-		builder.close ();
-		var variant = builder.end ();
-		stdout.printf ("%s\n", menu_proxy.call_sync ("Start", variant, DBusCallFlags.NONE, SHORT_TIMEOUT).print (true));
-		menu_proxy.call_sync ("End", variant, DBusCallFlags.NONE, SHORT_TIMEOUT);
-	}
-
 	var loop = new MainLoop (null, false);
 
 	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
@@ -212,12 +293,95 @@ static void test_activate_character_map (void *data) {
 	loop.run ();
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
-}
 
-static void test_activate_keyboard_layout_chart (void *data) {
+	assert (strcmp ((!) ((!) fixture.service).command, "'gkbd-keyboard-display -l ca\teng'") == 0);
 }
 
 static void test_activate_text_entry_settings (void *data) {
+	var fixture = (Fixture *) data;
+
+	if (fixture.object_name == 0) {
+		Test.message ("Invalid test fixture.");
+		Test.fail ();
+		return;
+	}
+
+	var cancellable = new Cancellable ();
+	DBusProxy action_proxy;
+	DBusProxy menu_proxy;
+
+	var source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		action_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                           DBusProxyFlags.NONE,
+		                                           null,
+		                                           "com.canonical.indicator.keyboard",
+		                                           "/com/canonical/indicator/keyboard",
+		                                           "org.gtk.Actions",
+		                                           cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (LONG_TIMEOUT, () => { cancellable.cancel (); return false; });
+
+	try {
+		menu_proxy = new DBusProxy.for_bus_sync (BusType.SESSION,
+		                                         DBusProxyFlags.NONE,
+		                                         null,
+		                                         "com.canonical.indicator.keyboard",
+		                                         "/com/canonical/indicator/keyboard/desktop",
+		                                         "org.gtk.Menus",
+		                                         cancellable);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	Source.remove (source);
+
+	if (cancellable.is_cancelled ()) {
+		Test.message ("Unable to connect to 'com.canonical.indicator.keyboard'.\n");
+		Test.fail ();
+		return;
+	}
+
+	var loop = new MainLoop (null, false);
+
+	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
+		loop.quit ();
+	});
+
+	try {
+		var builder = new VariantBuilder (new VariantType ("(sava{sv})"));
+		builder.add ("s", "settings");
+		builder.add_value (new Variant.parsed ("@av []"));
+		builder.add_value (new Variant.parsed ("@a{sv} {}"));
+		action_proxy.call_sync ("Activate", builder.end (), DBusCallFlags.NONE, SHORT_TIMEOUT);
+	} catch (Error error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (LONG_TIMEOUT, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	((!) fixture.service).disconnect (signal_name);
+
+	assert (strcmp ((!) ((!) fixture.service).command, "'gnome-control-center region layouts'") == 0);
 }
 
 static void test_update_input_source (void *data) {

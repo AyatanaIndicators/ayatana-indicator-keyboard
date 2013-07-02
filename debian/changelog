@@ -1,6 +1,7 @@
 indicator-keyboard (0.0.0-0ubuntu18) UNRELEASED; urgency=low
 
   * Add indicator schema.
+  * Repair test fixtures.
 
  -- William Hua <william.hua@canonical.com>  Mon, 01 Jul 2013 10:21:40 -0400
 
