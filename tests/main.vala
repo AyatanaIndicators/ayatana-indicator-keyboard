@@ -129,16 +129,30 @@ static void test_activate_input_source (void *data) {
 		return;
 	}
 
+	var loop = new MainLoop (null, false);
+
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
+		loop.quit ();
+	});
+	action_group.list_actions ();
 	action_group.activate_action ("current", new Variant.uint32 (2));
-	Posix.sleep (TIMEOUT_S);
+
+	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	action_group.disconnect (signal_name);
+
+	var state = action_group.get_action_state ("current");
+	var current = state.get_uint32 ();
+	assert (current == 2);
 
 	try {
-		string current;
-		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out current);
-		assert (strcmp (current, "uint32 2\n") == 0);
+		string output;
+		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		assert (strcmp (output, "uint32 2\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
 		Test.fail ();
@@ -401,7 +415,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("indicator");
-	assert (((!) state).lookup ("visible", "b", out visible));
+	assert (state.lookup ("visible", "b", out visible));
 	assert (visible);
 
 	loop = new MainLoop (null, false);
@@ -424,7 +438,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (((!) state).lookup ("visible", "b", out visible));
+	assert (state.lookup ("visible", "b", out visible));
 	assert (!visible);
 
 	loop = new MainLoop (null, false);
@@ -447,11 +461,101 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (((!) state).lookup ("visible", "b", out visible));
+	assert (state.lookup ("visible", "b", out visible));
 	assert (visible);
 }
 
 static void test_update_input_source (void *data) {
+	var fixture = (Fixture *) data;
+
+	if (fixture.object_name == 0) {
+		Test.message ("error: Test fixture not initialized.");
+		Test.fail ();
+		return;
+	}
+
+	try {
+		var current = 0;
+		var sources = "[('xkb', 'us'), ('xkb', 'ca+eng'), ('xkb', 'epo'), ('ibus', 'pinyin')]";
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	var loop = new MainLoop (null, false);
+
+	var action_group = DBusActionGroup.get ((!) fixture.connection,
+	                                        "com.canonical.indicator.keyboard",
+	                                        "/com/canonical/indicator/keyboard");
+	var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
+		loop.quit ();
+	});
+	action_group.list_actions ();
+
+	try {
+		var current = 1;
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	action_group.disconnect (signal_name);
+
+	var state = action_group.get_action_state ("current");
+	var current = state.get_uint32 ();
+	assert (current == 1);
+
+	try {
+		string output;
+		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		assert (strcmp (output, "uint32 1\n") == 0);
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	loop = new MainLoop (null, false);
+
+	signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
+		loop.quit ();
+	});
+
+	try {
+		current = 0;
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	action_group.disconnect (signal_name);
+
+	state = action_group.get_action_state ("current");
+	current = state.get_uint32 ();
+	assert (current == 0);
+
+	try {
+		string output;
+		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		assert (strcmp (output, "uint32 0\n") == 0);
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
 }
 
 static void test_update_input_sources (void *data) {
