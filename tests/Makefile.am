@@ -11,6 +11,7 @@ AM_VALAFLAGS = --enable-experimental-non-null   \
 indicator_keyboard_test_SOURCES = main.vala   \
                                   config.vala
 indicator_keyboard_test_VALAFLAGS = $(AM_VALAFLAGS) \
+                                    --pkg posix     \
                                     --pkg gio-2.0
 indicator_keyboard_test_CFLAGS = $(AM_CFLAGS)  \
                                  $(GIO_CFLAGS)
