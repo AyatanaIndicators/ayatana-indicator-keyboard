@@ -129,14 +129,14 @@ static void test_activate_input_source (void *data) {
 		return;
 	}
 
-	var loop = new MainLoop (null, false);
-
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var loop = new MainLoop (null, false);
 	var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
 		loop.quit ();
 	});
+
 	action_group.list_actions ();
 	action_group.activate_action ("current", new Variant.uint32 (2));
 
@@ -146,7 +146,7 @@ static void test_activate_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("current");
-	var current = state.get_uint32 ();
+	var current = ((!) state).get_uint32 ();
 	assert (current == 2);
 
 	try {
@@ -169,15 +169,14 @@ static void test_activate_character_map (void *data) {
 		return;
 	}
 
+	var action_group = DBusActionGroup.get ((!) fixture.connection,
+	                                        "com.canonical.indicator.keyboard",
+	                                        "/com/canonical/indicator/keyboard");
 	var loop = new MainLoop (null, false);
-
 	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
 		loop.quit ();
 	});
 
-	var action_group = DBusActionGroup.get ((!) fixture.connection,
-	                                        "com.canonical.indicator.keyboard",
-	                                        "/com/canonical/indicator/keyboard");
 	action_group.activate_action ("map", null);
 
 	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
@@ -208,15 +207,13 @@ static void test_activate_keyboard_layout_chart (void *data) {
 		return;
 	}
 
-	var loop = new MainLoop (null, false);
-
-	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
-		loop.quit ();
-	});
-
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var loop = new MainLoop (null, false);
+	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
+		loop.quit ();
+	});
 
 	action_group.activate_action ("chart", null);
 
@@ -237,15 +234,13 @@ static void test_activate_text_entry_settings (void *data) {
 		return;
 	}
 
-	var loop = new MainLoop (null, false);
-
-	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
-		loop.quit ();
-	});
-
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var loop = new MainLoop (null, false);
+	var signal_name = ((!) fixture.service).notify["command"].connect ((pspec) => {
+		loop.quit ();
+	});
 
 	action_group.activate_action ("settings", null);
 
@@ -399,14 +394,14 @@ static void test_update_visible (void *data) {
 		return;
 	}
 
-	var loop = new MainLoop (null, false);
-
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var loop = new MainLoop (null, false);
 	var signal_name = action_group.action_added["indicator"].connect ((action) => {
 		loop.quit ();
 	});
+
 	action_group.list_actions ();
 
 	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
@@ -415,7 +410,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (visible);
 
 	loop = new MainLoop (null, false);
@@ -438,7 +433,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (!visible);
 
 	loop = new MainLoop (null, false);
@@ -461,7 +456,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (visible);
 }
 
@@ -485,14 +480,14 @@ static void test_update_input_source (void *data) {
 		return;
 	}
 
-	var loop = new MainLoop (null, false);
-
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
+	var loop = new MainLoop (null, false);
 	var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
 		loop.quit ();
 	});
+
 	action_group.list_actions ();
 
 	try {
@@ -510,7 +505,7 @@ static void test_update_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("current");
-	var current = state.get_uint32 ();
+	var current = ((!) state).get_uint32 ();
 	assert (current == 1);
 
 	try {
@@ -524,7 +519,6 @@ static void test_update_input_source (void *data) {
 	}
 
 	loop = new MainLoop (null, false);
-
 	signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
 		loop.quit ();
 	});
@@ -544,7 +538,7 @@ static void test_update_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("current");
-	current = state.get_uint32 ();
+	current = ((!) state).get_uint32 ();
 	assert (current == 0);
 
 	try {
@@ -559,10 +553,107 @@ static void test_update_input_source (void *data) {
 }
 
 static void test_update_input_sources (void *data) {
+	var fixture = (Fixture *) data;
+
+	if (fixture.object_name == 0) {
+		Test.message ("error: Test fixture not initialized.");
+		Test.fail ();
+		return;
+	}
+
+	try {
+		var current = 0;
+		var sources = "[('xkb', 'us')]";
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources current $current");
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	var menu_model = DBusMenuModel.get ((!) fixture.connection,
+	                                    "com.canonical.indicator.keyboard",
+	                                    "/com/canonical/indicator/keyboard/desktop");
+	var loop = new MainLoop (null, false);
+	var signal_name = menu_model.items_changed.connect ((position, removed, added) => {
+		loop.quit ();
+	});
+
+	menu_model.get_n_items ();
+
+	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	menu_model.disconnect (signal_name);
+
+	var menu = menu_model.get_item_link (0, Menu.LINK_SUBMENU);
+	loop = new MainLoop (null, false);
+	signal_name = menu.items_changed.connect ((position, removed, added) => {
+		loop.quit ();
+	});
+
+	menu.get_n_items ();
+
+	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	menu.disconnect (signal_name);
+
+	var section = menu.get_item_link (0, Menu.LINK_SECTION);
+	loop = new MainLoop (null, false);
+	signal_name = section.items_changed.connect ((position, removed, added) => {
+		loop.quit ();
+	});
+
+	section.get_n_items ();
+
+	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	section.disconnect (signal_name);
+
+	string label;
+
+	assert (section.get_n_items () == 1);
+	section.get_item_attribute (0, Menu.ATTRIBUTE_LABEL, "s", out label);
+	assert (strcmp (label, "English (US)") == 0);
+
+	loop = new MainLoop (null, false);
+	signal_name = section.items_changed.connect ((position, removed, added) => {
+		if (section.get_n_items () == 4) {
+			loop.quit ();
+		}
+	});
+
+	try {
+		var sources = "[('xkb', 'us'), ('xkb', 'ca+eng'), ('xkb', 'epo'), ('ibus', 'pinyin')]";
+		Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
+	} catch (SpawnError error) {
+		Test.message ("error: %s", error.message);
+		Test.fail ();
+		return;
+	}
+
+	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+	Source.remove (source);
+	section.disconnect (signal_name);
+
+	assert (section.get_n_items () == 4);
+	section.get_item_attribute (0, Menu.ATTRIBUTE_LABEL, "s", out label);
+	assert (strcmp (label, "English (US)") == 0);
+	section.get_item_attribute (1, Menu.ATTRIBUTE_LABEL, "s", out label);
+	assert (strcmp (label, "English (Canada)") == 0);
+	section.get_item_attribute (2, Menu.ATTRIBUTE_LABEL, "s", out label);
+	assert (strcmp (label, "Esperanto") == 0);
+	section.get_item_attribute (3, Menu.ATTRIBUTE_LABEL, "s", out label);
+	assert (strcmp (label, "Pinyin") == 0);
 }
 
 public int main (string[] args) {
 	Environment.set_variable ("DCONF_PROFILE", DCONF_PROFILE, true);
+	Environment.set_variable ("LC_ALL", "C", true);
 
 	Test.init (ref args, null);
 
