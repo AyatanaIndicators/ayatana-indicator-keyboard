@@ -146,7 +146,7 @@ static void test_activate_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("current");
-	var current = state.get_uint32 ();
+	var current = ((!) state).get_uint32 ();
 	assert (current == 2);
 
 	try {
@@ -410,7 +410,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (visible);
 
 	loop = new MainLoop (null, false);
@@ -433,7 +433,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (!visible);
 
 	loop = new MainLoop (null, false);
@@ -456,7 +456,7 @@ static void test_update_visible (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("indicator");
-	assert (state.lookup ("visible", "b", out visible));
+	assert (((!) state).lookup ("visible", "b", out visible));
 	assert (visible);
 }
 
@@ -505,7 +505,7 @@ static void test_update_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("current");
-	var current = state.get_uint32 ();
+	var current = ((!) state).get_uint32 ();
 	assert (current == 1);
 
 	try {
@@ -538,7 +538,7 @@ static void test_update_input_source (void *data) {
 	action_group.disconnect (signal_name);
 
 	state = action_group.get_action_state ("current");
-	current = state.get_uint32 ();
+	current = ((!) state).get_uint32 ();
 	assert (current == 0);
 
 	try {
