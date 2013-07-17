@@ -34,9 +34,9 @@ servicedir = $(DBUS_SERVICE_DIR)
 dist_service_DATA = indicator-keyboard.service
 
 indicator-keyboard.service:
-	$(AM_V_GEN) (echo '[D-BUS Service]';                                           \
-	             echo 'Name=com.canonical.indicator.keyboard';                     \
-	             echo 'Exec=${libexecdir}/indicator-keyboard-service') > $@.tmp && \
+	$(AM_V_GEN) (echo '[D-BUS Service]';                                                     \
+	             echo 'Name=com.canonical.indicator.keyboard';                               \
+	             echo 'Exec=${libexecdir}/indicator-keyboard-service --use-gtk') > $@.tmp && \
 	            mv $@.tmp $@
 
 indicatordir = $(INDICATOR_DIR)
