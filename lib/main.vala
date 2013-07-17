@@ -404,15 +404,19 @@ public class Indicator.Keyboard.Service : Object {
 							icon_name = @"indicator-keyboard-$((!) icon_string)-$icon_subscript";
 						}
 
-						var icon_theme = Gtk.IconTheme.get_default ();
-						Gtk.IconInfo? icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
+						if (this.use_gtk) {
+							var icon_theme = Gtk.IconTheme.get_default ();
+							Gtk.IconInfo? icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
 
-						if (icon_info != null) {
-							try {
-								this.icons[index] = Icon.new_for_string (((!) icon_info).get_filename ());
-							} catch (Error error) {
-								this.icons[index] = null;
+							if (icon_info != null) {
+								try {
+									this.icons[index] = Icon.new_for_string (((!) icon_info).get_filename ());
+								} catch (Error error) {
+									this.icons[index] = null;
+								}
 							}
+						} else {
+							this.icons[index] = new ThemedIcon (icon_name);
 						}
 					}
 
