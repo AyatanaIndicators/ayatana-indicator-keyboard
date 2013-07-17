@@ -9,7 +9,7 @@
 +AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
                 --vapidir $(top_srcdir)/deps
  
- indicator_keyboard_test_SOURCES = main.vala   \
+ indicator_keyboard_tests_SOURCES = main.vala   \
 --- a/tests/main.vala
 +++ b/tests/main.vala
 @@ -146,7 +146,7 @@
