@@ -2,6 +2,7 @@
 public class Indicator.Keyboard.Service : Object {
 
 	private bool use_gtk;
+	private bool use_bamf;
 	private MainLoop? loop;
 	private Settings indicator_settings;
 	private Settings source_settings;
@@ -22,15 +23,22 @@ public class Indicator.Keyboard.Service : Object {
 	private uint[]? icon_string_subscripts;
 
 	[DBus (visible = false)]
-	public Service (bool force, bool use_gtk) {
+	public Service (ref unowned string[] args) {
 		Bus.own_name (BusType.SESSION,
 		              "com.canonical.indicator.keyboard",
-		              BusNameOwnerFlags.ALLOW_REPLACEMENT | (force ? BusNameOwnerFlags.REPLACE : 0),
+		              BusNameOwnerFlags.ALLOW_REPLACEMENT | ("--force" in args ? BusNameOwnerFlags.REPLACE : 0),
 		              this.handle_bus_acquired,
 		              null,
 		              this.handle_name_lost);
 
-		this.use_gtk = use_gtk;
+		this.use_gtk = "--use-gtk" in args;
+		this.use_bamf = "--use-bamf" in args;
+
+		if (this.use_gtk) {
+			this.use_gtk = Gtk.init_check (ref args);
+		} else {
+			Gdk.init (ref args);
+		}
 
 		this.indicator_settings = new Settings ("com.canonical.indicator.keyboard");
 		this.indicator_settings.changed["visible"].connect (this.handle_changed_visible);
@@ -121,17 +129,19 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_window_sources () {
-		var group_per_window = this.per_window_settings.get_boolean ("group-per-window");
+		if (this.use_bamf) {
+			var group_per_window = this.per_window_settings.get_boolean ("group-per-window");
 
-		if (group_per_window != (this.window_sources != null)) {
-			if (group_per_window) {
-				this.window_sources = new Gee.HashMap<string, uint> ();
-				this.matcher = Bamf.Matcher.get_default ();
-				((!) this.matcher).active_window_changed.connect (this.handle_active_window_changed);
-			} else {
-				((!) this.matcher).active_window_changed.disconnect (this.handle_active_window_changed);
-				this.matcher = null;
-				this.window_sources = null;
+			if (group_per_window != (this.window_sources != null)) {
+				if (group_per_window) {
+					this.window_sources = new Gee.HashMap<string, uint> ();
+					this.matcher = Bamf.Matcher.get_default ();
+					((!) this.matcher).active_window_changed.connect (this.handle_active_window_changed);
+				} else {
+					((!) this.matcher).active_window_changed.disconnect (this.handle_active_window_changed);
+					this.matcher = null;
+					this.window_sources = null;
+				}
 			}
 		}
 	}
@@ -163,15 +173,18 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Gtk.StyleContext? get_style_context () {
 		Gtk.StyleContext? context = null;
-		Gdk.Screen? screen = Gdk.Screen.get_default ();
 
-		if (screen != null) {
-			context = new Gtk.StyleContext ();
-			((!) context).set_screen ((!) screen);
+		if (this.use_gtk) {
+			Gdk.Screen? screen = Gdk.Screen.get_default ();
 
-			var path = new Gtk.WidgetPath ();
-			path.append_type (typeof (Gtk.MenuItem));
-			((!) context).set_path (path);
+			if (screen != null) {
+				context = new Gtk.StyleContext ();
+				((!) context).set_screen ((!) screen);
+
+				var path = new Gtk.WidgetPath ();
+				path.append_type (typeof (Gtk.MenuItem));
+				((!) context).set_path (path);
+			}
 		}
 
 		return context;
@@ -181,90 +194,88 @@ public class Indicator.Keyboard.Service : Object {
 	protected virtual Icon? create_icon (string? text, uint subscript) {
 		Icon? icon = null;
 
-		if (this.use_gtk) {
-			var style = get_style_context ();
+		var style = get_style_context ();
 
-			if (style != null) {
-				const int W = 22;
-				const int H = 22;
-				const int w = 20;
-				const int h = 20;
-				const double R = 2.0;
-				const double TEXT_SIZE = 12.0;
-				const double SUBSCRIPT_SIZE = 8.0;
+		if (style != null) {
+			const int W = 22;
+			const int H = 22;
+			const int w = 20;
+			const int h = 20;
+			const double R = 2.0;
+			const double TEXT_SIZE = 12.0;
+			const double SUBSCRIPT_SIZE = 8.0;
 
-				Pango.FontDescription description;
-				var colour = ((!) style).get_color (Gtk.StateFlags.NORMAL);
-				colour = { 0.5, 0.5, 0.5, 1.0 };
-				((!) style).get (Gtk.StateFlags.NORMAL, Gtk.STYLE_PROPERTY_FONT, out description);
+			Pango.FontDescription description;
+			var colour = ((!) style).get_color (Gtk.StateFlags.NORMAL);
+			colour = { 0.5, 0.5, 0.5, 1.0 };
+			((!) style).get (Gtk.StateFlags.NORMAL, Gtk.STYLE_PROPERTY_FONT, out description);
 
-				var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, W, H);
-				var context = new Cairo.Context (surface);
+			var surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, W, H);
+			var context = new Cairo.Context (surface);
 
-				context.translate (0.5 * (W - w), 0.5 * (H - h));
+			context.translate (0.5 * (W - w), 0.5 * (H - h));
 
-				context.new_sub_path ();
-				context.arc (R, R, R, Math.PI, -0.5 * Math.PI);
-				context.arc (w - R, R, R, -0.5 * Math.PI, 0);
-				context.arc (w - R, h - R, R, 0, 0.5 * Math.PI);
-				context.arc (R, h - R, R, 0.5 * Math.PI, Math.PI);
-				context.close_path ();
+			context.new_sub_path ();
+			context.arc (R, R, R, Math.PI, -0.5 * Math.PI);
+			context.arc (w - R, R, R, -0.5 * Math.PI, 0);
+			context.arc (w - R, h - R, R, 0, 0.5 * Math.PI);
+			context.arc (R, h - R, R, 0.5 * Math.PI, Math.PI);
+			context.close_path ();
 
-				context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
-				context.fill ();
-				context.set_operator (Cairo.Operator.CLEAR);
+			context.set_source_rgba (colour.red, colour.green, colour.blue, colour.alpha);
+			context.fill ();
+			context.set_operator (Cairo.Operator.CLEAR);
 
-				if (text != null) {
-					var text_layout = Pango.cairo_create_layout (context);
-					text_layout.set_alignment (Pango.Alignment.CENTER);
-					description.set_absolute_size (Pango.units_from_double (TEXT_SIZE));
-					text_layout.set_font_description (description);
-					text_layout.set_text ((!) text, -1);
-					Pango.cairo_update_layout (context, text_layout);
-					int text_width;
-					int text_height;
-					text_layout.get_pixel_size (out text_width, out text_height);
+			if (text != null) {
+				var text_layout = Pango.cairo_create_layout (context);
+				text_layout.set_alignment (Pango.Alignment.CENTER);
+				description.set_absolute_size (Pango.units_from_double (TEXT_SIZE));
+				text_layout.set_font_description (description);
+				text_layout.set_text ((!) text, -1);
+				Pango.cairo_update_layout (context, text_layout);
+				int text_width;
+				int text_height;
+				text_layout.get_pixel_size (out text_width, out text_height);
 
-					if (subscript > 0) {
-						var subscript_layout = Pango.cairo_create_layout (context);
-						subscript_layout.set_alignment (Pango.Alignment.CENTER);
-						description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
-						subscript_layout.set_font_description (description);
-						subscript_layout.set_text (@"$subscript", -1);
-						Pango.cairo_update_layout (context, subscript_layout);
-						int subscript_width;
-						int subscript_height;
-						subscript_layout.get_pixel_size (out subscript_width, out subscript_height);
+				if (subscript > 0) {
+					var subscript_layout = Pango.cairo_create_layout (context);
+					subscript_layout.set_alignment (Pango.Alignment.CENTER);
+					description.set_absolute_size (Pango.units_from_double (SUBSCRIPT_SIZE));
+					subscript_layout.set_font_description (description);
+					subscript_layout.set_text (@"$subscript", -1);
+					Pango.cairo_update_layout (context, subscript_layout);
+					int subscript_width;
+					int subscript_height;
+					subscript_layout.get_pixel_size (out subscript_width, out subscript_height);
 
-						context.save ();
-						context.translate ((w - (text_width + subscript_width)) / 2, (h - text_height) / 2);
-						Pango.cairo_layout_path (context, text_layout);
-						context.fill ();
-						context.restore ();
+					context.save ();
+					context.translate ((w - (text_width + subscript_width)) / 2, (h - text_height) / 2);
+					Pango.cairo_layout_path (context, text_layout);
+					context.fill ();
+					context.restore ();
 
-						context.save ();
-						context.translate ((w + (text_width - subscript_width)) / 2, (h + text_height) / 2 - subscript_height);
-						Pango.cairo_layout_path (context, subscript_layout);
-						context.fill ();
-						context.restore ();
-					} else {
-						context.save ();
-						context.translate ((w - text_width) / 2, (h - text_height) / 2);
-						Pango.cairo_layout_path (context, text_layout);
-						context.fill ();
-						context.restore ();
-					}
+					context.save ();
+					context.translate ((w + (text_width - subscript_width)) / 2, (h + text_height) / 2 - subscript_height);
+					Pango.cairo_layout_path (context, subscript_layout);
+					context.fill ();
+					context.restore ();
+				} else {
+					context.save ();
+					context.translate ((w - text_width) / 2, (h - text_height) / 2);
+					Pango.cairo_layout_path (context, text_layout);
+					context.fill ();
+					context.restore ();
 				}
-
-				var buffer = new ByteArray ();
-
-				surface.write_to_png_stream ((data) => {
-					buffer.append (data);
-					return Cairo.Status.SUCCESS;
-				});
-
-				icon = new BytesIcon (ByteArray.free_to_bytes ((owned) buffer));
 			}
+
+			var buffer = new ByteArray ();
+
+			surface.write_to_png_stream ((data) => {
+				buffer.append (data);
+				return Cairo.Status.SUCCESS;
+			});
+
+			icon = new BytesIcon (ByteArray.free_to_bytes ((owned) buffer));
 		}
 
 		return icon;
@@ -738,13 +749,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	public static int main (string[] args) {
-		var force = "--force" in args;
-		var use_gtk = "--use-gtk" in args;
-
-		if (use_gtk)
-			use_gtk = Gtk.init_check (ref args);
-
-		new Service (force, use_gtk);
+		new Service (ref args);
 		return 0;
 	}
 }
