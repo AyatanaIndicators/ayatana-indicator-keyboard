@@ -1,2 +1,3 @@
 default-icon-colour.patch
 disable-experimental-non-null.patch
+relax-test-missing-ibus.patch

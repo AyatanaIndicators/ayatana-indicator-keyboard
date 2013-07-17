@@ -648,7 +648,7 @@ static void test_update_input_sources (void *data) {
 	section.get_item_attribute (2, Menu.ATTRIBUTE_LABEL, "s", out label);
 	assert (strcmp (label, "Esperanto") == 0);
 	section.get_item_attribute (3, Menu.ATTRIBUTE_LABEL, "s", out label);
-	assert (label.ascii_casecmp ("Pinyin") == 0);
+	assert (strcmp (label, "Pinyin") == 0);
 }
 
 public int main (string[] args) {

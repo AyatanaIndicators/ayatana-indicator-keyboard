@@ -1,0 +1,11 @@
+--- a/tests/main.vala
++++ b/tests/main.vala
+@@ -648,7 +648,7 @@
+ 	section.get_item_attribute (2, Menu.ATTRIBUTE_LABEL, "s", out label);
+ 	assert (strcmp (label, "Esperanto") == 0);
+ 	section.get_item_attribute (3, Menu.ATTRIBUTE_LABEL, "s", out label);
+-	assert (strcmp (label, "Pinyin") == 0);
++	assert (label.ascii_casecmp ("Pinyin") == 0);
+ }
+ 
+ public int main (string[] args) {
