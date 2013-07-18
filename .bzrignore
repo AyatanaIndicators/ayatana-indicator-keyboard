@@ -19,6 +19,7 @@ configure
 data/com.canonical.indicator.keyboard
 data/indicator-keyboard-icon-generator
 data/indicator-keyboard.service
+data/gschemas.compiled
 debian/autoreconf.after
 debian/autoreconf.before
 debian/files
@@ -29,7 +30,7 @@ libtool
 po/POTFILES
 po/stamp-it
 tests/config.vala
-tests/indicator-keyboard-service
+tests/indicator-keyboard-test
 tests/indicator-keyboard-test.trs
 tests/indicator-keyboard-tests
 tests/services/indicator-keyboard.service

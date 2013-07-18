@@ -30,8 +30,8 @@ indicator_keyboard_icon_generator_LDFLAGS = $(AM_LDFLAGS)         \
                                             $(GNOME_DESKTOP_LIBS) \
                                             $(LIBXKLAVIER_LIBS)
 
-servicedir = $(DBUS_SERVICE_DIR)
 dist_service_DATA = indicator-keyboard.service
+servicedir = $(DBUS_SERVICE_DIR)
 
 indicator-keyboard.service:
 	$(AM_V_GEN) (echo '[D-BUS Service]';                                                                \
@@ -39,8 +39,8 @@ indicator-keyboard.service:
 	             echo 'Exec=${libexecdir}/indicator-keyboard-service --use-gtk --use-bamf') > $@.tmp && \
 	            mv $@.tmp $@
 
-indicatordir = $(INDICATOR_DIR)
 dist_indicator_DATA = com.canonical.indicator.keyboard
+indicatordir = $(INDICATOR_DIR)
 
 com.canonical.indicator.keyboard:
 	$(AM_V_GEN) (echo '[Indicator Service]';                                              \
@@ -54,6 +54,11 @@ com.canonical.indicator.keyboard:
 gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
 
 @GSETTINGS_RULES@
+
+check_DATA = gschemas.compiled
+
+gschemas.compiled: $(gsettings_SCHEMAS)
+	$(GLIB_COMPILE_SCHEMAS) --strict .
 
 EXTRA_DIST = $(dist_service_DATA)   \
 	     $(dist_indicator_DATA) \

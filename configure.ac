@@ -79,7 +79,7 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  tests/config.vala
                  tests/services/indicator-keyboard.service])
-AC_CONFIG_FILES([tests/indicator-keyboard-service],
-                [chmod +x tests/indicator-keyboard-service])
+AC_CONFIG_FILES([tests/indicator-keyboard-test],
+                [chmod +x tests/indicator-keyboard-test])
 
 AC_OUTPUT

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export PATH="@abs_top_builddir@/tests/execute:$PATH"
+export DCONF_PROFILE="@abs_top_builddir@/tests/profiles/indicator-keyboard-test"
+export GSETTINGS_SCHEMA_DIR="@abs_top_builddir@/data"
+
+xvfb-run -a ./indicator-keyboard-tests

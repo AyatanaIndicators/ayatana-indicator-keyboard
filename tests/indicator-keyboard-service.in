@@ -1,5 +1,0 @@
-#!/bin/sh
-
-PATH="@abs_top_builddir@/tests/execute:$PATH"
-DCONF_PROFILE="@abs_top_builddir@/tests/profiles/indicator-keyboard-test"
-@abs_top_builddir@/lib/indicator-keyboard-service "$@"
