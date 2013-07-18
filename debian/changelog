@@ -1,9 +1,17 @@
-indicator-keyboard (0.0.0-0ubuntu18) UNRELEASED; urgency=low
+indicator-keyboard (0.0.0-0ubuntu19) saucy; urgency=low
+
+  * debian/control:
+    - Don't build-depend on vala-0.20-vapi
+    - Build-depend on dbus for tests
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Mon, 15 Jul 2013 21:00:06 -0400
+
+indicator-keyboard (0.0.0-0ubuntu18) saucy; urgency=low
 
   * Add indicator schema.
   * Repair test fixtures.
 
- -- William Hua <william.hua@canonical.com>  Mon, 01 Jul 2013 10:21:40 -0400
+ -- William Hua <william.hua@canonical.com>  Mon, 15 Jul 2013 20:37:40 -0400
 
 indicator-keyboard (0.0.0-0ubuntu17) saucy; urgency=low
 
