@@ -1,3 +1,4 @@
+SUBDIRS = autopilot
 TESTS = indicator-keyboard-test
 
 check_PROGRAMS = indicator-keyboard-tests

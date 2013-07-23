@@ -21,6 +21,8 @@ PKG_PROG_PKG_CONFIG([0.26])
 AC_ARG_WITH([dbus-service-dir], [AS_HELP_STRING([--with-dbus-service-dir=DIR], [D-Bus service directory [default=$datadir/dbus-1/services]])], [], [with_dbus_service_dir=$datadir/dbus-1/services])
 AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indicator directory [default=$datadir/unity/indicators]])], [], [with_indicator_dir=$datadir/unity/indicators])
 
+AM_PATH_PYTHON
+
 AC_SUBST([DBUS_SERVICE_DIR], [$with_dbus_service_dir])
 AC_SUBST([INDICATOR_DIR], [$with_indicator_dir])
 
@@ -77,6 +79,7 @@ AC_CONFIG_FILES([Makefile
                  lib/Makefile
                  po/Makefile.in
                  tests/Makefile
+                 tests/autopilot/Makefile
                  tests/config.vala
                  tests/services/indicator-keyboard.service])
 AC_CONFIG_FILES([tests/indicator-keyboard-test],
