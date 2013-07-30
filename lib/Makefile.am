@@ -16,7 +16,7 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
                                        --pkg GDesktopEnums-3.0 \
                                        --pkg gnome-desktop-3.0 \
                                        --pkg Xkl-1.0           \
-                                       --pkg libgnomekbd       \
+                                       --pkg Gkbd-3.0          \
                                        --pkg ibus-1.0          \
                                        --pkg libbamf3
 indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)            \
