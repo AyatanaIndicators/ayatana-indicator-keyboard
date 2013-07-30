@@ -1,6 +1,6 @@
 --- a/tests/Makefile.am
 +++ b/tests/Makefile.am
-@@ -4,8 +4,7 @@
+@@ -5,8 +5,7 @@
  
  AM_CFLAGS = -w
  AM_LDFLAGS = -lm
