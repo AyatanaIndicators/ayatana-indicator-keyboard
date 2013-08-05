@@ -29,7 +29,7 @@ Vcs-Browser: https://bazaar.launchpad.net/~indicator-applet-develpers/indicator-
 
 Package: indicator-keyboard
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends},
 Description: Keyboard indicator
  This package contains the keyboard indicator, which should show as an icon in
  the top panel when using the Unity environment. It can be used to switch
