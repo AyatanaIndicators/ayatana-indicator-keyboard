@@ -165,11 +165,13 @@ static void test_activate_input_source (void *data) {
 
 	var state = action_group.get_action_state ("current");
 	var current = state.get_uint32 ();
+	stderr.printf ("current = %u\n", current);
 	assert (current == 2);
 
 	try {
 		string output;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		stderr.printf ("output = \"%s\"\n", output);
 		assert (strcmp (output, "uint32 2\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
@@ -202,6 +204,7 @@ static void test_activate_character_map (void *data) {
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
 
+	stderr.printf ("fixture.service.command = \"%s\"\n", (!) ((!) fixture.service).command);
 	assert (strcmp ((!) ((!) fixture.service).command, "'gucharmap '") == 0);
 }
 
@@ -240,6 +243,7 @@ static void test_activate_keyboard_layout_chart (void *data) {
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
 
+	stderr.printf ("fixture.service.command = \"%s\"\n", (!) ((!) fixture.service).command);
 	assert (strcmp ((!) ((!) fixture.service).command, "'gkbd-keyboard-display -l ca\teng'") == 0);
 }
 
@@ -267,6 +271,7 @@ static void test_activate_text_entry_settings (void *data) {
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
 
+	stderr.printf ("fixture.service.command = \"%s\"\n", (!) ((!) fixture.service).command);
 	assert (strcmp ((!) ((!) fixture.service).command, "'gnome-control-center region layouts'") == 0);
 }
 
@@ -323,6 +328,7 @@ static void test_migration (void *data) {
 	try {
 		string sources;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources sources", out sources);
+		stderr.printf ("sources = \"%s\"\n", sources);
 		assert (strcmp (sources, "[('xkb', 'us'), ('xkb', 'ca+eng'), ('xkb', 'epo')]\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
@@ -384,6 +390,7 @@ static void test_no_migration (void *data) {
 	try {
 		string sources;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources sources", out sources);
+		stderr.printf ("sources = \"%s\"\n", sources);
 		assert (strcmp (sources, "[('xkb', 'us')]\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
@@ -429,6 +436,7 @@ static void test_update_visible (void *data) {
 
 	var state = action_group.get_action_state ("indicator");
 	assert (state.lookup ("visible", "b", out visible));
+	stderr.printf ("visible = %s\n", visible ? "true" : "false");
 	assert (visible);
 
 	loop = new MainLoop (null, false);
@@ -452,6 +460,7 @@ static void test_update_visible (void *data) {
 
 	state = action_group.get_action_state ("indicator");
 	assert (state.lookup ("visible", "b", out visible));
+	stderr.printf ("visible = %s\n", visible ? "true" : "false");
 	assert (!visible);
 
 	loop = new MainLoop (null, false);
@@ -475,6 +484,7 @@ static void test_update_visible (void *data) {
 
 	state = action_group.get_action_state ("indicator");
 	assert (state.lookup ("visible", "b", out visible));
+	stderr.printf ("visible = %s\n", visible ? "true" : "false");
 	assert (visible);
 }
 
@@ -524,11 +534,13 @@ static void test_update_input_source (void *data) {
 
 	var state = action_group.get_action_state ("current");
 	var current = state.get_uint32 ();
+	stderr.printf ("current = %u\n", current);
 	assert (current == 1);
 
 	try {
 		string output;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		stderr.printf ("output = \"%s\"\n", output);
 		assert (strcmp (output, "uint32 1\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
@@ -557,11 +569,13 @@ static void test_update_input_source (void *data) {
 
 	state = action_group.get_action_state ("current");
 	current = state.get_uint32 ();
+	stderr.printf ("current = %u\n", current);
 	assert (current == 0);
 
 	try {
 		string output;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources current", out output);
+		stderr.printf ("output = \"%s\"\n", output);
 		assert (strcmp (output, "uint32 0\n") == 0);
 	} catch (SpawnError error) {
 		Test.message ("error: %s", error.message);
@@ -633,8 +647,10 @@ static void test_update_input_sources (void *data) {
 
 	string label;
 
+	stderr.printf ("section.get_n_items () = %d\n", section.get_n_items ());
 	assert (section.get_n_items () == 1);
 	section.get_item_attribute (0, Menu.ATTRIBUTE_LABEL, "s", out label);
+	stderr.printf ("label = \"%s\"\n", label);
 	assert (strcmp (label, "English (US)") == 0);
 
 	loop = new MainLoop (null, false);
@@ -658,14 +674,19 @@ static void test_update_input_sources (void *data) {
 	Source.remove (source);
 	section.disconnect (signal_name);
 
+	stderr.printf ("section.get_n_items () = %d\n", section.get_n_items ());
 	assert (section.get_n_items () == 4);
 	section.get_item_attribute (0, Menu.ATTRIBUTE_LABEL, "s", out label);
+	stderr.printf ("label = \"%s\"\n", label);
 	assert (strcmp (label, "English (US)") == 0);
 	section.get_item_attribute (1, Menu.ATTRIBUTE_LABEL, "s", out label);
+	stderr.printf ("label = \"%s\"\n", label);
 	assert (strcmp (label, "English (Canada)") == 0);
 	section.get_item_attribute (2, Menu.ATTRIBUTE_LABEL, "s", out label);
+	stderr.printf ("label = \"%s\"\n", label);
 	assert (strcmp (label, "Esperanto") == 0);
 	section.get_item_attribute (3, Menu.ATTRIBUTE_LABEL, "s", out label);
+	stderr.printf ("label = \"%s\"\n", label);
 	assert (label.ascii_casecmp ("Pinyin") == 0);
 }
 
