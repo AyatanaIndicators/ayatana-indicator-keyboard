@@ -31,12 +31,12 @@ public class Service : Object {
 	}
 
 	public void execute (string command) {
-		this._command = command;
+		_command = command;
 
-		var pspec = this.get_class ().find_property ("command");
+		var pspec = get_class ().find_property ("command");
 
 		if (pspec != null) {
-			this.notify["command"] ((!) pspec);
+			notify["command"] ((!) pspec);
 		}
 	}
 }

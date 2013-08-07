@@ -91,15 +91,14 @@ int main (string[] args) {
 
 		info.get_layout_info (name, null, out short_name, null, null);
 
-		if (short_name != null) {
-			var abbreviation = get_abbreviation ((!) short_name);
+		var abbreviation = abbreviate (short_name);
+		var has_abbreviation = abbreviation != null && ((!) abbreviation).get_char () != '\0';
 
-			if (abbreviation.get_char () != '\0') {
-				if (!occurrences.has_key (abbreviation)) {
-					occurrences[abbreviation] = 1;
-				} else {
-					occurrences[abbreviation] = occurrences[abbreviation] + 1;
-				}
+		if (has_abbreviation) {
+			if (!occurrences.has_key ((!) abbreviation)) {
+				occurrences[(!) abbreviation] = 1;
+			} else {
+				occurrences[(!) abbreviation] = occurrences[(!) abbreviation] + 1;
 			}
 		}
 	});
