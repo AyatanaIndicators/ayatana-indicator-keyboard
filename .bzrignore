@@ -1,6 +1,5 @@
 *.c
 *.log
-*.m4
 *.pyc
 *.stamp
 *.stamp-t
@@ -34,3 +33,10 @@ tests/indicator-keyboard-test
 tests/indicator-keyboard-test.trs
 tests/indicator-keyboard-tests
 tests/services/indicator-keyboard.service
+aclocal.m4
+m4/intltool.m4
+m4/libtool.m4
+m4/lt~obsolete.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
