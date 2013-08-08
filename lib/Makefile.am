@@ -28,7 +28,8 @@ indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)            \
                                     $(LIBXKLAVIER_CFLAGS)   \
                                     $(LIBGNOMEKBD_CFLAGS)   \
                                     $(IBUS_CFLAGS)          \
-                                    $(BAMF_CFLAGS)
+                                    $(BAMF_CFLAGS)          \
+                                    $(COVERAGE_CFLAGS)
 indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)         \
                                      $(GEE_LIBS)           \
                                      $(PANGOCAIRO_LIBS)    \
@@ -37,4 +38,5 @@ indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)         \
                                      $(LIBXKLAVIER_LIBS)   \
                                      $(LIBGNOMEKBD_LIBS)   \
                                      $(IBUS_LIBS)          \
-                                     $(BAMF_LIBS)
+                                     $(BAMF_LIBS)          \
+                                     $(COVERAGE_LDFLAGS)
