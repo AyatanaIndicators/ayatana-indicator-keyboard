@@ -319,6 +319,10 @@ static void test_migration (void *data) {
 		return;
 	}
 
+	var loop = new MainLoop (null, false);
+	Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+
 	try {
 		string sources;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources sources", out sources);
@@ -380,6 +384,10 @@ static void test_no_migration (void *data) {
 		Test.fail ();
 		return;
 	}
+
+	var loop = new MainLoop (null, false);
+	Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
 
 	try {
 		string sources;
