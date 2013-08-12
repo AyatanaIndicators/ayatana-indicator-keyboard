@@ -150,18 +150,12 @@ static void test_activate_input_source (void *data) {
 	var action_group = DBusActionGroup.get ((!) fixture.connection,
 	                                        "com.canonical.indicator.keyboard",
 	                                        "/com/canonical/indicator/keyboard");
-	var loop = new MainLoop (null, false);
-	var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
-		loop.quit ();
-	});
-
 	action_group.list_actions ();
 	action_group.activate_action ("current", new Variant.uint32 (2));
 
-	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	var loop = new MainLoop (null, false);
+	Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
-	Source.remove (source);
-	action_group.disconnect (signal_name);
 
 	var state = action_group.get_action_state ("current");
 	var current = state.get_uint32 ();
@@ -325,6 +319,10 @@ static void test_migration (void *data) {
 		return;
 	}
 
+	var loop = new MainLoop (null, false);
+	Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
+
 	try {
 		string sources;
 		Process.spawn_command_line_sync ("gsettings get org.gnome.desktop.input-sources sources", out sources);
@@ -386,6 +384,10 @@ static void test_no_migration (void *data) {
 		Test.fail ();
 		return;
 	}
+
+	var loop = new MainLoop (null, false);
+	Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	loop.run ();
 
 	try {
 		string sources;
