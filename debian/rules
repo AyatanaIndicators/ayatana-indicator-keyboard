@@ -17,5 +17,3 @@ override_dh_install:
 	find debian/indicator-keyboard/usr/lib -name *.a -delete
 	dh_install --fail-missing
 
-override_dh_auto_test:
-	dh_auto_test || ( cat tests/test-suite.log )
