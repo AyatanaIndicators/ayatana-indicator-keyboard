@@ -1,117 +1,25 @@
-indicator-keyboard (0.0.0-0ubuntu19) saucy; urgency=low
+indicator-keyboard (0.0.0-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Jeremy Bicha ]
   * debian/control:
     - Don't build-depend on vala-0.20-vapi
     - Build-depend on dbus for tests
 
- -- Jeremy Bicha <jbicha@ubuntu.com>  Mon, 15 Jul 2013 21:00:06 -0400
-
-indicator-keyboard (0.0.0-0ubuntu18) saucy; urgency=low
-
-  * Add indicator schema.
-  * Repair test fixtures.
-
- -- William Hua <william.hua@canonical.com>  Mon, 15 Jul 2013 20:37:40 -0400
-
-indicator-keyboard (0.0.0-0ubuntu17) saucy; urgency=low
-
-  * Minor fixes.
-
- -- William Hua <william.hua@canonical.com>  Thu, 27 Jun 2013 11:38:17 -0400
-
-indicator-keyboard (0.0.0-0ubuntu16) saucy; urgency=low
-
-  * Remove autopilot support.
-
- -- William Hua <william.hua@canonical.com>  Mon, 24 Jun 2013 17:13:03 -0400
-
-indicator-keyboard (0.0.0-0ubuntu15) saucy; urgency=low
-
-  * Experimental non-null support.
-
- -- William Hua <william.hua@canonical.com>  Sat, 22 Jun 2013 16:25:44 -0400
-
-indicator-keyboard (0.0.0-0ubuntu14) saucy; urgency=low
-
-  * Update indicator service manifest.
-
- -- William Hua <william.hua@canonical.com>  Thu, 20 Jun 2013 15:20:09 -0400
-
-indicator-keyboard (0.0.0-0ubuntu13) saucy; urgency=low
-
-  * Migrate old keyboard layouts.
-
- -- William Hua <william.hua@canonical.com>  Thu, 20 Jun 2013 13:50:00 -0400
-
-indicator-keyboard (0.0.0-0ubuntu12) saucy; urgency=low
-
-  * Remove indicator-keyboard-schema.
-
- -- William Hua <william.hua@canonical.com>  Wed, 19 Jun 2013 10:15:00 -0400
-
-indicator-keyboard (0.0.0-0ubuntu11) saucy; urgency=low
-
-  * Per-window fixes.
-
- -- William Hua <william.hua@canonical.com>  Wed, 19 Jun 2013 08:52:36 -0400
-
-indicator-keyboard (0.0.0-0ubuntu10) saucy; urgency=low
-
-  * Build depend on dh-translations.
-
- -- William Hua <william.hua@canonical.com>  Fri, 14 Jun 2013 09:34:50 -0400
-
-indicator-keyboard (0.0.0-0ubuntu9) saucy; urgency=low
-
-  * dh --with translations.
-
- -- William Hua <william.hua@canonical.com>  Thu, 13 Jun 2013 17:07:42 -0400
-
-indicator-keyboard (0.0.0-0ubuntu8) saucy; urgency=low
-
-  * Build depend on libgee-dev.
-
- -- William Hua <william.hua@canonical.com>  Mon, 10 Jun 2013 15:23:33 -0400
-
-indicator-keyboard (0.0.0-0ubuntu7) saucy; urgency=low
-
-  * Translations.
-  * Use icons from theme.
-
- -- William Hua <william.hua@canonical.com>  Mon, 10 Jun 2013 12:11:14 -0400
-
-indicator-keyboard (0.0.0-0ubuntu6) saucy; urgency=low
-
-  * Require vala 0.20.
-
- -- William Hua <william.hua@canonical.com>  Wed, 15 May 2013 16:57:51 -0400
-
-indicator-keyboard (0.0.0-0ubuntu5) saucy; urgency=low
-
-  * Fix icon rendering.
-
- -- William Hua <william.hua@canonical.com>  Wed, 08 May 2013 17:01:09 -0400
-
-indicator-keyboard (0.0.0-0ubuntu4) raring; urgency=low
-
-  * Add indicator visibility schema.
-
- -- William Hua <william.hua@canonical.com>  Wed, 01 May 2013 14:53:34 -0700
-
-indicator-keyboard (0.0.0-0ubuntu3) raring; urgency=low
-
-  * Use dictionary action state.
-
- -- William Hua <william.hua@canonical.com>  Fri, 26 Apr 2013 15:03:12 -0400
-
-indicator-keyboard (0.0.0-0ubuntu2) raring; urgency=low
-
-  * GBytesIcon support.
-
- -- William Hua <william.hua@canonical.com>  Tue, 16 Apr 2013 10:45:34 -0400
-
-indicator-keyboard (0.0.0-0ubuntu1) raring; urgency=low
-
+  [ William Hua ]
   * Initial Release.
 
- -- William Hua <william.hua@canonical.com>  Wed, 03 Apr 2013 12:37:54 -0400
+  [ Mathieu Trudel-Lapierre ]
+  * debian/control:
+    - Packaging review, add comment to developers.
+    - Fix Vcs-Bzr, Vcs-Browser.
+    - Sort Build-Depends, use trailing commas.
+    - Improve long description.
+  * debian/rules:
+    - Add DPKG_GENSYMBOLS_CHECK_LEVEL = 4.
+    - Override dh_autoreconf to run ./autogen.sh.
+    - Override dh_install to remove .la and .a files.
+    - Run dh_install with --fail-missing.
+  * debian/compat: bump to compat level 9.
+  * debian/source/format: make sure we're using format 1.0.
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 05 Aug 2013 13:37:16 -0400

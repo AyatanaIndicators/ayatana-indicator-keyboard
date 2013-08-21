@@ -1,13 +1,19 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
+
 %:
 	dh $@ --with autoreconf,translations
+
+override_dh_autoreconf:
+	NOCONFIGURE=1 dh_autoreconf ./autogen.sh
+
+override_dh_install:
+	find debian/indicator-keyboard/usr/lib -name *.la -delete
+	find debian/indicator-keyboard/usr/lib -name *.a -delete
+	dh_install --fail-missing
+
