@@ -9,6 +9,7 @@ indicator-keyboard (0.0.0-0ubuntu1) UNRELEASED; urgency=low
   * Initial Release.
 
   [ Mathieu Trudel-Lapierre ]
+  * Automatic snapshot from revision 102 (bootstrap)
   * debian/control:
     - Packaging review, add comment to developers.
     - Fix Vcs-Bzr, Vcs-Browser.
