@@ -18,6 +18,7 @@
 
 const int TIMEOUT_S = 1;
 const int TIMEOUT_MS = 1000;
+const int LONG_TIMEOUT_S = 10;
 
 [DBus (name = "com.canonical.indicator.keyboard.test")]
 public class Service : Object {
@@ -193,7 +194,7 @@ static void test_activate_character_map (void *data) {
 
 	action_group.activate_action ("map", null);
 
-	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
@@ -232,7 +233,7 @@ static void test_activate_keyboard_layout_chart (void *data) {
 
 	action_group.activate_action ("chart", null);
 
-	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
@@ -260,7 +261,7 @@ static void test_activate_text_entry_settings (void *data) {
 
 	action_group.activate_action ("settings", null);
 
-	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	((!) fixture.service).disconnect (signal_name);
@@ -294,7 +295,7 @@ static void test_migration (void *data) {
 	try {
 		var cancellable = new Cancellable ();
 
-		var source = Timeout.add_seconds (TIMEOUT_S, () => { cancellable.cancel (); return false; });
+		var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { cancellable.cancel (); return false; });
 
 		var dbus_proxy = new DBusProxy.sync ((!) fixture.connection,
 		                                     DBusProxyFlags.NONE,
@@ -360,7 +361,7 @@ static void test_no_migration (void *data) {
 	try {
 		var cancellable = new Cancellable ();
 
-		var source = Timeout.add_seconds (TIMEOUT_S, () => { cancellable.cancel (); return false; });
+		var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { cancellable.cancel (); return false; });
 
 		var dbus_proxy = new DBusProxy.sync ((!) fixture.connection,
 		                                     DBusProxyFlags.NONE,
@@ -431,7 +432,7 @@ static void test_update_visible (void *data) {
 
 	action_group.list_actions ();
 
-	var source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	var source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	action_group.disconnect (signal_name);
@@ -455,7 +456,7 @@ static void test_update_visible (void *data) {
 		return;
 	}
 
-	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	action_group.disconnect (signal_name);
@@ -479,7 +480,7 @@ static void test_update_visible (void *data) {
 		return;
 	}
 
-	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	action_group.disconnect (signal_name);
@@ -564,7 +565,7 @@ static void test_update_input_source (void *data) {
 		return;
 	}
 
-	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	action_group.disconnect (signal_name);
@@ -671,7 +672,7 @@ static void test_update_input_sources (void *data) {
 		return;
 	}
 
-	source = Timeout.add_seconds (TIMEOUT_S, () => { loop.quit (); return false; });
+	source = Timeout.add_seconds (LONG_TIMEOUT_S, () => { loop.quit (); return false; });
 	loop.run ();
 	Source.remove (source);
 	section.disconnect (signal_name);
