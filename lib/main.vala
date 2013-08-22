@@ -19,6 +19,7 @@
 [DBus (name = "com.canonical.indicator.keyboard")]
 public class Indicator.Keyboard.Service : Object {
 
+	private static Service service;
 	private static IBus.Bus? ibus;
 
 	private bool force;
@@ -83,6 +84,22 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	public void up () {
+		if (loop == null) {
+			loop = new MainLoop ();
+			((!) loop).run ();
+		}
+	}
+
+	[DBus (visible = false)]
+	public void down () {
+		if (loop != null) {
+			((!) loop).quit ();
+			loop = null;
+		}
+	}
+
+	[DBus (visible = false)]
 	private void acquire_bus_name () {
 		Bus.own_name (BusType.SESSION,
 		              "com.canonical.indicator.keyboard",
@@ -90,9 +107,6 @@ public class Indicator.Keyboard.Service : Object {
 		              handle_bus_acquired,
 		              null,
 		              handle_name_lost);
-
-		loop = new MainLoop ();
-		((!) loop).run ();
 	}
 
 	[DBus (visible = false)]
@@ -551,13 +565,19 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_name_lost (DBusConnection? connection, string name) {
-		((!) loop).quit ();
-		loop = null;
+		down ();
 	}
 
 	[DBus (visible = false)]
 	public static int main (string[] args) {
-		new Service (ref args);
+		Service.service = new Service (ref args);
+
+		Posix.signal (Posix.SIGTERM, (code) => {
+			Service.service.down ();
+		});
+
+		Service.service.up ();
+
 		return 0;
 	}
 }
