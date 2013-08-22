@@ -1,3 +1,24 @@
+indicator-keyboard (0.0.0+13.10.20130822.4-0ubuntu1) saucy; urgency=low
+
+  [ William Hua ]
+  * Kill running gvfs instance after tests finish. Because the
+    XDG_RUNTIME_DIR was changed to be in the build-tree, a running gvfs
+    instance held a lock on a file in the directory, preventing it from
+    being cleaned properly, and preventing the build from finishing. So
+    we send a SIGTERM to the running gvfs-fused instance, allowing the
+    build to finish.
+  * Use accountsservice and make work under unity-greeter.
+  * Proper shutdown on SIGTERM.
+
+  [ Jeremy Bicha ]
+  * Don't build-depend on quilt and drop debian/README.source, thanks
+    Michael Terry!.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 108
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 22 Aug 2013 20:29:00 +0000
+
 indicator-keyboard (0.0.0+13.10.20130821-0ubuntu1) saucy; urgency=low
 
   [ Jeremy Bicha ]
