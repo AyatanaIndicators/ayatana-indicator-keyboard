@@ -9,32 +9,38 @@ AM_VALAFLAGS = --enable-experimental-non-null   \
 indicator_keyboard_service_SOURCES = main.vala   \
                                      source.vala \
                                      common.vala
-indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)         \
-                                       --pkg gee-1.0           \
-                                       --pkg posix             \
-                                       --pkg pangocairo        \
-                                       --pkg gtk+-3.0          \
-                                       --pkg GDesktopEnums-3.0 \
-                                       --pkg gnome-desktop-3.0 \
-                                       --pkg Xkl-1.0           \
-                                       --pkg Gkbd-3.0          \
-                                       --pkg ibus-1.0          \
+indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
+                                       --pkg gee-1.0              \
+                                       --pkg posix                \
+                                       --pkg pangocairo           \
+                                       --pkg gtk+-3.0             \
+                                       --pkg GDesktopEnums-3.0    \
+                                       --pkg gnome-desktop-3.0    \
+                                       --pkg Xkl-1.0              \
+                                       --pkg Gkbd-3.0             \
+                                       --pkg ibus-1.0             \
+                                       --pkg accountsservice      \
+                                       --pkg liblightdm-gobject-1 \
                                        --pkg libbamf3
-indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)            \
-                                    $(GEE_CFLAGS)           \
-                                    $(PANGOCAIRO_CFLAGS)    \
-                                    $(GTK_CFLAGS)           \
-                                    $(GNOME_DESKTOP_CFLAGS) \
-                                    $(LIBXKLAVIER_CFLAGS)   \
-                                    $(LIBGNOMEKBD_CFLAGS)   \
-                                    $(IBUS_CFLAGS)          \
+indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
+                                    $(GEE_CFLAGS)             \
+                                    $(PANGOCAIRO_CFLAGS)      \
+                                    $(GTK_CFLAGS)             \
+                                    $(GNOME_DESKTOP_CFLAGS)   \
+                                    $(LIBXKLAVIER_CFLAGS)     \
+                                    $(LIBGNOMEKBD_CFLAGS)     \
+                                    $(IBUS_CFLAGS)            \
+                                    $(ACCOUNTSSERVICE_CFLAGS) \
+                                    $(LIGHTDM_CFLAGS)         \
                                     $(BAMF_CFLAGS)
-indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)         \
-                                     $(GEE_LIBS)           \
-                                     $(PANGOCAIRO_LIBS)    \
-                                     $(GTK_LIBS)           \
-                                     $(GNOME_DESKTOP_LIBS) \
-                                     $(LIBXKLAVIER_LIBS)   \
-                                     $(LIBGNOMEKBD_LIBS)   \
-                                     $(IBUS_LIBS)          \
+indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
+                                     $(GEE_LIBS)             \
+                                     $(PANGOCAIRO_LIBS)      \
+                                     $(GTK_LIBS)             \
+                                     $(GNOME_DESKTOP_LIBS)   \
+                                     $(LIBXKLAVIER_LIBS)     \
+                                     $(LIBGNOMEKBD_LIBS)     \
+                                     $(IBUS_LIBS)            \
+                                     $(ACCOUNTSSERVICE_LIBS) \
+                                     $(LIGHTDM_LIBS)         \
                                      $(BAMF_LIBS)

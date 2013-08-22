@@ -29,6 +29,7 @@ public class Indicator.Keyboard.Service : Object {
 	private Settings indicator_settings;
 	private Settings source_settings;
 	private Settings per_window_settings;
+	private SList<Act.User> users;
 	private Bamf.Matcher? matcher;
 	private Gee.HashMap<string, uint>? window_sources;
 
@@ -67,6 +68,11 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private static bool is_login_user () {
+		return Environment.get_user_name () == "lightdm";
+	}
+
+	[DBus (visible = false)]
 	private static IBus.Bus get_ibus () {
 		if (ibus == null) {
 			IBus.init ();
@@ -91,64 +97,177 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
-		if (!indicator_settings.get_boolean ("migrated")) {
-			var builder = new VariantBuilder (new VariantType ("a(ss)"));
-			var length = 0;
+		if (is_login_user ()) {
+			Act.UserManager manager = Act.UserManager.get_default ();
 
-			var layout_settings = new Settings ("org.gnome.libgnomekbd.keyboard");
-			var layouts = layout_settings.get_strv ("layouts");
+			if (manager.is_loaded) {
+				users = manager.list_users ();
 
-			foreach (var layout in layouts) {
-				var source = layout;
+				foreach (var user in users) {
+					if (user.is_loaded) {
+						migrate_input_sources ();
+					} else {
+						user.notify["is-loaded"].connect ((pspec) => {
+							if (user.is_loaded) {
+								migrate_input_sources ();
+							}
+						});
+					}
+				}
+			} else {
+				manager.notify["is-loaded"].connect ((pspec) => {
+					if (manager.is_loaded) {
+						users = manager.list_users ();
 
-				source = source.replace (" ", "+");
-				source = source.replace ("\t", "+");
-
-				builder.add ("(ss)", "xkb", source);
-				length++;
+						foreach (var user in users) {
+							if (user.is_loaded) {
+								migrate_input_sources ();
+							} else {
+								user.notify["is-loaded"].connect ((pspec) => {
+									if (user.is_loaded) {
+										migrate_input_sources ();
+									}
+								});
+							}
+						}
+					}
+				});
 			}
+		} else {
+			if (!indicator_settings.get_boolean ("migrated")) {
+				var builder = new VariantBuilder (new VariantType ("a(ss)"));
+				var length = 0;
 
-			var engines = get_ibus ().list_active_engines ();
+				var layout_settings = new Settings ("org.gnome.libgnomekbd.keyboard");
+				var layouts = layout_settings.get_strv ("layouts");
 
-			foreach (var engine in engines) {
-				if (length == 0 || engine.name.has_prefix ("xkb")) {
-					var source = "us";
-					string? layout = engine.get_layout ();
-					string? variant = engine.get_layout_variant ();
-
-					if (layout != null && ((!) layout).length == 0) {
-						layout = null;
-					}
-
-					if (variant != null && ((!) variant).length == 0) {
-						variant = null;
-					}
-
-					if (layout != null && variant != null) {
-						source = @"$((!) layout)+$((!) variant)";
-					} else if (layout != null) {
-						source = (!) layout;
-					}
+				foreach (var layout in layouts) {
+					var source = layout;
+					source = source.replace (" ", "+");
+					source = source.replace ("\t", "+");
 
 					builder.add ("(ss)", "xkb", source);
 					length++;
 				}
 
-				if (!engine.name.has_prefix ("xkb")) {
-					builder.add ("(ss)", "ibus", engine.name);
-					length++;
+				var engines = get_ibus ().list_active_engines ();
+
+				foreach (var engine in engines) {
+					if (length == 0 || engine.name.has_prefix ("xkb")) {
+						var source = "us";
+						string? layout = engine.get_layout ();
+						string? variant = engine.get_layout_variant ();
+
+						if (layout != null && ((!) layout).length == 0) {
+							layout = null;
+						}
+
+						if (variant != null && ((!) variant).length == 0) {
+							variant = null;
+						}
+
+						if (layout != null && variant != null) {
+							source = @"$((!) layout)+$((!) variant)";
+						} else if (layout != null) {
+							source = (!) layout;
+						}
+
+						builder.add ("(ss)", "xkb", source);
+						length++;
+					}
+
+					if (!engine.name.has_prefix ("xkb")) {
+						builder.add ("(ss)", "ibus", engine.name);
+						length++;
+					}
+				}
+
+				source_settings.set_value ("sources", builder.end ());
+				indicator_settings.set_boolean ("migrated", true);
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void migrate_input_sources () {
+		var list = new Gee.LinkedList<string> ();
+		var added = new Gee.HashSet<string> ();
+
+		foreach (var user in users) {
+			if (user.is_loaded) {
+				var sources = user.input_sources;
+				var layouts = user.xkeyboard_layouts;
+
+				VariantIter outer;
+				VariantIter inner;
+
+				sources.get ("aa{ss}", out outer);
+
+				while (outer.next ("a{ss}", out inner)) {
+					unowned string key;
+					unowned string source;
+
+					while (inner.next ("{&s&s}", out key, out source)) {
+						if (key == "xkb") {
+							if (!added.contains (source)) {
+								list.add (source);
+								added.add (source);
+							}
+						}
+					}
+				}
+
+				foreach (var layout in layouts) {
+					var source = layout;
+					source = source.replace (" ", "+");
+					source = source.replace ("\t", "+");
+
+					if (!added.contains (source)) {
+						list.add (source);
+						added.add (source);
+					}
 				}
 			}
+		}
 
-			source_settings.set_value ("sources", builder.end ());
+		var builder = new VariantBuilder (new VariantType ("a(ss)"));
 
-			indicator_settings.set_boolean ("migrated", true);
+		foreach (var layout in list) {
+			builder.add ("(ss)", "xkb", layout);
+		}
+
+		source_settings.set_value ("sources", builder.end ());
+	}
+
+	[DBus (visible = false)]
+	private void update_login_layout () {
+		unowned List<LightDM.Layout> layouts = LightDM.get_layouts ();
+		var current = source_settings.get_uint ("current");
+
+		if (current < get_sources ().length) {
+			var source = get_sources ()[current];
+			string? name = null;
+
+			if (source.layout != null && source.variant != null) {
+				name = @"$((!) source.layout)\t$((!) source.variant)";
+			} else if (source.layout != null) {
+				name = source.layout;
+			}
+
+			if (name != null) {
+				foreach (var layout in layouts) {
+					if (layout.name == (!) name) {
+						LightDM.set_layout (layout);
+						break;
+					}
+				}
+			}
 		}
 	}
 
 	[DBus (visible = false)]
 	private void update_window_sources () {
-		if (use_bamf) {
+		if (use_bamf && !is_login_user ()) {
 			var group_per_window = per_window_settings.get_boolean ("group-per-window");
 
 			if (group_per_window != (window_sources != null)) {
@@ -324,11 +443,13 @@ public class Indicator.Keyboard.Service : Object {
 
 		submenu.append_section (null, section_menu);
 
-		var section = new Menu ();
-		section.append (_ ("Character Map"), "indicator.map");
-		section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
-		section.append (_ ("Text Entry Settings..."), "indicator.settings");
-		submenu.append_section (null, section);
+		if (!is_login_user ()) {
+			var section = new Menu ();
+			section.append (_ ("Character Map"), "indicator.map");
+			section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
+			section.append (_ ("Text Entry Settings..."), "indicator.settings");
+			submenu.append_section (null, section);
+		}
 
 		var indicator = new MenuItem.submenu ("x", submenu);
 		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
@@ -355,6 +476,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_changed_current (string key) {
 		update_indicator_action ();
+		update_login_layout ();
 	}
 
 	[DBus (visible = false)]
@@ -363,6 +485,7 @@ public class Indicator.Keyboard.Service : Object {
 
 		update_sources_menu ();
 		update_indicator_action ();
+		update_login_layout ();
 	}
 
 	[DBus (visible = false)]
