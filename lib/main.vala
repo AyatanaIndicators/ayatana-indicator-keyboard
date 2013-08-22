@@ -339,8 +339,14 @@ public class Indicator.Keyboard.Service : Object {
 	private void update_indicator_action () {
 		var visible = indicator_settings.get_boolean ("visible");
 		var current = source_settings.get_uint ("current");
-		var icon = get_sources ()[current].icon;
+		var sources = get_sources ();
+
 		Variant state;
+		Icon? icon = null;
+
+		if (current < sources.length) {
+			icon = sources[current].icon;
+		}
 
 		if (icon != null) {
 			state = new Variant.parsed ("{ 'visible' : <%b>, 'icon' : %v }", visible, ((!) icon).serialize ());

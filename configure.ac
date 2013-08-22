@@ -7,7 +7,7 @@ AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AM_INIT_AUTOMAKE([1.11 foreign -Wall -Woverride -Wno-portability])
+AM_INIT_AUTOMAKE([1.11 foreign serial-tests -Wall -Woverride -Wno-portability])
 AM_SILENT_RULES([yes])
 
 LT_INIT
