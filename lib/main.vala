@@ -355,20 +355,24 @@ public class Indicator.Keyboard.Service : Object {
 		var current = source_settings.get_uint ("current");
 		var sources = get_sources ();
 
-		Variant state;
 		Icon? icon = null;
+		string? name = null;
 
 		if (current < sources.length) {
 			icon = sources[current].icon;
+			name = sources[current].name;
 		}
 
+		var builder = new VariantBuilder (new VariantType ("a{sv}"));
+		builder.add ("{sv}", "visible", new Variant.boolean (visible));
+		if (name != null) {
+			builder.add ("{sv}", "accessible-desc", new Variant.string ((!) name));
+		}
 		if (icon != null) {
-			state = new Variant.parsed ("{ 'visible' : <%b>, 'icon' : %v }", visible, ((!) icon).serialize ());
-		} else {
-			state = new Variant.parsed ("{ 'visible' : <%b> }", visible);
+			builder.add ("{sv}", "icon", ((!) icon).serialize ());
 		}
 
-		get_indicator_action ().set_state (state);
+		get_indicator_action ().set_state (builder.end ());
 	}
 
 	[DBus (visible = false)]
