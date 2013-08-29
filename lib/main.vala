@@ -366,7 +366,8 @@ public class Indicator.Keyboard.Service : Object {
 		var builder = new VariantBuilder (new VariantType ("a{sv}"));
 		builder.add ("{sv}", "visible", new Variant.boolean (visible));
 		if (name != null) {
-			builder.add ("{sv}", "accessible-desc", new Variant.string ((!) name));
+			var description = _ ("%s input source").printf ((!) name);
+			builder.add ("{sv}", "accessible-desc", new Variant.string (description));
 		}
 		if (icon != null) {
 			builder.add ("{sv}", "icon", ((!) icon).serialize ());
