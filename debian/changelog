@@ -1,3 +1,15 @@
+indicator-keyboard (0.0.0+13.10.20130829-0ubuntu1) saucy; urgency=low
+
+  [ Matthieu Baerts ]
+  * Added an 'accessible description' This description is used by other
+    applications (like Cairo-Dock) as label for this icon. (LP:
+    #1217855)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 110
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 29 Aug 2013 02:07:27 +0000
+
 indicator-keyboard (0.0.0+13.10.20130822.4-0ubuntu1) saucy; urgency=low
 
   [ William Hua ]
