@@ -41,6 +41,8 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
+	private uint lightdm_current;
+
 	[DBus (visible = false)]
 	public Service (ref unowned string[] args) {
 		force = "--force" in args;
@@ -112,6 +114,8 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
 		if (is_login_user ()) {
+			lightdm_current = source_settings.get_uint ("current");
+
 			var manager = Act.UserManager.get_default ();
 
 			if (manager.is_loaded) {
@@ -296,6 +300,12 @@ public class Indicator.Keyboard.Service : Object {
 
 		foreach (var name in list) {
 			builder.add ("(ss)", "xkb", name);
+		}
+
+		if (lightdm_current < list.size) {
+			source_settings.set_uint ("current", lightdm_current);
+		} else {
+			source_settings.set_uint ("current", list.size - 1);
 		}
 
 		source_settings.set_value ("sources", builder.end ());
