@@ -281,20 +281,21 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
-		if (list.size == 0) {
-			var layout = LightDM.get_layout ();
+		var layout = LightDM.get_layout ();
 
-			var source = layout.name;
-			source = source.replace (" ", "+");
-			source = source.replace ("\t", "+");
+		var source = layout.name;
+		source = source.replace (" ", "+");
+		source = source.replace ("\t", "+");
 
+		if (!added.contains (source)) {
 			list.add (source);
+			added.add (source);
 		}
 
 		var builder = new VariantBuilder (new VariantType ("a(ss)"));
 
-		foreach (var layout in list) {
-			builder.add ("(ss)", "xkb", layout);
+		foreach (var name in list) {
+			builder.add ("(ss)", "xkb", name);
 		}
 
 		source_settings.set_value ("sources", builder.end ());
