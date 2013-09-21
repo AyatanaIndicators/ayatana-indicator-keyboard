@@ -153,7 +153,9 @@ public class Indicator.Keyboard.Service : Object {
 			user_list.user_added.connect ((user) => { migrate_input_sources (); });
 			user_list.user_changed.connect ((user) => { migrate_input_sources (); });
 			user_list.user_removed.connect ((user) => { migrate_input_sources (); });
-			user_list.get_user_by_name ("this line force loads the users");
+
+			/* Force the loading of the user list. */
+			user_list.get_user_by_name ("");
 		} else {
 			if (!indicator_settings.get_boolean ("migrated")) {
 				var builder = new VariantBuilder (new VariantType ("a(ss)"));
