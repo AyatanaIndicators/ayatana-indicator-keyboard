@@ -112,7 +112,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
 		if (is_login_user ()) {
-			Act.UserManager manager = Act.UserManager.get_default ();
+			var manager = Act.UserManager.get_default ();
 
 			if (manager.is_loaded) {
 				users = manager.list_users ();
