@@ -209,12 +209,12 @@ public class Indicator.Keyboard.Service : Object {
 
 		foreach (var user in users) {
 			if (user.is_loaded) {
-				var sources = user.input_sources;
-				var layouts = user.xkeyboard_layouts;
+				var done = false;
 
 				VariantIter outer;
 				VariantIter inner;
 
+				var sources = user.input_sources;
 				sources.get ("aa{ss}", out outer);
 
 				while (outer.next ("a{ss}", out inner)) {
@@ -223,6 +223,8 @@ public class Indicator.Keyboard.Service : Object {
 
 					while (inner.next ("{&s&s}", out key, out source)) {
 						if (key == "xkb") {
+							done = true;
+
 							if (!added.contains (source)) {
 								list.add (source);
 								added.add (source);
@@ -231,14 +233,19 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 
-				foreach (var layout in layouts) {
-					var source = layout;
-					source = source.replace (" ", "+");
-					source = source.replace ("\t", "+");
+				if (!done) {
+					var layouts = user.xkeyboard_layouts;
+					foreach (var layout in layouts) {
+						done = true;
 
-					if (!added.contains (source)) {
-						list.add (source);
-						added.add (source);
+						var source = layout;
+						source = source.replace (" ", "+");
+						source = source.replace ("\t", "+");
+
+						if (!added.contains (source)) {
+							list.add (source);
+							added.add (source);
+						}
 					}
 				}
 			}
