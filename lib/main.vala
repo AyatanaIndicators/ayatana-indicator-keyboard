@@ -251,6 +251,16 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
+		if (list.size == 0) {
+			var layout = LightDM.get_layout ();
+
+			var source = layout.name;
+			source = source.replace (" ", "+");
+			source = source.replace ("\t", "+");
+
+			list.add (source);
+		}
+
 		var builder = new VariantBuilder (new VariantType ("a(ss)"));
 
 		foreach (var layout in list) {
