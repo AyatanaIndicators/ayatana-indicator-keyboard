@@ -147,6 +147,13 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				});
 			}
+
+			var user_list = LightDM.UserList.get_instance ();
+
+			user_list.user_added.connect ((user) => { migrate_input_sources (); });
+			user_list.user_changed.connect ((user) => { migrate_input_sources (); });
+			user_list.user_removed.connect ((user) => { migrate_input_sources (); });
+			user_list.get_user_by_name ("this line force loads the users");
 		} else {
 			if (!indicator_settings.get_boolean ("migrated")) {
 				var builder = new VariantBuilder (new VariantType ("a(ss)"));
@@ -245,6 +252,27 @@ public class Indicator.Keyboard.Service : Object {
 						if (!added.contains (source)) {
 							list.add (source);
 							added.add (source);
+						}
+					}
+				}
+
+				if (!done) {
+					var user_list = LightDM.UserList.get_instance ();
+					LightDM.User? light_user = user_list.get_user_by_name (user.user_name);
+
+					if (light_user != null) {
+						var layouts = ((!) light_user).get_layouts ();
+						foreach (var layout in layouts) {
+							done = true;
+
+							var source = layout;
+							source = source.replace (" ", "+");
+							source = source.replace ("\t", "+");
+
+							if (!added.contains (source)) {
+								list.add (source);
+								added.add (source);
+							}
 						}
 					}
 				}
