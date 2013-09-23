@@ -41,6 +41,8 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
+	private uint lightdm_current;
+
 	[DBus (visible = false)]
 	public Service (ref unowned string[] args) {
 		force = "--force" in args;
@@ -112,7 +114,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
 		if (is_login_user ()) {
-			Act.UserManager manager = Act.UserManager.get_default ();
+			lightdm_current = source_settings.get_uint ("current");
+
+			var manager = Act.UserManager.get_default ();
 
 			if (manager.is_loaded) {
 				users = manager.list_users ();
@@ -147,6 +151,15 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				});
 			}
+
+			var user_list = LightDM.UserList.get_instance ();
+
+			user_list.user_added.connect ((user) => { migrate_input_sources (); });
+			user_list.user_changed.connect ((user) => { migrate_input_sources (); });
+			user_list.user_removed.connect ((user) => { migrate_input_sources (); });
+
+			/* Force the loading of the user list. */
+			user_list.get_user_by_name ("");
 		} else {
 			if (!indicator_settings.get_boolean ("migrated")) {
 				var builder = new VariantBuilder (new VariantType ("a(ss)"));
@@ -209,12 +222,12 @@ public class Indicator.Keyboard.Service : Object {
 
 		foreach (var user in users) {
 			if (user.is_loaded) {
-				var sources = user.input_sources;
-				var layouts = user.xkeyboard_layouts;
+				var done = false;
 
 				VariantIter outer;
 				VariantIter inner;
 
+				var sources = user.input_sources;
 				sources.get ("aa{ss}", out outer);
 
 				while (outer.next ("a{ss}", out inner)) {
@@ -223,6 +236,8 @@ public class Indicator.Keyboard.Service : Object {
 
 					while (inner.next ("{&s&s}", out key, out source)) {
 						if (key == "xkb") {
+							done = true;
+
 							if (!added.contains (source)) {
 								list.add (source);
 								added.add (source);
@@ -231,23 +246,66 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 
-				foreach (var layout in layouts) {
-					var source = layout;
-					source = source.replace (" ", "+");
-					source = source.replace ("\t", "+");
+				if (!done) {
+					var layouts = user.xkeyboard_layouts;
+					foreach (var layout in layouts) {
+						done = true;
 
-					if (!added.contains (source)) {
-						list.add (source);
-						added.add (source);
+						var source = layout;
+						source = source.replace (" ", "+");
+						source = source.replace ("\t", "+");
+
+						if (!added.contains (source)) {
+							list.add (source);
+							added.add (source);
+						}
+					}
+				}
+
+				if (!done) {
+					var user_list = LightDM.UserList.get_instance ();
+					LightDM.User? light_user = user_list.get_user_by_name (user.user_name);
+
+					if (light_user != null) {
+						var layouts = ((!) light_user).get_layouts ();
+						foreach (var layout in layouts) {
+							done = true;
+
+							var source = layout;
+							source = source.replace (" ", "+");
+							source = source.replace ("\t", "+");
+
+							if (!added.contains (source)) {
+								list.add (source);
+								added.add (source);
+							}
+						}
 					}
 				}
 			}
 		}
 
+		var layout = LightDM.get_layout ();
+
+		var source = layout.name;
+		source = source.replace (" ", "+");
+		source = source.replace ("\t", "+");
+
+		if (!added.contains (source)) {
+			list.add (source);
+			added.add (source);
+		}
+
 		var builder = new VariantBuilder (new VariantType ("a(ss)"));
 
-		foreach (var layout in list) {
-			builder.add ("(ss)", "xkb", layout);
+		foreach (var name in list) {
+			builder.add ("(ss)", "xkb", name);
+		}
+
+		if (lightdm_current < list.size) {
+			source_settings.set_uint ("current", lightdm_current);
+		} else {
+			source_settings.set_uint ("current", list.size - 1);
 		}
 
 		source_settings.set_value ("sources", builder.end ());
