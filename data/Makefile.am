@@ -46,7 +46,7 @@ com.canonical.indicator.keyboard:
 	$(AM_V_GEN) (echo '[Indicator Service]';                                              \
 	             echo 'Name=indicator-keyboard';                                          \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard';                     \
-	             echo 'Position=80'                                                       \
+	             echo 'Position=80';                                                      \
 	             echo '';                                                                 \
 	             echo '[desktop]';                                                        \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
