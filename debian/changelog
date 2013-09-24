@@ -1,3 +1,14 @@
+indicator-keyboard (0.0.0+13.10.20130924.2-0ubuntu1) saucy; urgency=low
+
+  [ William Hua ]
+  * Fall-back on old unity-greeter keyboard layouts in case migration
+    hasn't occurred. (LP: #1228489)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 116
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 24 Sep 2013 08:58:16 +0000
+
 indicator-keyboard (0.0.0+13.10.20130829.1-0ubuntu1) saucy; urgency=low
 
   [ William Hua ]
