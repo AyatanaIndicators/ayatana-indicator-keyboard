@@ -41,7 +41,9 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
+	private Greeter greeter;
 	private uint lightdm_current;
+	private string? greeter_user;
 
 	[DBus (visible = false)]
 	public Service (ref unowned string[] args) {
@@ -53,6 +55,15 @@ public class Indicator.Keyboard.Service : Object {
 			use_gtk = Gtk.init_check (ref args);
 		} else {
 			Gdk.init (ref args);
+		}
+
+		if (is_login_user ()) {
+			try {
+				greeter = Bus.get_proxy_sync (BusType.SESSION, "com.canonical.UnityGreeter.List", "/list");
+				greeter.entry_selected.connect (handle_entry_selected);
+			} catch (IOError error) {
+				warning ("error: %s", error.message);
+			}
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -109,6 +120,82 @@ public class Indicator.Keyboard.Service : Object {
 		              handle_bus_acquired,
 		              null,
 		              handle_name_lost);
+	}
+
+	[DBus (visible = false)]
+	private void update_greeter_user () {
+		if (greeter_user != null) {
+			var manager = Act.UserManager.get_default ();
+
+			if (manager.is_loaded) {
+				Act.User? user = manager.get_user ((!) greeter_user);
+
+				if (user != null && ((!) user).is_loaded) {
+					string? source = null;
+
+					VariantIter outer;
+					VariantIter inner;
+
+					var sources = ((!) user).input_sources;
+					sources.get ("aa{ss}", out outer);
+
+					if (outer.next ("a{ss}", out inner)) {
+						unowned string key;
+						unowned string value;
+
+						while (inner.next ("{&s&s}", out key, out value)) {
+							if (key == "xkb") {
+								source = value;
+							}
+						}
+					}
+
+					if (source == null) {
+						var layouts = ((!) user).xkeyboard_layouts;
+
+						if (layouts.length == 0) {
+							var user_list = LightDM.UserList.get_instance ();
+							LightDM.User? light_user = user_list.get_user_by_name ((!) greeter_user);
+
+							if (light_user != null) {
+								layouts = ((!) light_user).get_layouts ();
+							}
+						}
+
+						if (layouts.length > 0) {
+							source = layouts[0];
+							source = ((!) source).replace (" ", "+");
+							source = ((!) source).replace ("\t", "+");
+						}
+					}
+
+					if (source != null) {
+						var array = source_settings.get_value ("sources");
+
+						for (int i = 0; i < array.n_children (); i++) {
+							unowned string type;
+							unowned string name;
+
+							array.get_child (i, "(&s&s)", out type, out name);
+
+							if (type == "xkb" && name == (!) source) {
+								source_settings.set_uint ("current", i);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_entry_selected (string entry_name) {
+		if (greeter_user == null || entry_name != (!) greeter_user) {
+			greeter_user = entry_name;
+
+			update_greeter_user ();
+		}
 	}
 
 	[DBus (visible = false)]
@@ -309,6 +396,8 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		source_settings.set_value ("sources", builder.end ());
+
+		update_greeter_user ();
 	}
 
 	[DBus (visible = false)]
