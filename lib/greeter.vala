@@ -19,6 +19,7 @@
 [DBus (name="com.canonical.UnityGreeter.List")]
 public interface Greeter : Object {
 
+	public abstract string get_active_entry () throws IOError;
 	public abstract void set_active_entry (string entry_name) throws IOError;
 
 	public signal void entry_selected (string entry_name);

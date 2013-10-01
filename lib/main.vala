@@ -41,7 +41,7 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
-	private Greeter greeter;
+	private Greeter? greeter;
 	private uint lightdm_current;
 	private string? greeter_user;
 
@@ -58,12 +58,11 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		if (is_login_user ()) {
-			try {
-				greeter = Bus.get_proxy_sync (BusType.SESSION, "com.canonical.UnityGreeter.List", "/list");
-				greeter.entry_selected.connect (handle_entry_selected);
-			} catch (IOError error) {
-				warning ("error: %s", error.message);
-			}
+			Bus.watch_name (BusType.SESSION,
+			                "com.canonical.UnityGreeter",
+			                BusNameWatcherFlags.NONE,
+			                handle_name_appeared,
+			                handle_name_vanished);
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -124,6 +123,14 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_greeter_user () {
+		if (greeter_user == null && greeter != null) {
+			try {
+				greeter_user = ((!) greeter).get_active_entry ();
+			} catch (IOError error) {
+				warning ("error: %s", error.message);
+			}
+		}
+
 		if (greeter_user != null) {
 			var manager = Act.UserManager.get_default ();
 
@@ -139,21 +146,26 @@ public class Indicator.Keyboard.Service : Object {
 					var sources = ((!) user).input_sources;
 					sources.get ("aa{ss}", out outer);
 
-					if (outer.next ("a{ss}", out inner)) {
+					while (outer.next ("a{ss}", out inner)) {
 						unowned string key;
 						unowned string value;
 
 						while (inner.next ("{&s&s}", out key, out value)) {
 							if (key == "xkb") {
 								source = value;
+								break;
 							}
+						}
+
+						if (source != null) {
+							break;
 						}
 					}
 
 					if (source == null) {
 						var layouts = ((!) user).xkeyboard_layouts;
 
-						if (layouts.length == 0) {
+						if (layouts.length <= 0) {
 							var user_list = LightDM.UserList.get_instance ();
 							LightDM.User? light_user = user_list.get_user_by_name ((!) greeter_user);
 
@@ -703,6 +715,21 @@ public class Indicator.Keyboard.Service : Object {
 		} catch (SpawnError error) {
 			warning ("error: %s", error.message);
 		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			greeter = Bus.get_proxy_sync (BusType.SESSION, "com.canonical.UnityGreeter", "/list");
+			((!) greeter).entry_selected.connect (handle_entry_selected);
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_name_vanished (DBusConnection connection, string name) {
+		greeter = null;
 	}
 
 	[DBus (visible = false)]
