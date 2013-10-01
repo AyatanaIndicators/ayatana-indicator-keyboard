@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-09-20 20:56-0400\n"
+"POT-Creation-Date: 2013-09-27 16:28+0200\n"
 "PO-Revision-Date: 2013-09-28 11:11+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-29 05:47+0000\n"
+"X-Launchpad-Export-Date: 2013-10-01 05:40+0000\n"
 "X-Generator: Launchpad (build 16774)\n"
 
 #: ../lib/main.vala:427
 #, c-format
 msgid "%s input source"
-msgstr ""
+msgstr "%s-Eingabequelle"
 
 #: ../lib/main.vala:525
 msgid "Character Map"
@@ -28,8 +28,8 @@ msgstr "Zeichentabelle"
 
 #: ../lib/main.vala:526
 msgid "Keyboard Layout Chart"
-msgstr ""
+msgstr "Abbild der Tastaturbelegung"
 
 #: ../lib/main.vala:527
 msgid "Text Entry Settings..."
-msgstr ""
+msgstr "Texteingabe-Einstellungen …"
