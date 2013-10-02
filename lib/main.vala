@@ -135,6 +135,8 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
+		string? source = null;
+
 		if (greeter_user != null) {
 			var manager = Act.UserManager.get_default ();
 
@@ -142,8 +144,6 @@ public class Indicator.Keyboard.Service : Object {
 				Act.User? user = manager.get_user ((!) greeter_user);
 
 				if (user != null && ((!) user).is_loaded) {
-					string? source = null;
-
 					VariantIter outer;
 					VariantIter inner;
 
@@ -184,22 +184,35 @@ public class Indicator.Keyboard.Service : Object {
 							source = ((!) source).replace ("\t", "+");
 						}
 					}
+				}
+			}
+		}
 
-					if (source != null) {
-						var array = source_settings.get_value ("sources");
+		if (source == null) {
+			LightDM.Layout? layout = LightDM.get_layout ();
 
-						for (int i = 0; i < array.n_children (); i++) {
-							unowned string type;
-							unowned string name;
+			if (layout != null) {
+				source = ((!) layout).name;
 
-							array.get_child (i, "(&s&s)", out type, out name);
+				if (source != null) {
+					source = ((!) source).replace (" ", "+");
+					source = ((!) source).replace ("\t", "+");
+				}
+			}
+		}
 
-							if (type == "xkb" && name == (!) source) {
-								source_settings.set_uint ("current", i);
-								break;
-							}
-						}
-					}
+		if (source != null) {
+			var array = source_settings.get_value ("sources");
+
+			for (int i = 0; i < array.n_children (); i++) {
+				unowned string type;
+				unowned string name;
+
+				array.get_child (i, "(&s&s)", out type, out name);
+
+				if (type == "xkb" && name == (!) source) {
+					source_settings.set_uint ("current", i);
+					break;
 				}
 			}
 		}
@@ -388,15 +401,20 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
-		var layout = LightDM.get_layout ();
+		LightDM.Layout? layout = LightDM.get_layout ();
 
-		var source = layout.name;
-		source = source.replace (" ", "+");
-		source = source.replace ("\t", "+");
+		if (layout != null) {
+			string? source = ((!) layout).name;
 
-		if (!added.contains (source)) {
-			list.add (source);
-			added.add (source);
+			if (source != null) {
+				source = ((!) source).replace (" ", "+");
+				source = ((!) source).replace ("\t", "+");
+
+				if (!added.contains ((!) source)) {
+					list.add ((!) source);
+					added.add ((!) source);
+				}
+			}
 		}
 
 		var builder = new VariantBuilder (new VariantType ("a(ss)"));
