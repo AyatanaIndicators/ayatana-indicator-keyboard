@@ -42,8 +42,8 @@ public class Indicator.Keyboard.Service : Object {
 	private Menu? sources_menu;
 
 	private Greeter? greeter;
-	private uint lightdm_current;
 	private string? greeter_user;
+	private uint lightdm_current;
 
 	[DBus (visible = false)]
 	public Service (ref unowned string[] args) {
