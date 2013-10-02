@@ -58,11 +58,15 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		if (is_login_user ()) {
-			Bus.watch_name (BusType.SESSION,
-			                "com.canonical.UnityGreeter",
-			                BusNameWatcherFlags.NONE,
-			                handle_name_appeared,
-			                handle_name_vanished);
+			var name = Environment.get_variable ("UNITY_GREETER_DBUS_NAME");
+
+			if (name != null) {
+				Bus.watch_name (BusType.SESSION,
+				                (!) name,
+				                BusNameWatcherFlags.NONE,
+				                handle_name_appeared,
+				                handle_name_vanished);
+			}
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -720,7 +724,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			greeter = Bus.get_proxy_sync (BusType.SESSION, "com.canonical.UnityGreeter", "/list");
+			greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
 			((!) greeter).entry_selected.connect (handle_entry_selected);
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
