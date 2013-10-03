@@ -1,4 +1,4 @@
-# Hebrew translation for indicator-keyboard
+# Occitan (post 1500) translation for indicator-keyboard
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the indicator-keyboard package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-10-02 05:46+0000\n"
-"PO-Revision-Date: 2013-10-01 12:03+0000\n"
+"PO-Revision-Date: 2013-10-02 06:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: ../lib/main.vala:427
 #, c-format
 msgid "%s input source"
-msgstr "מקור קלט %s"
+msgstr "Agençament : %s"
 
 #: ../lib/main.vala:525
 msgid "Character Map"
-msgstr "מפת תווים"
+msgstr "Taula de caractèrs"
 
 #: ../lib/main.vala:526
 msgid "Keyboard Layout Chart"
-msgstr "תרשים פריסת המקלדת"
+msgstr "Representacion de l'agençament"
 
 #: ../lib/main.vala:527
 msgid "Text Entry Settings..."
-msgstr "הגדרות הזנת טקסט…"
+msgstr "Paramètres d'agençament"
