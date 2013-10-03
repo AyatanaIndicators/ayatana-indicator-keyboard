@@ -41,6 +41,8 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
+	private Greeter? greeter;
+	private string? greeter_user;
 	private uint lightdm_current;
 
 	[DBus (visible = false)]
@@ -53,6 +55,18 @@ public class Indicator.Keyboard.Service : Object {
 			use_gtk = Gtk.init_check (ref args);
 		} else {
 			Gdk.init (ref args);
+		}
+
+		if (is_login_user ()) {
+			var name = Environment.get_variable ("UNITY_GREETER_DBUS_NAME");
+
+			if (name != null) {
+				Bus.watch_name (BusType.SESSION,
+				                (!) name,
+				                BusNameWatcherFlags.NONE,
+				                handle_name_appeared,
+				                handle_name_vanished);
+			}
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -109,6 +123,108 @@ public class Indicator.Keyboard.Service : Object {
 		              handle_bus_acquired,
 		              null,
 		              handle_name_lost);
+	}
+
+	[DBus (visible = false)]
+	private void update_greeter_user () {
+		if (greeter_user == null && greeter != null) {
+			try {
+				greeter_user = ((!) greeter).get_active_entry ();
+			} catch (IOError error) {
+				warning ("error: %s", error.message);
+			}
+		}
+
+		string? source = null;
+
+		if (greeter_user != null) {
+			var manager = Act.UserManager.get_default ();
+
+			if (manager.is_loaded) {
+				Act.User? user = manager.get_user ((!) greeter_user);
+
+				if (user != null && ((!) user).is_loaded) {
+					VariantIter outer;
+					VariantIter inner;
+
+					var sources = ((!) user).input_sources;
+					sources.get ("aa{ss}", out outer);
+
+					while (outer.next ("a{ss}", out inner)) {
+						unowned string key;
+						unowned string value;
+
+						while (inner.next ("{&s&s}", out key, out value)) {
+							if (key == "xkb") {
+								source = value;
+								break;
+							}
+						}
+
+						if (source != null) {
+							break;
+						}
+					}
+
+					if (source == null) {
+						var layouts = ((!) user).xkeyboard_layouts;
+
+						if (layouts.length <= 0) {
+							var user_list = LightDM.UserList.get_instance ();
+							LightDM.User? light_user = user_list.get_user_by_name ((!) greeter_user);
+
+							if (light_user != null) {
+								layouts = ((!) light_user).get_layouts ();
+							}
+						}
+
+						if (layouts.length > 0) {
+							source = layouts[0];
+							source = ((!) source).replace (" ", "+");
+							source = ((!) source).replace ("\t", "+");
+						}
+					}
+				}
+			}
+		}
+
+		if (source == null) {
+			LightDM.Layout? layout = LightDM.get_layout ();
+
+			if (layout != null) {
+				source = ((!) layout).name;
+
+				if (source != null) {
+					source = ((!) source).replace (" ", "+");
+					source = ((!) source).replace ("\t", "+");
+				}
+			}
+		}
+
+		if (source != null) {
+			var array = source_settings.get_value ("sources");
+
+			for (int i = 0; i < array.n_children (); i++) {
+				unowned string type;
+				unowned string name;
+
+				array.get_child (i, "(&s&s)", out type, out name);
+
+				if (type == "xkb" && name == (!) source) {
+					source_settings.set_uint ("current", i);
+					break;
+				}
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_entry_selected (string entry_name) {
+		if (greeter_user == null || entry_name != (!) greeter_user) {
+			greeter_user = entry_name;
+
+			update_greeter_user ();
+		}
 	}
 
 	[DBus (visible = false)]
@@ -285,15 +401,20 @@ public class Indicator.Keyboard.Service : Object {
 			}
 		}
 
-		var layout = LightDM.get_layout ();
+		LightDM.Layout? layout = LightDM.get_layout ();
 
-		var source = layout.name;
-		source = source.replace (" ", "+");
-		source = source.replace ("\t", "+");
+		if (layout != null) {
+			string? source = ((!) layout).name;
 
-		if (!added.contains (source)) {
-			list.add (source);
-			added.add (source);
+			if (source != null) {
+				source = ((!) source).replace (" ", "+");
+				source = ((!) source).replace ("\t", "+");
+
+				if (!added.contains ((!) source)) {
+					list.add ((!) source);
+					added.add ((!) source);
+				}
+			}
 		}
 
 		var builder = new VariantBuilder (new VariantType ("a(ss)"));
@@ -309,6 +430,8 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		source_settings.set_value ("sources", builder.end ());
+
+		update_greeter_user ();
 	}
 
 	[DBus (visible = false)]
@@ -614,6 +737,21 @@ public class Indicator.Keyboard.Service : Object {
 		} catch (SpawnError error) {
 			warning ("error: %s", error.message);
 		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
+			((!) greeter).entry_selected.connect (handle_entry_selected);
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_name_vanished (DBusConnection connection, string name) {
+		greeter = null;
 	}
 
 	[DBus (visible = false)]
