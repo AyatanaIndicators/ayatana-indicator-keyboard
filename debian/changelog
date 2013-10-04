@@ -1,3 +1,14 @@
+indicator-keyboard (0.0.0+13.10.20131004-0ubuntu1) saucy; urgency=low
+
+  [ William Hua ]
+  * Set the selected user's first keyboard layout whenever it changes
+    under unity-greeter. (LP #1233945). (LP: #1233945)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 125
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 04 Oct 2013 02:28:12 +0000
+
 indicator-keyboard (0.0.0+13.10.20130924.2-0ubuntu3) saucy; urgency=low
 
   * Updated POTFILES.skip, seems to be required as well.
