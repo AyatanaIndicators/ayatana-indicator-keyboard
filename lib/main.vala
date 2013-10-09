@@ -436,24 +436,26 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_login_layout () {
-		unowned List<LightDM.Layout> layouts = LightDM.get_layouts ();
-		var current = source_settings.get_uint ("current");
+		if (is_login_user ()) {
+			unowned List<LightDM.Layout> layouts = LightDM.get_layouts ();
+			var current = source_settings.get_uint ("current");
 
-		if (current < get_sources ().length) {
-			var source = get_sources ()[current];
-			string? name = null;
+			if (current < get_sources ().length) {
+				var source = get_sources ()[current];
+				string? name = null;
 
-			if (source.layout != null && source.variant != null) {
-				name = @"$((!) source.layout)\t$((!) source.variant)";
-			} else if (source.layout != null) {
-				name = source.layout;
-			}
+				if (source.layout != null && source.variant != null) {
+					name = @"$((!) source.layout)\t$((!) source.variant)";
+				} else if (source.layout != null) {
+					name = source.layout;
+				}
 
-			if (name != null) {
-				foreach (var layout in layouts) {
-					if (layout.name == (!) name) {
-						LightDM.set_layout (layout);
-						break;
+				if (name != null) {
+					foreach (var layout in layouts) {
+						if (layout.name == (!) name) {
+							LightDM.set_layout (layout);
+							break;
+						}
 					}
 				}
 			}
