@@ -1,4 +1,4 @@
-# Tajik translation for indicator-keyboard
+# Arabic translation for indicator-keyboard
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the indicator-keyboard package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-10-09 22:07+0000\n"
-"PO-Revision-Date: 2013-09-28 14:41+0000\n"
+"PO-Revision-Date: 2013-10-10 03:47+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Tajik <tg@li.org>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: ../lib/main.vala:552
 #, c-format
 msgid "%s input source"
-msgstr "Манбаи вуруди %s"
+msgstr "مصدر الإدخال %s"
 
 #: ../lib/main.vala:650
 msgid "Character Map"
-msgstr "Тарҳбандии аломатҳо"
+msgstr "خريطة المحارف"
 
 #: ../lib/main.vala:651
 msgid "Keyboard Layout Chart"
-msgstr "Аломатҳои тарҳбандии клавиатура"
+msgstr "رسمة تخطيط لوحة المفاتيح"
 
 #: ../lib/main.vala:652
 msgid "Text Entry Settings..."
-msgstr "Танзимоти вуруди матн..."
+msgstr "إعدادات إدخال النص..."

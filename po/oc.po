@@ -7,29 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-10-08 06:21+0000\n"
+"POT-Creation-Date: 2013-10-09 22:07+0000\n"
 "PO-Revision-Date: 2013-10-02 06:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:51+0000\n"
+"X-Launchpad-Export-Date: 2013-10-10 05:26+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
-#: ../lib/main.vala:550
+#: ../lib/main.vala:552
 #, c-format
 msgid "%s input source"
 msgstr "Agençament : %s"
 
-#: ../lib/main.vala:648
+#: ../lib/main.vala:650
 msgid "Character Map"
 msgstr "Taula de caractèrs"
 
-#: ../lib/main.vala:649
+#: ../lib/main.vala:651
 msgid "Keyboard Layout Chart"
 msgstr "Representacion de l'agençament"
 
-#: ../lib/main.vala:650
+#: ../lib/main.vala:652
 msgid "Text Entry Settings..."
 msgstr "Paramètres d'agençament"
