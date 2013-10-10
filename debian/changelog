@@ -1,3 +1,14 @@
+indicator-keyboard (0.0.0+13.10.20131010.1-0ubuntu1) saucy; urgency=low
+
+  [ William Hua ]
+  * Don't set LightDM's layout if we're in a session. (LP: 1226962).
+    (LP: #1226962)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 134
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 10 Oct 2013 12:36:09 +0000
+
 indicator-keyboard (0.0.0+13.10.20131004-0ubuntu1) saucy; urgency=low
 
   [ William Hua ]
