@@ -1,3 +1,10 @@
+indicator-keyboard (0.0.0+13.10.20131010.1-0ubuntu2) UNRELEASED; urgency=low
+
+  * Define "ubiquity" indicator profile, reusing the greeter object. (LP:
+    #1241539)
+
+ -- Dmitrijs Ledkovs <xnox@ubuntu.com>  Fri, 18 Oct 2013 13:22:18 +0100
+
 indicator-keyboard (0.0.0+13.10.20131010.1-0ubuntu1) saucy; urgency=low
 
   [ William Hua ]
