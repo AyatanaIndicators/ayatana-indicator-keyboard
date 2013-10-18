@@ -51,7 +51,11 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
 	             echo '';                                                                 \
 	             echo '[desktop_greeter]';                                                \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
+	             echo '';                                                                 \
+	             echo '[ubiquity]';                                                       \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
+
 	            mv $@.tmp $@
 
 gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
