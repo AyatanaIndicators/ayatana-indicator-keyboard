@@ -55,7 +55,6 @@ com.canonical.indicator.keyboard:
 	             echo '';                                                                 \
 	             echo '[ubiquity]';                                                       \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
-
 	            mv $@.tmp $@
 
 gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
