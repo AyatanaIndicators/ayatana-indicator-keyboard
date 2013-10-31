@@ -569,13 +569,37 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_middle_click (Variant? parameter) {
+		handle_scroll_wheel (new Variant.int32 (-1));
+	}
+
+	[DBus (visible = false)]
+	private void handle_scroll_wheel (Variant? parameter) {
+		if (parameter != null) {
+			var sources = source_settings.get_value ("sources");
+			var current = source_settings.get_uint ("current");
+			var length = (int) sources.n_children ();
+
+			source_settings.set_uint ("current", (current + (length - parameter.get_int32 ())) % length);
+		}
+	}
+
+	[DBus (visible = false)]
 	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
 		group.insert (root_action);
 		group.insert (source_settings.create_action ("current"));
 
-		var action = new SimpleAction ("map", null);
+		var action = new SimpleAction ("next", null);
+		action.activate.connect (handle_middle_click);
+		group.insert (action);
+
+		action = new SimpleAction ("scroll", VariantType.INT32);
+		action.activate.connect (handle_scroll_wheel);
+		group.insert (action);
+
+		action = new SimpleAction ("map", null);
 		action.activate.connect (handle_activate_map);
 		group.insert (action);
 
@@ -653,6 +677,8 @@ public class Indicator.Keyboard.Service : Object {
 
 		var indicator = new MenuItem.submenu ("x", submenu);
 		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
+		indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
+		indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
 		indicator.set_detailed_action ("indicator.indicator");
 		menu.append_item (indicator);
 
