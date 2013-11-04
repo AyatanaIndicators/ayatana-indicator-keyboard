@@ -580,7 +580,10 @@ public class Indicator.Keyboard.Service : Object {
 			var current = source_settings.get_uint ("current");
 			var length = (int) sources.n_children ();
 
-			source_settings.set_uint ("current", (current + (length - parameter.get_int32 ())) % length);
+			if (length > 0) {
+				var offset = parameter.get_int32 () % length;
+				source_settings.set_uint ("current", (current + (length - offset)) % length);
+			}
 		}
 	}
 
