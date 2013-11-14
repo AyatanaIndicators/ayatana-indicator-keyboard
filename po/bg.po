@@ -1,4 +1,4 @@
-# English (Canada) translation for indicator-keyboard
+# Bulgarian translation for indicator-keyboard
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the indicator-keyboard package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-11-13 06:14+0000\n"
-"PO-Revision-Date: 2013-09-12 10:07+0000\n"
-"Last-Translator: William Hua <Unknown>\n"
-"Language-Team: English (Canada) <en_CA@li.org>\n"
+"PO-Revision-Date: 2013-11-13 14:40+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: ../lib/main.vala:552
 #, c-format
 msgid "%s input source"
-msgstr "%s input source"
+msgstr "Входен източник %s"
 
 #: ../lib/main.vala:677
 msgid "Character Map"
-msgstr "Character Map"
+msgstr "Таблица със знаци"
 
 #: ../lib/main.vala:678
 msgid "Keyboard Layout Chart"
-msgstr "Keyboard Layout Chart"
+msgstr "Схема на клавиатурната подредба"
 
 #: ../lib/main.vala:679
 msgid "Text Entry Settings..."
-msgstr "Text Entry Settings..."
+msgstr "Параметри за въвеждане на текста..."
