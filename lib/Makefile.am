@@ -32,7 +32,8 @@ indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(IBUS_CFLAGS)            \
                                     $(ACCOUNTSSERVICE_CFLAGS) \
                                     $(LIGHTDM_CFLAGS)         \
-                                    $(BAMF_CFLAGS)
+                                    $(BAMF_CFLAGS)            \
+                                    $(COVERAGE_CFLAGS)
 indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
                                      $(GEE_LIBS)             \
                                      $(PANGOCAIRO_LIBS)      \
@@ -43,4 +44,5 @@ indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
                                      $(IBUS_LIBS)            \
                                      $(ACCOUNTSSERVICE_LIBS) \
                                      $(LIGHTDM_LIBS)         \
-                                     $(BAMF_LIBS)
+                                     $(BAMF_LIBS)            \
+                                     $(COVERAGE_LDFLAGS)
