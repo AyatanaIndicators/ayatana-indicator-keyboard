@@ -806,6 +806,7 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_window_stack_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
 			window_stack = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/WindowStack");
+			update_window_sources ();
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}
