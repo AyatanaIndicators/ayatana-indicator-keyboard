@@ -24,15 +24,16 @@ public class Indicator.Keyboard.Service : Object {
 
 	private bool force;
 	private bool use_gtk;
-	private bool use_bamf;
 
 	private MainLoop? loop;
 	private Settings indicator_settings;
 	private Settings source_settings;
 	private Settings per_window_settings;
 	private SList<Act.User> users;
-	private Bamf.Matcher? matcher;
-	private Gee.HashMap<string, uint>? window_sources;
+
+	private WindowStack? window_stack;
+	private Gee.HashMap<uint, uint>? window_sources;
+	private uint focused_window_id;
 
 	private Source[]? sources;
 
@@ -49,7 +50,6 @@ public class Indicator.Keyboard.Service : Object {
 	public Service (ref unowned string[] args) {
 		force = "--force" in args;
 		use_gtk = "--use-gtk" in args;
-		use_bamf = "--use-bamf" in args;
 
 		if (use_gtk) {
 			use_gtk = Gtk.init_check (ref args);
@@ -64,9 +64,15 @@ public class Indicator.Keyboard.Service : Object {
 				Bus.watch_name (BusType.SESSION,
 				                (!) name,
 				                BusNameWatcherFlags.NONE,
-				                handle_name_appeared,
-				                handle_name_vanished);
+				                handle_unity_greeter_name_appeared,
+				                handle_unity_greeter_name_vanished);
 			}
+		} else {
+			Bus.watch_name (BusType.SESSION,
+			                "com.canonical.Unity.WindowStack",
+			                BusNameWatcherFlags.NONE,
+			                handle_window_stack_name_appeared,
+			                handle_window_stack_name_vanished);
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -464,17 +470,30 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_window_sources () {
-		if (use_bamf && !is_login_user ()) {
+		if (window_stack != null) {
 			var group_per_window = per_window_settings.get_boolean ("group-per-window");
 
 			if (group_per_window != (window_sources != null)) {
 				if (group_per_window) {
-					window_sources = new Gee.HashMap<string, uint> ();
-					matcher = Bamf.Matcher.get_default ();
-					((!) matcher).active_window_changed.connect (handle_active_window_changed);
+					focused_window_id = 0;
+
+					try {
+						var windows = ((!) window_stack).get_window_stack ();
+
+						foreach (var window in windows) {
+							if (window.focused) {
+								focused_window_id = window.window_id;
+								break;
+							}
+						}
+					} catch (IOError error) {
+						warning ("error: %s", error.message);
+					}
+
+					window_sources = new Gee.HashMap<uint, uint> ();
+					((!) window_stack).focused_window_changed.connect (handle_focused_window_changed);
 				} else {
-					((!) matcher).active_window_changed.disconnect (handle_active_window_changed);
-					matcher = null;
+					((!) window_stack).focused_window_changed.disconnect (handle_focused_window_changed);
 					window_sources = null;
 				}
 			}
@@ -487,22 +506,20 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_active_window_changed (Bamf.View? old_view, Bamf.View? new_view) {
-		if (old_view != null) {
-			((!) window_sources)[((!) old_view).path] = source_settings.get_uint ("current");
-		}
+	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
+		((!) window_sources)[focused_window_id] = source_settings.get_uint ("current");
 
-		if (new_view != null) {
-			if (!((!) window_sources).has_key (((!) new_view).path)) {
-				var default_group = per_window_settings.get_int ("default-group");
+		if (!(((!) window_sources).has_key (window_id))) {
+			var default_group = per_window_settings.get_int ("default-group");
 
-				if (default_group >= 0) {
-					source_settings.set_uint ("current", (uint) default_group);
-				}
-			} else {
-				source_settings.set_uint ("current", ((!) window_sources)[((!) new_view).path]);
+			if (default_group >= 0) {
+				source_settings.set_uint ("current", (uint) default_group);
 			}
+		} else {
+			source_settings.set_uint ("current", ((!) window_sources)[window_id]);
 		}
+
+		focused_window_id = window_id;
 	}
 
 	[DBus (visible = false)]
@@ -771,7 +788,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_name_appeared (DBusConnection connection, string name, string name_owner) {
+	private void handle_unity_greeter_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
 			unity_greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
 			((!) unity_greeter).entry_selected.connect (handle_entry_selected);
@@ -781,8 +798,22 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_name_vanished (DBusConnection connection, string name) {
+	private void handle_unity_greeter_name_vanished (DBusConnection connection, string name) {
 		unity_greeter = null;
+	}
+
+	[DBus (visible = false)]
+	private void handle_window_stack_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			window_stack = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/WindowStack");
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_window_stack_name_vanished (DBusConnection connection, string name) {
+		window_stack = null;
 	}
 
 	[DBus (visible = false)]
