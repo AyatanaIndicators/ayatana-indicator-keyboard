@@ -41,7 +41,7 @@ public class Indicator.Keyboard.Service : Object {
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
 
-	private Greeter? greeter;
+	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
 	private uint lightdm_current;
 
@@ -127,9 +127,9 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_greeter_user () {
-		if (greeter_user == null && greeter != null) {
+		if (greeter_user == null && unity_greeter != null) {
 			try {
-				greeter_user = ((!) greeter).get_active_entry ();
+				greeter_user = ((!) unity_greeter).get_active_entry ();
 			} catch (IOError error) {
 				warning ("error: %s", error.message);
 			}
@@ -773,8 +773,8 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
-			((!) greeter).entry_selected.connect (handle_entry_selected);
+			unity_greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
+			((!) unity_greeter).entry_selected.connect (handle_entry_selected);
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}
@@ -782,7 +782,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_name_vanished (DBusConnection connection, string name) {
-		greeter = null;
+		unity_greeter = null;
 	}
 
 	[DBus (visible = false)]

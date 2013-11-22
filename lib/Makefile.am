@@ -5,10 +5,10 @@ AM_LDFLAGS = -lm
 AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
-indicator_keyboard_service_SOURCES = main.vala    \
-                                     source.vala  \
-                                     common.vala  \
-                                     greeter.vala
+indicator_keyboard_service_SOURCES = main.vala          \
+                                     source.vala        \
+                                     common.vala        \
+                                     unity-greeter.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg gee-1.0              \
                                        --pkg posix                \
