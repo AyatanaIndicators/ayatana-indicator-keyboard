@@ -1,3 +1,25 @@
+indicator-keyboard (0.0.0+14.04.20131125-0ubuntu1) trusty; urgency=low
+
+  [ William Hua ]
+  * Enable middle click and mouse wheel scrolling. (LP: #887139)
+  * Add accountsservice.vapi (accountsservice no long ships it).
+
+  [ Allan LeSage ]
+  * Add gcov coverage tooling; use ./autogen.sh --enable-gcov and then
+    make coverage-html to see a report of what's covered. You can read
+    about the rationale in this old blog post:
+    http://qualityhour.wordpress.com/2012/01/29/test-coverage-tutorial-
+    for-cc-autotools-projects/ .
+
+  [ Lars Uebernickel ]
+  * Set the indicator's position according to
+    http://wiki.ubuntu.com/SystemComponents.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 185
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 25 Nov 2013 03:55:06 +0000
+
 indicator-keyboard (0.0.0+14.04.20131029.1-0ubuntu1) trusty; urgency=low
 
   [ Dmitrijs Ledkovs ]
