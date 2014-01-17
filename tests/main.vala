@@ -50,6 +50,8 @@ struct Fixture {
 	uint object_name;
 }
 
+string display;
+
 static void start_service (Fixture *fixture) {
 	if (fixture.connection != null) {
 		try {
@@ -67,6 +69,8 @@ static void start_service (Fixture *fixture) {
 }
 
 static void begin_test (void *data) {
+	Environment.set_variable ("DISPLAY", display, true);
+
 	var fixture = (Fixture *) data;
 
 	fixture.bus = new TestDBus (TestDBusFlags.NONE);
@@ -694,6 +698,7 @@ static void test_update_input_sources (void *data) {
 }
 
 public int main (string[] args) {
+	display = Environment.get_variable ("DISPLAY");
 	Environment.set_variable ("DCONF_PROFILE", DCONF_PROFILE, true);
 	Environment.set_variable ("LC_ALL", "C", true);
 
