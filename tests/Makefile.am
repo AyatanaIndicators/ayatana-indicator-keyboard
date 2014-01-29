@@ -8,7 +8,8 @@ AM_LDFLAGS = -lm
 AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
-indicator_keyboard_tests_SOURCES = main.vala   \
+indicator_keyboard_tests_SOURCES = main.vala    \
+                                   fixture.vala \
                                    config.vala
 indicator_keyboard_tests_VALAFLAGS = $(AM_VALAFLAGS) \
                                      --pkg gio-2.0
