@@ -5,10 +5,11 @@ AM_LDFLAGS = -lm
 AM_VALAFLAGS = --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
-indicator_keyboard_service_SOURCES = main.vala    \
-                                     source.vala  \
-                                     common.vala  \
-                                     greeter.vala
+indicator_keyboard_service_SOURCES = main.vala          \
+                                     source.vala        \
+                                     common.vala        \
+                                     window-stack.vala  \
+                                     unity-greeter.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg gee-1.0              \
                                        --pkg posix                \
@@ -20,8 +21,7 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg Gkbd-3.0             \
                                        --pkg ibus-1.0             \
                                        --pkg accountsservice      \
-                                       --pkg liblightdm-gobject-1 \
-                                       --pkg libbamf3
+                                       --pkg liblightdm-gobject-1
 indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(GEE_CFLAGS)             \
                                     $(PANGOCAIRO_CFLAGS)      \
@@ -32,7 +32,6 @@ indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(IBUS_CFLAGS)            \
                                     $(ACCOUNTSSERVICE_CFLAGS) \
                                     $(LIGHTDM_CFLAGS)         \
-                                    $(BAMF_CFLAGS)            \
                                     $(COVERAGE_CFLAGS)
 indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
                                      $(GEE_LIBS)             \
@@ -44,5 +43,4 @@ indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
                                      $(IBUS_LIBS)            \
                                      $(ACCOUNTSSERVICE_LIBS) \
                                      $(LIGHTDM_LIBS)         \
-                                     $(BAMF_LIBS)            \
                                      $(COVERAGE_LDFLAGS)

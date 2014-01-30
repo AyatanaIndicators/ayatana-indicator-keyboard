@@ -78,10 +78,6 @@ PKG_CHECK_MODULES([LIGHTDM], [liblightdm-gobject-1])
 AC_SUBST([LIGHTDM_CFLAGS])
 AC_SUBST([LIGHTDM_LIBS])
 
-PKG_CHECK_MODULES([BAMF], [libbamf3])
-AC_SUBST([BAMF_CFLAGS])
-AC_SUBST([BAMF_LIBS])
-
 m4_include([m4/gcov.m4])
 AC_TDD_GCOV
 AM_CONDITIONAL([HAVE_GCOV], [test "x$ac_cv_check_gcov" = xyes])
