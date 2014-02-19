@@ -69,6 +69,14 @@ public class Indicator.Keyboard.Source : Object {
 		construct set { _use_gtk = value; icon = null; }
 	}
 
+	public bool is_xkb {
+		get { return xkb != null; }
+	}
+
+	public bool is_ibus {
+		get { return ibus != null; }
+	}
+
 	public Source (Variant variant, bool use_gtk = false) {
 		Object (use_gtk: use_gtk);
 

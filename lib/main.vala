@@ -19,8 +19,9 @@
 [DBus (name = "com.canonical.indicator.keyboard")]
 public class Indicator.Keyboard.Service : Object {
 
+	private static const uint PROPERTIES_DELAY = 250;
+
 	private static Service service;
-	private static IBus.Bus? ibus;
 
 	private bool force;
 	private bool use_gtk;
@@ -35,12 +36,17 @@ public class Indicator.Keyboard.Service : Object {
 	private Gee.HashMap<uint, uint>? window_sources;
 	private uint focused_window_id;
 
+	private IBus.Bus? ibus;
+	private IBus.PanelService? panel_service;
+	private uint panel_timeout;
+
 	private Source[]? sources;
 
 	private SimpleActionGroup? action_group;
 	private SimpleAction? indicator_action;
 	private MenuModel? menu_model;
 	private Menu? sources_menu;
+	private IBusMenu? ibus_menu;
 
 	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
@@ -96,7 +102,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private static IBus.Bus get_ibus () {
+	private IBus.Bus get_ibus () {
 		if (ibus == null) {
 			IBus.init ();
 			ibus = new IBus.Bus ();
@@ -210,7 +216,7 @@ public class Indicator.Keyboard.Service : Object {
 		if (source != null) {
 			var array = source_settings.get_value ("sources");
 
-			for (int i = 0; i < array.n_children (); i++) {
+			for (var i = 0; i < array.n_children (); i++) {
 				unowned string type;
 				unowned string name;
 
@@ -543,10 +549,36 @@ public class Indicator.Keyboard.Service : Object {
 						break;
 					}
 				}
+
+				if (panel_service == null && sources[i].is_ibus) {
+					if (get_ibus ().request_name (IBus.SERVICE_PANEL, IBus.BusNameFlag.REPLACE_EXISTING) > 0) {
+						panel_service = new IBus.PanelService (get_ibus ().get_connection ());
+						((!) panel_service).register_properties.connect (handle_registered_properties);
+						((!) panel_service).update_property.connect (handle_updated_property);
+					}
+				}
 			}
 		}
 
 		return (!) sources;
+	}
+
+	[DBus (visible = false)]
+	private void handle_registered_properties (IBus.PropList list) {
+		if (panel_timeout > 0) {
+			GLib.Source.remove (panel_timeout);
+			panel_timeout = 0;
+		}
+
+		panel_timeout = Timeout.add (PROPERTIES_DELAY, () => {
+			update_ibus_menu (list);
+			panel_timeout = 0;
+			return false;
+		});
+	}
+
+	[DBus (visible = false)]
+	private void handle_updated_property (IBus.Property property) {
 	}
 
 	[DBus (visible = false)]
@@ -600,7 +632,7 @@ public class Indicator.Keyboard.Service : Object {
 			var length = (int) sources.n_children ();
 
 			if (length > 0) {
-				var offset = parameter.get_int32 () % length;
+				var offset = ((!) parameter).get_int32 () % length;
 				source_settings.set_uint ("current", (current + (length - offset)) % length);
 			}
 		}
@@ -610,28 +642,28 @@ public class Indicator.Keyboard.Service : Object {
 	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
-		group.insert (root_action);
-		group.insert (source_settings.create_action ("current"));
+		group.add_action (root_action);
+		group.add_action (source_settings.create_action ("current"));
 
 		var action = new SimpleAction ("next", null);
 		action.activate.connect (handle_middle_click);
-		group.insert (action);
+		group.add_action (action);
 
 		action = new SimpleAction ("scroll", VariantType.INT32);
 		action.activate.connect (handle_scroll_wheel);
-		group.insert (action);
+		group.add_action (action);
 
 		action = new SimpleAction ("map", null);
 		action.activate.connect (handle_activate_map);
-		group.insert (action);
+		group.add_action (action);
 
 		action = new SimpleAction ("chart", null);
 		action.activate.connect (handle_activate_chart);
-		group.insert (action);
+		group.add_action (action);
 
 		action = new SimpleAction ("settings", null);
 		action.activate.connect (handle_activate_settings);
-		group.insert (action);
+		group.add_action (action);
 
 		return group;
 	}
@@ -649,12 +681,9 @@ public class Indicator.Keyboard.Service : Object {
 	private void update_sources_menu () {
 		if (sources_menu != null) {
 			var menu = get_sources_menu ();
-
-			while (menu.get_n_items () > 0)
-				menu.remove (0);
+			menu.remove_all ();
 
 			var sources = get_sources ();
-
 			for (var i = 0; i < sources.length; i++) {
 				var item = new MenuItem (sources[i].name, "indicator.current");
 				item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
@@ -682,12 +711,37 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	protected virtual MenuModel create_menu_model (MenuModel section_menu) {
+	private void update_ibus_menu (IBus.PropList list) {
+		if (ibus_menu != null) {
+			var menu = get_ibus_menu ();
+			menu.set_properties (list);
+		} else {
+			get_ibus_menu ();
+		}
+	}
+
+	[DBus (visible = false)]
+	private IBusMenu get_ibus_menu () {
+		if (ibus_menu == null) {
+			ibus_menu = new IBusMenu (get_action_group ());
+			((!) ibus_menu).activate.connect ((property, state) => {
+				if (panel_service != null) {
+					((!) panel_service).property_activate (property.key, state);
+				}
+			});
+		}
+
+		return (!) ibus_menu;
+	}
+
+	[DBus (visible = false)]
+	protected virtual MenuModel create_menu_model (MenuModel sources_menu, MenuModel ibus_menu) {
 		var menu = new Menu ();
 
 		var submenu = new Menu ();
 
-		submenu.append_section (null, section_menu);
+		submenu.append_section (null, sources_menu);
+		submenu.append_section (null, ibus_menu);
 
 		if (!is_login_user ()) {
 			var section = new Menu ();
@@ -710,7 +764,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public MenuModel get_menu_model () {
 		if (menu_model == null) {
-			menu_model = create_menu_model (get_sources_menu ());
+			menu_model = create_menu_model (get_sources_menu (), get_ibus_menu ());
 		}
 
 		return (!) menu_model;
