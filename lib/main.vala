@@ -781,7 +781,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_activate_settings (Variant? parameter) {
 		try {
-			Process.spawn_command_line_async ("gnome-control-center region layouts");
+			Process.spawn_command_line_async ("unity-control-center region layouts");
 		} catch (SpawnError error) {
 			warning ("error: %s", error.message);
 		}

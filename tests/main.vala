@@ -240,7 +240,7 @@ public class Tests : Object, Fixture {
 		((!) _service).disconnect (signal_name);
 
 		stderr.printf ("_service.command = \"%s\"\n", (!) ((!) _service).command);
-		assert (strcmp ((!) ((!) _service).command, "'gnome-control-center region layouts'") == 0);
+		assert (strcmp ((!) ((!) _service).command, "'unity-control-center region layouts'") == 0);
 	}
 
 	public void test_migration () {
