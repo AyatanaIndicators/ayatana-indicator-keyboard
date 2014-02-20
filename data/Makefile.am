@@ -47,7 +47,7 @@ upstart_jobsdir = $(datadir)/upstart/sessions/
 upstart_jobs_DATA = indicator-keyboard.conf
 
 %.conf: %.conf.in
-	$(AM_V_GEN) sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
 
 ###########################
 # XDG Autostart File
@@ -57,7 +57,7 @@ xdg_autostartdir = /etc/xdg/autostart
 xdg_autostart_DATA = indicator-keyboard.desktop
 
 %.desktop: %.desktop.in
-	$(AM_V_GEN) sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
 
 ###########################
 # Indicator Config

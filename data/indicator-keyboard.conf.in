@@ -6,4 +6,4 @@ stop on desktop-end or indicator-services-end
 respawn
 respawn limit 2 10
 
-exec @libexecdir@/indicator-keyboard-service --use-gtk
+exec @pkglibexecdir@/indicator-keyboard-service --use-gtk
