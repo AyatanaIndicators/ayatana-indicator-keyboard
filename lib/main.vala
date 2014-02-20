@@ -579,6 +579,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_updated_property (IBus.Property property) {
+		get_ibus_menu ().update_property (property);
 	}
 
 	[DBus (visible = false)]
@@ -712,12 +713,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_ibus_menu (IBus.PropList list) {
-		if (ibus_menu != null) {
-			var menu = get_ibus_menu ();
-			menu.set_properties (list);
-		} else {
-			get_ibus_menu ();
-		}
+		get_ibus_menu ().set_properties (list);
 	}
 
 	[DBus (visible = false)]
