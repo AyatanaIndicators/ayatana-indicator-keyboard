@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Indicator Keyboard
+Exec=@libexecdir@/indicator-keyboard-service
+OnlyShowIn=Unity;
+NoDisplay=true
+StartupNotify=false
+Terminal=false
+Hidden=true

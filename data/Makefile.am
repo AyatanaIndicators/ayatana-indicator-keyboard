@@ -1,3 +1,6 @@
+
+SUBDIRS = upstart
+
 ###########################
 # Icon Generator
 ###########################
@@ -47,6 +50,16 @@ upstart_jobs_DATA = indicator-keyboard.conf
 	$(AM_V_GEN) sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
 
 ###########################
+# XDG Autostart File
+###########################
+
+xdg_autostartdir = /etc/xdg/autostart
+xdg_autostart_DATA = indicator-keyboard.desktop
+
+%.desktop: %.desktop.in
+	$(AM_V_GEN) sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
+###########################
 # Indicator Config
 ###########################
 
@@ -85,5 +98,6 @@ gschemas.compiled: $(gsettings_SCHEMAS)
 EXTRA_DIST = $(dist_service_DATA)   \
 	     $(dist_indicator_DATA) \
 	     $(gsettings_SCHEMAS) \
-	     indicator-keyboard.conf.in
+	     indicator-keyboard.conf.in \
+	     indicator-keyboard.desktop.in
 
