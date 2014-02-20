@@ -1,3 +1,7 @@
+###########################
+# Icon Generator
+###########################
+
 noinst_PROGRAMS = indicator-keyboard-icon-generator
 
 AM_CFLAGS = -w -DGNOME_DESKTOP_USE_UNSTABLE_API
@@ -32,6 +36,20 @@ indicator_keyboard_icon_generator_LDFLAGS = $(AM_LDFLAGS)         \
                                             $(LIBXKLAVIER_LIBS)   \
                                             $(COVERAGE_LDFLAGS)
 
+###########################
+# Upstart Config
+###########################
+
+upstart_jobsdir = $(datadir)/upstart/sessions/
+upstart_jobs_DATA = indicator-keyboard.conf
+
+%.conf: %.conf.in
+	$(AM_V_GEN) sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
+###########################
+# Indicator Config
+###########################
+
 dist_indicator_DATA = com.canonical.indicator.keyboard
 indicatordir = $(INDICATOR_DIR)
 
@@ -51,6 +69,10 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
 	            mv $@.tmp $@
 
+###########################
+# GSettings Schemas
+###########################
+
 gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
 
 @GSETTINGS_RULES@
@@ -62,4 +84,6 @@ gschemas.compiled: $(gsettings_SCHEMAS)
 
 EXTRA_DIST = $(dist_service_DATA)   \
 	     $(dist_indicator_DATA) \
-	     $(gsettings_SCHEMAS)
+	     $(gsettings_SCHEMAS) \
+	     indicator-keyboard.conf.in
+
