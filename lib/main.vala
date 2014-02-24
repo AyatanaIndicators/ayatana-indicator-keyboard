@@ -513,16 +513,22 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
-		((!) window_sources)[focused_window_id] = source_settings.get_uint ("current");
+		var old_current = source_settings.get_uint ("current");
+
+		((!) window_sources)[focused_window_id] = old_current;
 
 		if (!(((!) window_sources).has_key (window_id))) {
 			var default_group = per_window_settings.get_int ("default-group");
 
-			if (default_group >= 0) {
+			if (default_group >= 0 && default_group != old_current) {
 				source_settings.set_uint ("current", (uint) default_group);
 			}
 		} else {
-			source_settings.set_uint ("current", ((!) window_sources)[window_id]);
+			var current = ((!) window_sources)[window_id];
+
+			if (current != old_current) {
+				source_settings.set_uint ("current", current);
+			}
 		}
 
 		focused_window_id = window_id;
