@@ -51,7 +51,7 @@ public class Indicator.Keyboard.Source : Object {
 
 	public Icon? icon {
 		get { if (_icon == null) { _icon = _get_icon (); } return _icon; }
-		private set { _icon = value; }
+		set { _icon = value; }
 	}
 
 	public uint subscript {
@@ -424,16 +424,7 @@ public class Indicator.Keyboard.Source : Object {
 				Gtk.IconInfo? icon_info = icon_theme.lookup_icon (icon_name, 22, 0);
 
 				if (icon_info != null) {
-					string? file_name = ((!) icon_info).get_filename ();
-					var has_file_name = file_name != null && ((!) file_name).get_char () != '\0';
-
-					if (has_file_name) {
-						try {
-							icon = Icon.new_for_string ((!) file_name);
-						} catch (Error error) {
-							warning ("error: %s", error.message);
-						}
-					}
+					icon = new ThemedIcon (icon_name);
 				}
 			} else {
 				icon = new ThemedIcon (icon_name);

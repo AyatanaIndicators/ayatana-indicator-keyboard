@@ -59,6 +59,26 @@ public class Indicator.Keyboard.Service : Object {
 
 		if (use_gtk) {
 			use_gtk = Gtk.init_check (ref args);
+
+			Gtk.IconTheme? icon_theme = Gtk.IconTheme.get_default ();
+
+			if (icon_theme != null) {
+				((!) icon_theme).changed.connect (() => {
+					if (sources != null) {
+						foreach (var source in (!) sources) {
+							source.icon = null;
+						}
+					}
+
+					if (sources_menu != null) {
+						update_sources_menu ();
+					}
+
+					if (indicator_action != null) {
+						update_indicator_action ();
+					}
+				});
+			}
 		} else {
 			Gdk.init (ref args);
 		}
