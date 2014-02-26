@@ -7,29 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-24 06:13+0000\n"
+"POT-Creation-Date: 2014-02-25 06:29+0000\n"
 "PO-Revision-Date: 2013-06-21 11:10+0000\n"
 "Last-Translator: Иван Благојевић <ivan_blagojevic@mail.com>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-25 06:25+0000\n"
-"X-Generator: Launchpad (build 16926)\n"
+"X-Launchpad-Export-Date: 2014-02-26 07:34+0000\n"
+"X-Generator: Launchpad (build 16935)\n"
 
 #: ../lib/main.vala:602
 #, c-format
 msgid "%s input source"
-msgstr ""
+msgstr "%s извор уноса"
 
 #: ../lib/main.vala:744
 msgid "Character Map"
-msgstr "Мапа карактера"
+msgstr "Таблица знакова"
 
 #: ../lib/main.vala:745
 msgid "Keyboard Layout Chart"
-msgstr "Шаблон распореда тастатуре"
+msgstr "Графикон распореда тастатуре"
 
 #: ../lib/main.vala:746
 msgid "Text Entry Settings..."
-msgstr "Подешавања уноса текста"
+msgstr "Подешавања уноса текста..."
