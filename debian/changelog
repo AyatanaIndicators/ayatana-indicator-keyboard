@@ -1,3 +1,18 @@
+indicator-keyboard (0.0.0+14.04.20140227.3-0ubuntu1) trusty; urgency=low
+
+  [ Sebastien Bacher ]
+  * Drop unity8 test description, that indicator is used on desktop only
+
+  [ William Hua ]
+  * Do not set org.gnome.desktop.input-sources.current when unchanged
+    (LP: #1256559). (LP: #1256559)
+  * Update icons when icon theme changes. (LP: #1237749)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 27 Feb 2014 19:38:10 +0000
+
 indicator-keyboard (0.0.0+14.04.20140220-0ubuntu1) trusty; urgency=low
 
   [ William Hua ]
