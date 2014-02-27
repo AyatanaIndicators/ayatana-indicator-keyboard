@@ -12,8 +12,6 @@ and reviewers should ensure that they've done for a merge into the project.
 
  * Did the Jenkins build compile?  Pass?  Run unit tests successfully?
  * Are there appropriate tests to cover any new functionality?
- * If the description says this effects the phone profile:
-   * Run tests indicator-keyboard/unity8*
  * If the description says this effects the desktop profile:
    * Run tests indicator-keyboard/unity7*
 
