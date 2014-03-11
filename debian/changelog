@@ -1,3 +1,10 @@
+indicator-keyboard (0.0.0+14.04.20140311-0ubuntu1) trusty; urgency=low
+
+  [ Lars Uebernickel ]
+  * Add desktop_lockscreen profile
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 11 Mar 2014 18:29:39 +0000
+
 indicator-keyboard (0.0.0+14.04.20140227.3-0ubuntu1) trusty; urgency=low
 
   [ Sebastien Bacher ]
