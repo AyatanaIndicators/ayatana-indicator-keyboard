@@ -37,7 +37,7 @@ public class Indicator.Keyboard.Service : Object {
 	private uint focused_window_id;
 
 	private IBus.Bus? ibus;
-	private IBus.PanelService? panel_service;
+	private IBusPanel? ibus_panel;
 	private uint panel_timeout;
 
 	private Source[]? sources;
@@ -576,11 +576,35 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 
-				if (panel_service == null && sources[i].is_ibus) {
-					if (get_ibus ().request_name (IBus.SERVICE_PANEL, IBus.BusNameFlag.REPLACE_EXISTING) > 0) {
-						panel_service = new IBus.PanelService (get_ibus ().get_connection ());
-						((!) panel_service).register_properties.connect (handle_registered_properties);
-						((!) panel_service).update_property.connect (handle_updated_property);
+				if (ibus_panel == null && sources[i].is_ibus) {
+					var connection = get_ibus ().get_connection ();
+					var name = "org.freedesktop.IBus.Panel";
+					var path = "/org/freedesktop/IBus/Panel";
+
+					try {
+						ibus_panel = connection.get_proxy_sync (name, path);
+
+						((!) ibus_panel).properties_registered.connect ((variant) => {
+							var properties = new IBus.PropList ();
+							properties.deserialize (variant);
+
+							if (properties is IBus.PropList) {
+								handle_properties_registered ((!) (properties as IBus.PropList));
+							}
+						});
+						((!) ibus_panel).property_updated.connect ((variant) => {
+							var type = IBus.PropType.NORMAL;
+							var state = IBus.PropState.INCONSISTENT;
+							var text = new IBus.Text.from_static_string ("");
+							var property = new IBus.Property ("", type, text, null, text, false, false, state, null);
+							property.deserialize (variant);
+
+							if (property is IBus.Property) {
+								handle_property_updated ((!) (property as IBus.Property));
+							}
+						});
+					} catch (IOError error) {
+						warning ("error: %s", error.message);
 					}
 				}
 			}
@@ -590,7 +614,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_registered_properties (IBus.PropList list) {
+	private void handle_properties_registered (IBus.PropList list) {
 		if (panel_timeout > 0) {
 			GLib.Source.remove (panel_timeout);
 			panel_timeout = 0;
@@ -604,7 +628,7 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_updated_property (IBus.Property property) {
+	private void handle_property_updated (IBus.Property property) {
 		get_ibus_menu ().update_property (property);
 	}
 
@@ -747,8 +771,12 @@ public class Indicator.Keyboard.Service : Object {
 		if (ibus_menu == null) {
 			ibus_menu = new IBusMenu (get_action_group ());
 			((!) ibus_menu).activate.connect ((property, state) => {
-				if (panel_service != null) {
-					((!) panel_service).property_activate (property.key, state);
+				if (ibus_panel != null) {
+					try {
+						((!) ibus_panel).activate_property (property.key, state);
+					} catch (IOError error) {
+						warning ("error: %s", error.message);
+					}
 				}
 			});
 		}

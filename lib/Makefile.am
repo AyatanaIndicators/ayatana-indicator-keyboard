@@ -10,6 +10,7 @@ indicator_keyboard_service_SOURCES = main.vala          \
                                      source.vala        \
                                      common.vala        \
                                      ibus-menu.vala     \
+                                     ibus-panel.vala    \
                                      window-stack.vala  \
                                      unity-greeter.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
