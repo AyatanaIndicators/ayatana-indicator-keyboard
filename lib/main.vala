@@ -577,34 +577,37 @@ public class Indicator.Keyboard.Service : Object {
 				}
 
 				if (ibus_panel == null && sources[i].is_ibus) {
-					var connection = get_ibus ().get_connection ();
-					var name = "org.freedesktop.IBus.Panel";
-					var path = "/org/freedesktop/IBus/Panel";
+					DBusConnection? connection = get_ibus ().get_connection ();
 
-					try {
-						ibus_panel = connection.get_proxy_sync (name, path);
+					if (connection != null) {
+						var name = "org.freedesktop.IBus.Panel";
+						var path = "/org/freedesktop/IBus/Panel";
 
-						((!) ibus_panel).properties_registered.connect ((variant) => {
-							var properties = new IBus.PropList ();
-							properties.deserialize (variant);
+						try {
+							ibus_panel = ((!) connection).get_proxy_sync (name, path);
 
-							if (properties is IBus.PropList) {
-								handle_properties_registered ((!) (properties as IBus.PropList));
-							}
-						});
-						((!) ibus_panel).property_updated.connect ((variant) => {
-							var type = IBus.PropType.NORMAL;
-							var state = IBus.PropState.INCONSISTENT;
-							var text = new IBus.Text.from_static_string ("");
-							var property = new IBus.Property ("", type, text, null, text, false, false, state, null);
-							property.deserialize (variant);
+							((!) ibus_panel).properties_registered.connect ((variant) => {
+								var properties = new IBus.PropList ();
+								properties.deserialize (variant);
 
-							if (property is IBus.Property) {
-								handle_property_updated ((!) (property as IBus.Property));
-							}
-						});
-					} catch (IOError error) {
-						warning ("error: %s", error.message);
+								if (properties is IBus.PropList) {
+									handle_properties_registered ((!) (properties as IBus.PropList));
+								}
+							});
+							((!) ibus_panel).property_updated.connect ((variant) => {
+								var type = IBus.PropType.NORMAL;
+								var state = IBus.PropState.INCONSISTENT;
+								var text = new IBus.Text.from_static_string ("");
+								var property = new IBus.Property ("", type, text, null, text, false, false, state, null);
+								property.deserialize (variant);
+
+								if (property is IBus.Property) {
+									handle_property_updated ((!) (property as IBus.Property));
+								}
+							});
+						} catch (IOError error) {
+							warning ("error: %s", error.message);
+						}
 					}
 				}
 			}
