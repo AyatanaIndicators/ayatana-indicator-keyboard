@@ -68,15 +68,17 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		sources_section.remove_all ();
 
 		for (var i = 0; i < sources.length; i++) {
-			var item = new MenuItem (sources[i].name, "indicator.current");
+			if (!sources[i].is_ibus || (options & Options.IBUS) != Options.NONE) {
+				var item = new MenuItem (sources[i].name, "indicator.current");
 
-			item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
+				item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
 
-			if (sources[i].icon != null) {
-				item.set_icon ((!) sources[i].icon);
+				if (sources[i].icon != null) {
+					item.set_icon ((!) sources[i].icon);
+				}
+
+				sources_section.append_item (item);
 			}
-
-			sources_section.append_item (item);
 		}
 	}
 
