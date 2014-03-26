@@ -6,11 +6,12 @@ AM_VALAFLAGS = --enable-experimental-non-null   \
                --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
-indicator_keyboard_service_SOURCES = main.vala          \
-                                     source.vala        \
-                                     common.vala        \
-                                     ibus-menu.vala     \
-                                     window-stack.vala  \
+indicator_keyboard_service_SOURCES = main.vala           \
+                                     source.vala         \
+                                     common.vala         \
+                                     ibus-menu.vala      \
+                                     indicator-menu.vala \
+                                     window-stack.vala   \
                                      unity-greeter.vala
 indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg gee-1.0              \
