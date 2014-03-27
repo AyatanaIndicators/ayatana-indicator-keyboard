@@ -30,6 +30,7 @@ Package: indicator-keyboard
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+Breaks: ibus (<< 1.5.5-1ubuntu3),
 Description: Keyboard indicator
  This package contains the keyboard indicator, which should show as an icon in
  the top panel when using the Unity environment. It can be used to switch

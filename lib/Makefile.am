@@ -10,6 +10,7 @@ indicator_keyboard_service_SOURCES = main.vala           \
                                      source.vala         \
                                      common.vala         \
                                      ibus-menu.vala      \
+                                     ibus-panel.vala     \
                                      indicator-menu.vala \
                                      window-stack.vala   \
                                      unity-greeter.vala
