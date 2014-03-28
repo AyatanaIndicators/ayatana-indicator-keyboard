@@ -1,3 +1,12 @@
+indicator-keyboard (0.0.0+14.04.20140328.1-0ubuntu1) trusty; urgency=low
+
+  [ William Hua ]
+  * Use Ubuntu-specific IBus D-Bus API so that we don't have to replace
+    the old IBus panel service in order to inspect and activate IBus
+    engine properties. (LP: #1290881)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Mar 2014 14:59:09 +0000
+
 indicator-keyboard (0.0.0+14.04.20140311-0ubuntu1) trusty; urgency=low
 
   [ Lars Uebernickel ]
