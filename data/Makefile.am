@@ -54,10 +54,10 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
 	             echo '';                                                                 \
 	             echo '[desktop_greeter]';                                                \
-	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop_greeter';     \
 	             echo '';                                                                 \
 	             echo '[desktop_lockscreen]';                                             \
-	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop';             \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop_greeter';     \
 	             echo '';                                                                 \
 	             echo '[ubiquity]';                                                       \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \

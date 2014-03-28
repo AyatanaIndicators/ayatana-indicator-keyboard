@@ -23,16 +23,16 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 	private IBus.PropList? properties;
 
 	private Menu menu;
-	private SimpleActionGroup? action_group;
+	private ActionMap? action_map;
 
 	private string? radio_name;
 	private SimpleAction? radio_action;
 	private Gee.HashMap<string, IBus.Property> radio_properties;
 
-	// A list of the action names this menu registers
+	/* A list of the action names this menu registers. */
 	private Gee.LinkedList<string> names;
 
-	public IBusMenu (SimpleActionGroup? action_group = null, IBus.PropList? properties = null) {
+	public IBusMenu (ActionMap? action_map = null, IBus.PropList? properties = null) {
 		menu = new Menu ();
 
 		menu.items_changed.connect ((position, removed, added) => {
@@ -40,7 +40,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 		});
 
 		names = new Gee.LinkedList<string> ();
-		set_action_group (action_group);
+		set_action_map (action_map);
 		set_properties (properties);
 	}
 
@@ -72,12 +72,12 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 			name = @"ibus-$key";
 		}
 
-		// Find an unused action name using a counter
-		if (action_group != null && (Action?) ((!) action_group).lookup_action (name) != null) {
+		/* Find an unused action name using a counter. */
+		if (action_map != null && (Action?) ((!) action_map).lookup_action (name) != null) {
 			var i = 0;
 			var unique_name = @"$name-$i";
 
-			while ((Action?) ((!) action_group).lookup_action (unique_name) != null) {
+			while ((Action?) ((!) action_map).lookup_action (unique_name) != null) {
 				i++;
 				unique_name = @"$name-$i";
 			}
@@ -107,10 +107,10 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 			if ((string?) property.key != null) {
 				var name = get_action_name (property.key);
 
-				if (action_group != null) {
+				if (action_map != null) {
 					var action = new SimpleAction (name, null);
 					action.activate.connect ((parameter) => { activate (property, property.state); });
-					((!) action_group).add_action (action);
+					((!) action_map).add_action (action);
 					names.add (name);
 				}
 
@@ -124,7 +124,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 			if ((string?) property.key != null) {
 				var name = get_action_name (property.key);
 
-				if (action_group != null) {
+				if (action_map != null) {
 					var state = new Variant.boolean (property.state == IBus.PropState.CHECKED);
 					var action = new SimpleAction.stateful (name, null, state);
 
@@ -139,7 +139,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 						}
 					});
 
-					((!) action_group).add_action (action);
+					((!) action_map).add_action (action);
 					names.add (name);
 				}
 
@@ -151,8 +151,8 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 	private void append_radio_property (IBus.Property property) {
 		if (property.prop_type == IBus.PropType.RADIO) {
 			if ((string?) property.key != null) {
-				// Create a single action for all radio properties.
-				if (action_group != null && radio_name == null) {
+				/* Create a single action for all radio properties. */
+				if (action_map != null && radio_name == null) {
 					radio_counter++;
 					radio_name = @"-private-radio-$radio_counter";
 					radio_action = new SimpleAction.stateful ((!) radio_name, VariantType.STRING, new Variant.string (""));
@@ -172,7 +172,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 						}
 					});
 
-					((!) action_group).add_action ((!) radio_action);
+					((!) action_map).add_action ((!) radio_action);
 					names.add ((!) radio_name);
 				}
 
@@ -195,7 +195,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 
 	private void append_menu_property (IBus.Property property) {
 		if (property.prop_type == IBus.PropType.MENU) {
-			var submenu = new IBusMenu (action_group, ((!) property).sub_props);
+			var submenu = new IBusMenu (action_map, ((!) property).sub_props);
 			submenu.activate.connect ((property, state) => { activate (property, state); });
 			menu.append_submenu (get_label (property), submenu);
 		}
@@ -227,8 +227,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 	}
 
 	private void update_menu () {
-		// There's a reference cycle between the action group and the submenus.
-		// We need to break it here so that those submenus aren't hanging around.
+		/* Break reference cycle between action map and submenus. */
 		for (var i = 0; i < menu.get_n_items (); i++) {
 			var submenu = menu.get_item_link (i, Menu.LINK_SUBMENU) as IBusMenu;
 
@@ -250,19 +249,19 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 		radio_action = null;
 		radio_name = null;
 
-		if (action_group != null) {
+		if (action_map != null) {
 			foreach (var name in names) {
-				((!) action_group).remove_action (name);
+				((!) action_map).remove_action (name);
 			}
 		}
 
 		names.clear ();
 	}
 
-	public void set_action_group (SimpleActionGroup? action_group) {
-		if (action_group != this.action_group) {
+	public void set_action_map (ActionMap? action_map) {
+		if (action_map != this.action_map) {
 			remove_actions ();
-			this.action_group = action_group;
+			this.action_map = action_map;
 			update_menu ();
 		}
 	}
@@ -282,7 +281,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 		update_menu ();
 	}
 
-	// Forward all menu model calls to our internal menu
+	/* Forward all menu model calls to our internal menu. */
 
 	public override Variant get_item_attribute_value (int item_index, string attribute, VariantType? expected_type) {
 		return menu.get_item_attribute_value (item_index, attribute, expected_type);
