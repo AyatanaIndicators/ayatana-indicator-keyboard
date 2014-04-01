@@ -127,6 +127,15 @@ public class Indicator.Keyboard.Service : Object {
 		if (ibus == null) {
 			IBus.init ();
 			ibus = new IBus.Bus ();
+			((!) ibus).connected.connect (() => {
+				if (sources_menu != null) {
+					update_sources_menu ();
+				}
+
+				if (indicator_action != null) {
+					update_indicator_action ();
+				}
+			});
 		}
 
 		return (!) ibus;
