@@ -49,6 +49,9 @@ public class Indicator.Keyboard.Service : Object {
 	private Menu? sources_menu;
 	private IBusMenu? ibus_menu;
 
+	private UnitySession? unity_session;
+	private uint session_current;
+
 	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
 	private uint lightdm_current;
@@ -95,6 +98,12 @@ public class Indicator.Keyboard.Service : Object {
 				                handle_unity_greeter_name_vanished);
 			}
 		} else {
+			Bus.watch_name (BusType.SESSION,
+			                "com.canonical.Unity",
+			                BusNameWatcherFlags.NONE,
+			                handle_unity_name_appeared,
+			                handle_unity_name_vanished);
+
 			Bus.watch_name (BusType.SESSION,
 			                "com.canonical.Unity.WindowStack",
 			                BusNameWatcherFlags.NONE,
@@ -921,6 +930,51 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_greeter_name_vanished (DBusConnection connection, string name) {
 		unity_greeter = null;
+	}
+
+	[DBus (visible = false)]
+	private void handle_unity_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			unity_session = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/Session");
+			((!) unity_session).locked.connect (() => {
+				session_current = source_settings.get_uint ("current");
+
+				var sources = get_sources ();
+
+				if (session_current < 0) {
+					session_current = 0;
+				} else if (session_current >= sources.length) {
+					session_current = sources.length - 1;
+				}
+
+				if (0 <= session_current && session_current < sources.length) {
+					var source = sources[session_current];
+
+					if (source.is_ibus) {
+						for (var i = 0; i < sources.length; i++) {
+							if (!sources[i].is_ibus) {
+								source_settings.set_uint ("current", i);
+								break;
+							}
+						}
+					}
+				}
+			});
+			((!) unity_session).unlocked.connect (() => {
+				var locked_current = source_settings.get_uint ("current");
+
+				if (locked_current != session_current) {
+					source_settings.set_uint ("current", session_current);
+				}
+			});
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_unity_name_vanished (DBusConnection connection, string name) {
+		unity_session = null;
 	}
 
 	[DBus (visible = false)]
