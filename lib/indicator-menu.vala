@@ -46,7 +46,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 			var settings_section = new Menu ();
 			settings_section.append (_ ("Character Map"), "indicator.map");
 			settings_section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
-			settings_section.append (_ ("Text Entry Settings…"), "indicator.settings");
+			settings_section.append (_ ("Text Entry Settings..."), "indicator.settings");
 			submenu.append_section (null, settings_section);
 		}
 
