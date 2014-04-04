@@ -984,16 +984,7 @@ public class Indicator.Keyboard.Service : Object {
 				}
 			});
 			((!) unity_session).unlocked.connect (() => {
-				if (keyboard_plugin != null) {
-					var current = source_settings.get_uint ("current");
-
-					try {
-						/* Always restore session input source on unlock. */
-						((!) keyboard_plugin).activate_input_source (current);
-					} catch (IOError error) {
-						warning ("error: %s", error.message);
-					}
-				}
+				get_active_action ().change_state (source_settings.get_value ("current"));
 			});
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
