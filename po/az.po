@@ -7,29 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-04-02 06:55+0000\n"
+"POT-Creation-Date: 2014-04-04 05:42+0000\n"
 "PO-Revision-Date: 2013-10-12 21:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Azerbaijani <az@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-03 06:03+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-04-04 07:08+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
-#: ../lib/main.vala:667
+#: ../lib/main.vala:676
 #, c-format
 msgid "%s input source"
 msgstr "%s giriş mənbəyi"
 
-#: ../lib/main.vala:815
+#: ../lib/main.vala:824
 msgid "Character Map"
 msgstr "Simvol Xəritəsi"
 
-#: ../lib/main.vala:816
+#: ../lib/main.vala:825
 msgid "Keyboard Layout Chart"
 msgstr "Klaviatura Düzümü Qrafiki"
 
-#: ../lib/main.vala:817
+#: ../lib/main.vala:826
 msgid "Text Entry Settings..."
 msgstr "Mətn Daxiletmə Seçənəkləri..."
