@@ -57,7 +57,7 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop_greeter';     \
 	             echo '';                                                                 \
 	             echo '[desktop_lockscreen]';                                             \
-	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop_greeter';     \
+	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop_lockscreen';  \
 	             echo '';                                                                 \
 	             echo '[ubiquity]';                                                       \
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \

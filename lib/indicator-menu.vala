@@ -20,8 +20,9 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 	public enum Options {
 		NONE     = 0x0,
-		IBUS     = 0x1,
-		SETTINGS = 0x2
+		DCONF    = 0x1,
+		IBUS     = 0x2,
+		SETTINGS = 0x4
 	}
 
 	private Options options;
@@ -30,7 +31,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 	private Menu sources_section;
 	private IBusMenu properties_section;
 
-	public IndicatorMenu (ActionMap? action_map = null, Options options = Options.IBUS | Options.SETTINGS) {
+	public IndicatorMenu (ActionMap? action_map = null, Options options = Options.NONE) {
 		var submenu = new Menu ();
 
 		sources_section = new Menu ();
@@ -69,7 +70,15 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 		for (var i = 0; i < sources.length; i++) {
 			if (!sources[i].is_ibus || (options & Options.IBUS) != Options.NONE) {
-				var item = new MenuItem (sources[i].name, "indicator.current");
+				string action;
+
+				if ((options & Options.DCONF) != Options.NONE) {
+					action = "indicator.current";
+				} else {
+					action = "indicator.active";
+				}
+
+				var item = new MenuItem (sources[i].name, action);
 
 				item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
 

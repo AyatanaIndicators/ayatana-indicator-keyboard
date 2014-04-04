@@ -47,6 +47,7 @@ public class Indicator.Keyboard.Service : Object {
 	private SimpleAction? indicator_action;
 	private IndicatorMenu? desktop_menu;
 	private IndicatorMenu? desktop_greeter_menu;
+	private IndicatorMenu? desktop_lockscreen_menu;
 
 	private UnitySession? unity_session;
 	private uint session_current;
@@ -79,6 +80,10 @@ public class Indicator.Keyboard.Service : Object {
 
 					if (desktop_greeter_menu != null) {
 						get_desktop_greeter_menu ().set_sources (get_sources ());
+					}
+
+					if (desktop_lockscreen_menu != null) {
+						get_desktop_lockscreen_menu ().set_sources (get_sources ());
 					}
 
 					if (indicator_action != null) {
@@ -758,7 +763,11 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_menu () {
 		if (desktop_menu == null) {
-			desktop_menu = new IndicatorMenu (get_action_group ());
+			var options = IndicatorMenu.Options.DCONF
+			            | IndicatorMenu.Options.IBUS
+			            | IndicatorMenu.Options.SETTINGS;
+
+			desktop_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_menu).set_sources (get_sources ());
 			((!) desktop_menu).activate.connect ((property, state) => {
 				var panel = get_ibus_panel ();
@@ -779,11 +788,25 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_greeter_menu () {
 		if (desktop_greeter_menu == null) {
-			desktop_greeter_menu = new IndicatorMenu (get_action_group (), IndicatorMenu.Options.NONE);
+			var options = IndicatorMenu.Options.DCONF;
+
+			desktop_greeter_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_greeter_menu).set_sources (get_sources ());
 		}
 
 		return (!) desktop_greeter_menu;
+	}
+
+	[DBus (visible = false)]
+	public IndicatorMenu get_desktop_lockscreen_menu () {
+		if (desktop_lockscreen_menu == null) {
+			var options = IndicatorMenu.Options.NONE;
+
+			desktop_lockscreen_menu = new IndicatorMenu (get_action_group (), options);
+			((!) desktop_lockscreen_menu).set_sources (get_sources ());
+		}
+
+		return (!) desktop_lockscreen_menu;
 	}
 
 	[DBus (visible = false)]
@@ -803,6 +826,7 @@ public class Indicator.Keyboard.Service : Object {
 
 		get_desktop_menu ().set_sources (get_sources ());
 		get_desktop_greeter_menu ().set_sources (get_sources ());
+		get_desktop_lockscreen_menu ().set_sources (get_sources ());
 		update_indicator_action ();
 		update_login_layout ();
 	}
@@ -939,6 +963,7 @@ public class Indicator.Keyboard.Service : Object {
 			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_desktop_menu ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_greeter", get_desktop_greeter_menu ());
+			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_lockscreen", get_desktop_lockscreen_menu ());
 		} catch (Error error) {
 			warning ("error: %s", error.message);
 		}
