@@ -150,6 +150,23 @@ public class Indicator.Keyboard.Service : Object {
 		if (ibus == null) {
 			IBus.init ();
 			ibus = new IBus.Bus ();
+			((!) ibus).connected.connect (() => {
+				if (desktop_menu != null) {
+					get_desktop_menu ().set_sources (get_sources ());
+				}
+
+				if (desktop_greeter_menu != null) {
+					get_desktop_greeter_menu ().set_sources (get_sources ());
+				}
+
+				if (desktop_lockscreen_menu != null) {
+					get_desktop_lockscreen_menu ().set_sources (get_sources ());
+				}
+
+				if (indicator_action != null) {
+					update_indicator_action ();
+				}
+			});
 		}
 
 		return (!) ibus;
