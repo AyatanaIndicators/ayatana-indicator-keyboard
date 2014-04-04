@@ -29,6 +29,8 @@ libtool
 po/POTFILES
 po/stamp-it
 tests/config.vala
+tests/dconf-service
+tests/gvfs
 tests/indicator-keyboard-test
 tests/indicator-keyboard-test.trs
 tests/indicator-keyboard-tests
