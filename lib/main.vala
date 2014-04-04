@@ -45,9 +45,12 @@ public class Indicator.Keyboard.Service : Object {
 
 	private SimpleActionGroup? action_group;
 	private SimpleAction? indicator_action;
+	private SimpleAction? active_action;
 	private IndicatorMenu? desktop_menu;
 	private IndicatorMenu? desktop_greeter_menu;
 	private IndicatorMenu? desktop_lockscreen_menu;
+
+	private KeyboardPlugin? keyboard_plugin;
 
 	private UnitySession? unity_session;
 	private uint session_current;
@@ -106,6 +109,12 @@ public class Indicator.Keyboard.Service : Object {
 				                handle_unity_greeter_name_vanished);
 			}
 		} else {
+			Bus.watch_name (BusType.SESSION,
+			                "org.gnome.SettingsDaemon.Keyboard",
+			                BusNameWatcherFlags.NONE,
+			                handle_keyboard_name_appeared,
+			                handle_keyboard_name_vanished);
+
 			Bus.watch_name (BusType.SESSION,
 			                "com.canonical.Unity",
 			                BusNameWatcherFlags.NONE,
@@ -703,6 +712,40 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_changed_active (Variant? value) {
+		if (value != null) {
+			((!) active_action).set_state ((!) value);
+
+			if (keyboard_plugin != null) {
+				try {
+					((!) keyboard_plugin).activate_input_source (((!) value).get_uint32 ());
+				} catch (IOError error) {
+					warning ("error: %s", error.message);
+				}
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void update_active_action () {
+		if (active_action != null) {
+			((!) active_action).set_state (source_settings.get_value ("current"));
+		}
+	}
+
+	[DBus (visible = false)]
+	private Action get_active_action () {
+		if (active_action == null) {
+			var current = source_settings.get_value ("current");
+			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, current);
+			((!) active_action).activate.connect ((parameter) => { ((!) active_action).change_state (parameter); });
+			((!) active_action).change_state.connect (handle_changed_active);
+		}
+
+		return (!) active_action;
+	}
+
+	[DBus (visible = false)]
 	private void handle_middle_click (Variant? parameter) {
 		handle_scroll_wheel (new Variant.int32 (-1));
 	}
@@ -725,7 +768,17 @@ public class Indicator.Keyboard.Service : Object {
 	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
+		/*
+		 * The 'current' action reflects the current setting in
+		 * GSettings and the 'active' action only exists to set the
+		 * active input source without persisting it.
+		 *
+		 * The lock screen menu uses the 'active' action while the
+		 * other menus instead persist the current input source.
+		 */
+
 		group.add_action (root_action);
+		group.add_action (get_active_action ());
 		group.add_action (source_settings.create_action ("current"));
 
 		var action = new SimpleAction ("next", null);
@@ -817,6 +870,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_changed_current (string key) {
 		update_indicator_action ();
+		update_active_action ();
 		update_login_layout ();
 	}
 
@@ -895,6 +949,20 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_greeter_name_vanished (DBusConnection connection, string name) {
 		unity_greeter = null;
+	}
+
+	[DBus (visible = false)]
+	private void handle_keyboard_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			keyboard_plugin = Bus.get_proxy_sync (BusType.SESSION, name, "/org/gnome/SettingsDaemon/Keyboard");
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_keyboard_name_vanished (DBusConnection connection, string name) {
+		keyboard_plugin = null;
 	}
 
 	[DBus (visible = false)]
