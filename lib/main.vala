@@ -51,10 +51,7 @@ public class Indicator.Keyboard.Service : Object {
 	private IndicatorMenu? desktop_lockscreen_menu;
 
 	private KeyboardPlugin? keyboard_plugin;
-
 	private UnitySession? unity_session;
-	private uint session_current;
-
 	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
 	private uint lightdm_current;
@@ -970,23 +967,15 @@ public class Indicator.Keyboard.Service : Object {
 		try {
 			unity_session = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/Session");
 			((!) unity_session).locked.connect (() => {
-				session_current = source_settings.get_uint ("current");
-
 				var sources = get_sources ();
 
-				if (session_current < 0) {
-					session_current = 0;
-				} else if (session_current >= sources.length) {
-					session_current = sources.length - 1;
-				}
+				if (sources.length > 0) {
+					var current = source_settings.get_uint ("current");
 
-				if (0 <= session_current && session_current < sources.length) {
-					var source = sources[session_current];
-
-					if (source.is_ibus) {
+					if (current < sources.length && sources[current].is_ibus) {
 						for (var i = 0; i < sources.length; i++) {
 							if (!sources[i].is_ibus) {
-								source_settings.set_uint ("current", i);
+								get_active_action ().change_state (new Variant.uint32 (i));
 								break;
 							}
 						}
@@ -994,10 +983,15 @@ public class Indicator.Keyboard.Service : Object {
 				}
 			});
 			((!) unity_session).unlocked.connect (() => {
-				var locked_current = source_settings.get_uint ("current");
+				if (keyboard_plugin != null) {
+					var current = source_settings.get_uint ("current");
 
-				if (locked_current != session_current) {
-					source_settings.set_uint ("current", session_current);
+					try {
+						/* Always restore session input source on unlock. */
+						((!) keyboard_plugin).activate_input_source (current);
+					} catch (IOError error) {
+						warning ("error: %s", error.message);
+					}
 				}
 			});
 		} catch (IOError error) {
