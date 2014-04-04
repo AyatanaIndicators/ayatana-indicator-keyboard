@@ -672,20 +672,19 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_indicator_action () {
-		var visible = indicator_settings.get_boolean ("visible");
-		var current = source_settings.get_uint ("current");
-		var sources = get_sources ();
-
 		Icon? icon = null;
 		string? name = null;
 
-		if (current < sources.length) {
-			icon = sources[current].icon;
-			name = sources[current].name;
+		var sources = get_sources ();
+		var active = get_active_action ().get_state ().get_uint32 ();
+
+		if (active < sources.length) {
+			icon = sources[active].icon;
+			name = sources[active].name;
 		}
 
 		var builder = new VariantBuilder (new VariantType ("a{sv}"));
-		builder.add ("{sv}", "visible", new Variant.boolean (visible));
+		builder.add ("{sv}", "visible", indicator_settings.get_value ("visible"));
 		if (name != null) {
 			var description = _ ("%s input source").printf ((!) name);
 			builder.add ("{sv}", "accessible-desc", new Variant.string (description));
@@ -712,6 +711,7 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_changed_active (Variant? value) {
 		if (value != null) {
 			((!) active_action).set_state ((!) value);
+			update_indicator_action ();
 
 			if (keyboard_plugin != null) {
 				try {
@@ -727,6 +727,7 @@ public class Indicator.Keyboard.Service : Object {
 	private void update_active_action () {
 		if (active_action != null) {
 			((!) active_action).set_state (source_settings.get_value ("current"));
+			update_indicator_action ();
 		}
 	}
 
