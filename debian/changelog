@@ -1,3 +1,13 @@
+indicator-keyboard (0.0.0+14.04.20140403.1-0ubuntu1) trusty; urgency=low
+
+  [ William Hua ]
+  * Document how to refresh indicator-keyboard's icons for the ubuntu-
+    mono themes.
+  * Refresh the menu and indicator when IBus is connected. (LP:
+    #1246537)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 03 Apr 2014 16:17:38 +0000
+
 indicator-keyboard (0.0.0+14.04.20140328.1-0ubuntu1) trusty; urgency=low
 
   [ William Hua ]
