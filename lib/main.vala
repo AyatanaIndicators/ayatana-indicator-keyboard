@@ -780,6 +780,48 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_middle_click_when_locked (Variant? parameter) {
+		handle_scroll_wheel_when_locked (new Variant.int32 (-1));
+	}
+
+	[DBus (visible = false)]
+	private void handle_scroll_wheel_when_locked (Variant? parameter) {
+		if (parameter != null) {
+			var sources = get_sources ();
+			var non_ibus_length = 0;
+
+			/* Figure out how many non-IBus sources we have. */
+			foreach (var source in sources) {
+				if (!source.is_ibus) {
+					non_ibus_length++;
+				}
+			}
+
+			if (non_ibus_length > 1) {
+				var active_action = get_active_action ();
+				var active = active_action.state.get_uint32 ();
+				var offset = -((!) parameter).get_int32 () % non_ibus_length;
+
+				/* Make offset positive modulo non_ibus_length. */
+				if (offset < 0) {
+					offset += non_ibus_length;
+				}
+
+				/* We need to cycle through non-IBus sources only. */
+				while (offset > 0) {
+					do {
+						active = (active + 1) % sources.length;
+					} while (sources[active].is_ibus);
+
+					offset--;
+				}
+
+				active_action.change_state (new Variant.uint32 (active));
+			}
+		}
+	}
+
+	[DBus (visible = false)]
 	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
@@ -802,6 +844,14 @@ public class Indicator.Keyboard.Service : Object {
 
 		action = new SimpleAction ("scroll", VariantType.INT32);
 		action.activate.connect (handle_scroll_wheel);
+		group.add_action (action);
+
+		action = new SimpleAction ("locked_next", null);
+		action.activate.connect (handle_middle_click_when_locked);
+		group.add_action (action);
+
+		action = new SimpleAction ("locked_scroll", VariantType.INT32);
+		action.activate.connect (handle_scroll_wheel_when_locked);
 		group.add_action (action);
 
 		action = new SimpleAction ("map", null);

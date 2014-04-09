@@ -52,10 +52,17 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		}
 
 		var indicator = new MenuItem.submenu (null, submenu);
-		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
-		indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
-		indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
 		indicator.set_detailed_action ("indicator.indicator");
+		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
+
+		/* We need special mouse actions on the lock screen. */
+		if ((options & Options.DCONF) != Options.NONE) {
+			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
+			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
+		} else {
+			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.locked_next");
+			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.locked_scroll");
+		}
 
 		indicator_menu = new Menu ();
 		indicator_menu.append_item (indicator);
