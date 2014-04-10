@@ -20,8 +20,9 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 	public enum Options {
 		NONE     = 0x0,
-		IBUS     = 0x1,
-		SETTINGS = 0x2
+		DCONF    = 0x1,
+		IBUS     = 0x2,
+		SETTINGS = 0x4
 	}
 
 	private Options options;
@@ -30,7 +31,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 	private Menu sources_section;
 	private IBusMenu properties_section;
 
-	public IndicatorMenu (ActionMap? action_map = null, Options options = Options.IBUS | Options.SETTINGS) {
+	public IndicatorMenu (ActionMap? action_map = null, Options options = Options.NONE) {
 		var submenu = new Menu ();
 
 		sources_section = new Menu ();
@@ -51,10 +52,17 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		}
 
 		var indicator = new MenuItem.submenu (null, submenu);
-		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
-		indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
-		indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
 		indicator.set_detailed_action ("indicator.indicator");
+		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
+
+		/* We need special mouse actions on the lock screen. */
+		if ((options & Options.DCONF) != Options.NONE) {
+			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
+			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
+		} else {
+			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.locked_next");
+			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.locked_scroll");
+		}
 
 		indicator_menu = new Menu ();
 		indicator_menu.append_item (indicator);
@@ -69,7 +77,15 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 		for (var i = 0; i < sources.length; i++) {
 			if (!sources[i].is_ibus || (options & Options.IBUS) != Options.NONE) {
-				var item = new MenuItem (sources[i].name, "indicator.current");
+				string action;
+
+				if ((options & Options.DCONF) != Options.NONE) {
+					action = "indicator.current";
+				} else {
+					action = "indicator.active";
+				}
+
+				var item = new MenuItem (sources[i].name, action);
 
 				item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
 

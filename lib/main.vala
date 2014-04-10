@@ -45,9 +45,13 @@ public class Indicator.Keyboard.Service : Object {
 
 	private SimpleActionGroup? action_group;
 	private SimpleAction? indicator_action;
+	private SimpleAction? active_action;
 	private IndicatorMenu? desktop_menu;
 	private IndicatorMenu? desktop_greeter_menu;
+	private IndicatorMenu? desktop_lockscreen_menu;
 
+	private KeyboardPlugin? keyboard_plugin;
+	private UnitySession? unity_session;
 	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
 	private uint lightdm_current;
@@ -78,6 +82,10 @@ public class Indicator.Keyboard.Service : Object {
 						get_desktop_greeter_menu ().set_sources (get_sources ());
 					}
 
+					if (desktop_lockscreen_menu != null) {
+						get_desktop_lockscreen_menu ().set_sources (get_sources ());
+					}
+
 					if (indicator_action != null) {
 						update_indicator_action ();
 					}
@@ -98,6 +106,18 @@ public class Indicator.Keyboard.Service : Object {
 				                handle_unity_greeter_name_vanished);
 			}
 		} else {
+			Bus.watch_name (BusType.SESSION,
+			                "org.gnome.SettingsDaemon.Keyboard",
+			                BusNameWatcherFlags.NONE,
+			                handle_keyboard_name_appeared,
+			                handle_keyboard_name_vanished);
+
+			Bus.watch_name (BusType.SESSION,
+			                "com.canonical.Unity",
+			                BusNameWatcherFlags.NONE,
+			                handle_unity_name_appeared,
+			                handle_unity_name_vanished);
+
 			Bus.watch_name (BusType.SESSION,
 			                "com.canonical.Unity.WindowStack",
 			                BusNameWatcherFlags.NONE,
@@ -137,6 +157,10 @@ public class Indicator.Keyboard.Service : Object {
 
 				if (desktop_greeter_menu != null) {
 					get_desktop_greeter_menu ().set_sources (get_sources ());
+				}
+
+				if (desktop_lockscreen_menu != null) {
+					get_desktop_lockscreen_menu ().set_sources (get_sources ());
 				}
 
 				if (indicator_action != null) {
@@ -665,20 +689,19 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void update_indicator_action () {
-		var visible = indicator_settings.get_boolean ("visible");
-		var current = source_settings.get_uint ("current");
-		var sources = get_sources ();
-
 		Icon? icon = null;
 		string? name = null;
 
-		if (current < sources.length) {
-			icon = sources[current].icon;
-			name = sources[current].name;
+		var sources = get_sources ();
+		var active = get_active_action ().get_state ().get_uint32 ();
+
+		if (active < sources.length) {
+			icon = sources[active].icon;
+			name = sources[active].name;
 		}
 
 		var builder = new VariantBuilder (new VariantType ("a{sv}"));
-		builder.add ("{sv}", "visible", new Variant.boolean (visible));
+		builder.add ("{sv}", "visible", indicator_settings.get_value ("visible"));
 		if (name != null) {
 			var description = _ ("%s input source").printf ((!) name);
 			builder.add ("{sv}", "accessible-desc", new Variant.string (description));
@@ -702,6 +725,42 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_changed_active (Variant? value) {
+		if (value != null) {
+			((!) active_action).set_state ((!) value);
+			update_indicator_action ();
+
+			if (keyboard_plugin != null) {
+				try {
+					((!) keyboard_plugin).activate_input_source (((!) value).get_uint32 ());
+				} catch (IOError error) {
+					warning ("error: %s", error.message);
+				}
+			}
+		}
+	}
+
+	[DBus (visible = false)]
+	private void update_active_action () {
+		if (active_action != null) {
+			((!) active_action).set_state (source_settings.get_value ("current"));
+			update_indicator_action ();
+		}
+	}
+
+	[DBus (visible = false)]
+	private Action get_active_action () {
+		if (active_action == null) {
+			var current = source_settings.get_value ("current");
+			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, current);
+			((!) active_action).activate.connect ((parameter) => { ((!) active_action).change_state (parameter); });
+			((!) active_action).change_state.connect (handle_changed_active);
+		}
+
+		return (!) active_action;
+	}
+
+	[DBus (visible = false)]
 	private void handle_middle_click (Variant? parameter) {
 		handle_scroll_wheel (new Variant.int32 (-1));
 	}
@@ -721,10 +780,62 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_middle_click_when_locked (Variant? parameter) {
+		handle_scroll_wheel_when_locked (new Variant.int32 (-1));
+	}
+
+	[DBus (visible = false)]
+	private void handle_scroll_wheel_when_locked (Variant? parameter) {
+		if (parameter != null) {
+			var sources = get_sources ();
+			var non_ibus_length = 0;
+
+			/* Figure out how many non-IBus sources we have. */
+			foreach (var source in sources) {
+				if (!source.is_ibus) {
+					non_ibus_length++;
+				}
+			}
+
+			if (non_ibus_length > 1) {
+				var active_action = get_active_action ();
+				var active = active_action.state.get_uint32 ();
+				var offset = -((!) parameter).get_int32 () % non_ibus_length;
+
+				/* Make offset positive modulo non_ibus_length. */
+				if (offset < 0) {
+					offset += non_ibus_length;
+				}
+
+				/* We need to cycle through non-IBus sources only. */
+				while (offset > 0) {
+					do {
+						active = (active + 1) % sources.length;
+					} while (sources[active].is_ibus);
+
+					offset--;
+				}
+
+				active_action.change_state (new Variant.uint32 (active));
+			}
+		}
+	}
+
+	[DBus (visible = false)]
 	protected virtual SimpleActionGroup create_action_group (Action root_action) {
 		var group = new SimpleActionGroup ();
 
+		/*
+		 * The 'current' action reflects the current setting in
+		 * GSettings and the 'active' action only exists to set the
+		 * active input source without persisting it.
+		 *
+		 * The lock screen menu uses the 'active' action while the
+		 * other menus instead persist the current input source.
+		 */
+
 		group.add_action (root_action);
+		group.add_action (get_active_action ());
 		group.add_action (source_settings.create_action ("current"));
 
 		var action = new SimpleAction ("next", null);
@@ -733,6 +844,14 @@ public class Indicator.Keyboard.Service : Object {
 
 		action = new SimpleAction ("scroll", VariantType.INT32);
 		action.activate.connect (handle_scroll_wheel);
+		group.add_action (action);
+
+		action = new SimpleAction ("locked_next", null);
+		action.activate.connect (handle_middle_click_when_locked);
+		group.add_action (action);
+
+		action = new SimpleAction ("locked_scroll", VariantType.INT32);
+		action.activate.connect (handle_scroll_wheel_when_locked);
 		group.add_action (action);
 
 		action = new SimpleAction ("map", null);
@@ -762,7 +881,11 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_menu () {
 		if (desktop_menu == null) {
-			desktop_menu = new IndicatorMenu (get_action_group ());
+			var options = IndicatorMenu.Options.DCONF
+			            | IndicatorMenu.Options.IBUS
+			            | IndicatorMenu.Options.SETTINGS;
+
+			desktop_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_menu).set_sources (get_sources ());
 			((!) desktop_menu).activate.connect ((property, state) => {
 				var panel = get_ibus_panel ();
@@ -783,11 +906,25 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_greeter_menu () {
 		if (desktop_greeter_menu == null) {
-			desktop_greeter_menu = new IndicatorMenu (get_action_group (), IndicatorMenu.Options.NONE);
+			var options = IndicatorMenu.Options.DCONF;
+
+			desktop_greeter_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_greeter_menu).set_sources (get_sources ());
 		}
 
 		return (!) desktop_greeter_menu;
+	}
+
+	[DBus (visible = false)]
+	public IndicatorMenu get_desktop_lockscreen_menu () {
+		if (desktop_lockscreen_menu == null) {
+			var options = IndicatorMenu.Options.NONE;
+
+			desktop_lockscreen_menu = new IndicatorMenu (get_action_group (), options);
+			((!) desktop_lockscreen_menu).set_sources (get_sources ());
+		}
+
+		return (!) desktop_lockscreen_menu;
 	}
 
 	[DBus (visible = false)]
@@ -798,6 +935,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_changed_current (string key) {
 		update_indicator_action ();
+		update_active_action ();
 		update_login_layout ();
 	}
 
@@ -807,6 +945,7 @@ public class Indicator.Keyboard.Service : Object {
 
 		get_desktop_menu ().set_sources (get_sources ());
 		get_desktop_greeter_menu ().set_sources (get_sources ());
+		get_desktop_lockscreen_menu ().set_sources (get_sources ());
 		update_indicator_action ();
 		update_login_layout ();
 	}
@@ -878,6 +1017,53 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private void handle_keyboard_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			keyboard_plugin = Bus.get_proxy_sync (BusType.SESSION, name, "/org/gnome/SettingsDaemon/Keyboard");
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_keyboard_name_vanished (DBusConnection connection, string name) {
+		keyboard_plugin = null;
+	}
+
+	[DBus (visible = false)]
+	private void handle_unity_name_appeared (DBusConnection connection, string name, string name_owner) {
+		try {
+			unity_session = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/Session");
+			((!) unity_session).locked.connect (() => {
+				var sources = get_sources ();
+
+				if (sources.length > 0) {
+					var current = source_settings.get_uint ("current");
+
+					if (current < sources.length && sources[current].is_ibus) {
+						for (var i = 0; i < sources.length; i++) {
+							if (!sources[i].is_ibus) {
+								get_active_action ().change_state (new Variant.uint32 (i));
+								break;
+							}
+						}
+					}
+				}
+			});
+			((!) unity_session).unlocked.connect (() => {
+				get_active_action ().change_state (source_settings.get_value ("current"));
+			});
+		} catch (IOError error) {
+			warning ("error: %s", error.message);
+		}
+	}
+
+	[DBus (visible = false)]
+	private void handle_unity_name_vanished (DBusConnection connection, string name) {
+		unity_session = null;
+	}
+
+	[DBus (visible = false)]
 	private void handle_window_stack_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
 			window_stack = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/WindowStack");
@@ -898,6 +1084,7 @@ public class Indicator.Keyboard.Service : Object {
 			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_desktop_menu ());
 			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_greeter", get_desktop_greeter_menu ());
+			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_lockscreen", get_desktop_lockscreen_menu ());
 		} catch (Error error) {
 			warning ("error: %s", error.message);
 		}
