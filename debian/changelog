@@ -1,3 +1,10 @@
+indicator-keyboard (0.0.0+14.04.20140410-0ubuntu1) trusty; urgency=low
+
+  [ William Hua ]
+  * Export separate menus for desktop and greeter. (LP: #1291962)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 10 Apr 2014 11:50:41 +0000
+
 indicator-keyboard (0.0.0+14.04.20140403.1-0ubuntu1) trusty; urgency=low
 
   [ William Hua ]
