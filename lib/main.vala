@@ -45,9 +45,8 @@ public class Indicator.Keyboard.Service : Object {
 
 	private SimpleActionGroup? action_group;
 	private SimpleAction? indicator_action;
-	private MenuModel? menu_model;
-	private Menu? sources_menu;
-	private IBusMenu? ibus_menu;
+	private IndicatorMenu? desktop_menu;
+	private IndicatorMenu? desktop_greeter_menu;
 
 	private UnityGreeter? unity_greeter;
 	private string? greeter_user;
@@ -71,8 +70,12 @@ public class Indicator.Keyboard.Service : Object {
 						}
 					}
 
-					if (sources_menu != null) {
-						update_sources_menu ();
+					if (desktop_menu != null) {
+						get_desktop_menu ().set_sources (get_sources ());
+					}
+
+					if (desktop_greeter_menu != null) {
+						get_desktop_greeter_menu ().set_sources (get_sources ());
 					}
 
 					if (indicator_action != null) {
@@ -128,8 +131,12 @@ public class Indicator.Keyboard.Service : Object {
 			IBus.init ();
 			ibus = new IBus.Bus ();
 			((!) ibus).connected.connect (() => {
-				if (sources_menu != null) {
-					update_sources_menu ();
+				if (desktop_menu != null) {
+					get_desktop_menu ().set_sources (get_sources ());
+				}
+
+				if (desktop_greeter_menu != null) {
+					get_desktop_greeter_menu ().set_sources (get_sources ());
 				}
 
 				if (indicator_action != null) {
@@ -645,7 +652,7 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		panel_timeout = Timeout.add (PROPERTIES_DELAY, () => {
-			update_ibus_menu (list);
+			get_desktop_menu ().set_properties (list);
 			panel_timeout = 0;
 			return false;
 		});
@@ -653,7 +660,7 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_property_updated (IBus.Property property) {
-		get_ibus_menu ().update_property (property);
+		get_desktop_menu ().update_property (property);
 	}
 
 	[DBus (visible = false)]
@@ -753,48 +760,11 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void update_sources_menu () {
-		if (sources_menu != null) {
-			var menu = get_sources_menu ();
-			menu.remove_all ();
-
-			var sources = get_sources ();
-			for (var i = 0; i < sources.length; i++) {
-				var item = new MenuItem (sources[i].name, "indicator.current");
-				item.set_attribute (Menu.ATTRIBUTE_TARGET, "u", i);
-
-				var icon = sources[i].icon;
-				if (icon != null) {
-					item.set_icon ((!) icon);
-				}
-
-				menu.append_item (item);
-			}
-		} else {
-			get_sources_menu ();
-		}
-	}
-
-	[DBus (visible = false)]
-	private Menu get_sources_menu () {
-		if (sources_menu == null) {
-			sources_menu = new Menu ();
-			update_sources_menu ();
-		}
-
-		return (!) sources_menu;
-	}
-
-	[DBus (visible = false)]
-	private void update_ibus_menu (IBus.PropList list) {
-		get_ibus_menu ().set_properties (list);
-	}
-
-	[DBus (visible = false)]
-	private IBusMenu get_ibus_menu () {
-		if (ibus_menu == null) {
-			ibus_menu = new IBusMenu (get_action_group ());
-			((!) ibus_menu).activate.connect ((property, state) => {
+	public IndicatorMenu get_desktop_menu () {
+		if (desktop_menu == null) {
+			desktop_menu = new IndicatorMenu (get_action_group ());
+			((!) desktop_menu).set_sources (get_sources ());
+			((!) desktop_menu).activate.connect ((property, state) => {
 				var panel = get_ibus_panel ();
 
 				if (panel != null) {
@@ -807,43 +777,17 @@ public class Indicator.Keyboard.Service : Object {
 			});
 		}
 
-		return (!) ibus_menu;
+		return (!) desktop_menu;
 	}
 
 	[DBus (visible = false)]
-	protected virtual MenuModel create_menu_model (MenuModel sources_menu, MenuModel ibus_menu) {
-		var menu = new Menu ();
-
-		var submenu = new Menu ();
-
-		submenu.append_section (null, sources_menu);
-		submenu.append_section (null, ibus_menu);
-
-		if (!is_login_user ()) {
-			var section = new Menu ();
-			section.append (_ ("Character Map"), "indicator.map");
-			section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
-			section.append (_ ("Text Entry Settings..."), "indicator.settings");
-			submenu.append_section (null, section);
+	public IndicatorMenu get_desktop_greeter_menu () {
+		if (desktop_greeter_menu == null) {
+			desktop_greeter_menu = new IndicatorMenu (get_action_group (), IndicatorMenu.Options.NONE);
+			((!) desktop_greeter_menu).set_sources (get_sources ());
 		}
 
-		var indicator = new MenuItem.submenu ("x", submenu);
-		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
-		indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
-		indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
-		indicator.set_detailed_action ("indicator.indicator");
-		menu.append_item (indicator);
-
-		return menu;
-	}
-
-	[DBus (visible = false)]
-	public MenuModel get_menu_model () {
-		if (menu_model == null) {
-			menu_model = create_menu_model (get_sources_menu (), get_ibus_menu ());
-		}
-
-		return (!) menu_model;
+		return (!) desktop_greeter_menu;
 	}
 
 	[DBus (visible = false)]
@@ -861,7 +805,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_changed_sources (string key) {
 		sources = null;
 
-		update_sources_menu ();
+		get_desktop_menu ().set_sources (get_sources ());
+		get_desktop_greeter_menu ().set_sources (get_sources ());
 		update_indicator_action ();
 		update_login_layout ();
 	}
@@ -951,7 +896,8 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_bus_acquired (DBusConnection connection, string name) {
 		try {
 			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
-			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_menu_model ());
+			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_desktop_menu ());
+			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_greeter", get_desktop_greeter_menu ());
 		} catch (Error error) {
 			warning ("error: %s", error.message);
 		}
