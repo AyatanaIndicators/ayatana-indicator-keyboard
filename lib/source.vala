@@ -19,10 +19,12 @@
 public class Indicator.Keyboard.Source : Object {
 
 	private static Gnome.XkbInfo? xkb_info;
-	private static IBus.Bus? bus;
+	private static IBus.Bus? ibus_bus;
+	private static Fcitx.InputMethod? fcitx_proxy;
 
 	private string? xkb;
 	private string? ibus;
+	private string? fcitx;
 
 	private string? _name;
 	private string? _short_name;
@@ -77,6 +79,10 @@ public class Indicator.Keyboard.Source : Object {
 		get { return ibus != null; }
 	}
 
+	public bool is_fcitx {
+		get { return fcitx != null; }
+	}
+
 	public Source (Variant variant, bool use_gtk = false) {
 		Object (use_gtk: use_gtk);
 
@@ -90,6 +96,8 @@ public class Indicator.Keyboard.Source : Object {
 				xkb = name;
 			} else if (type == "ibus") {
 				ibus = name;
+			} else if (type == "fcitx") {
+				fcitx = name;
 			}
 		} else if (variant.is_of_type (new VariantType ("a{ss}"))) {
 			VariantIter iter;
@@ -103,6 +111,8 @@ public class Indicator.Keyboard.Source : Object {
 					xkb = value;
 				} else if (key == "ibus") {
 					ibus = value;
+				} else if (key == "fcitx") {
+					fcitx = value;
 				}
 			}
 		}
@@ -116,13 +126,21 @@ public class Indicator.Keyboard.Source : Object {
 		return (!) xkb_info;
 	}
 
-	private static IBus.Bus get_bus () {
-		if (bus == null) {
+	private static IBus.Bus get_ibus_bus () {
+		if (ibus_bus == null) {
 			IBus.init ();
-			bus = new IBus.Bus ();
+			ibus_bus = new IBus.Bus ();
 		}
 
-		return (!) bus;
+		return (!) ibus_bus;
+	}
+
+	private static Fcitx.InputMethod get_fcitx_proxy () throws Error {
+		if (fcitx_proxy == null) {
+			fcitx_proxy = new Fcitx.InputMethod (GLib.BusType.SESSION, GLib.DBusProxyFlags.NONE, 0);
+		}
+
+		return (!) fcitx_proxy;
 	}
 
 	private IBus.EngineDesc? get_engine () {
@@ -132,7 +150,7 @@ public class Indicator.Keyboard.Source : Object {
 			var names = new string[2];
 			names[0] = (!) ibus;
 
-			var engines = get_bus ().get_engines_by_names (names);
+			var engines = get_ibus_bus ().get_engines_by_names (names);
 
 			if (engines.length > 0) {
 				engine = engines[0];
@@ -145,31 +163,7 @@ public class Indicator.Keyboard.Source : Object {
 	protected virtual string? _get_name () {
 		string? name = null;
 
-		var engine = get_engine ();
-
-		if (engine != null) {
-			string? language = ((!) engine).get_language ();
-			string? display_name = ((!) engine).get_longname ();
-			var has_language = language != null && ((!) language).get_char () != '\0';
-			var has_display_name = display_name != null && ((!) display_name).get_char () != '\0';
-
-			if (has_language) {
-				language = Xkl.get_language_name ((!) language);
-				has_language = language != null && ((!) language).get_char () != '\0';
-			}
-
-			if (has_language && has_display_name) {
-				name = @"$((!) language) ($((!) display_name))";
-			} else if (has_language) {
-				name = language;
-			} else if (has_display_name) {
-				name = display_name;
-			}
-		}
-
-		var has_name = name != null && ((!) name).get_char () != '\0';
-
-		if (!has_name && xkb != null) {
+		if (xkb != null) {
 			string? display_name = null;
 			string? layout = null;
 
@@ -194,13 +188,52 @@ public class Indicator.Keyboard.Source : Object {
 					name = country;
 				}
 			}
-		}
 
-		if (name == null || ((!) name).get_char () == '\0') {
-			if (ibus != null) {
-				name = ibus;
-			} else if (xkb != null) {
+			if (name == null || ((!) name).get_char () == '\0') {
 				name = xkb;
+			}
+		} else if (ibus != null) {
+			var engine = get_engine ();
+
+			if (engine != null) {
+				string? language = ((!) engine).get_language ();
+				string? display_name = ((!) engine).get_longname ();
+				var has_language = language != null && ((!) language).get_char () != '\0';
+				var has_display_name = display_name != null && ((!) display_name).get_char () != '\0';
+
+				if (has_language) {
+					language = Xkl.get_language_name ((!) language);
+					has_language = language != null && ((!) language).get_char () != '\0';
+				}
+
+				if (has_language && has_display_name) {
+					name = @"$((!) language) ($((!) display_name))";
+				} else if (has_language) {
+					name = language;
+				} else if (has_display_name) {
+					name = display_name;
+				}
+			}
+
+			if (name == null || ((!) name).get_char () == '\0') {
+				name = ibus;
+			}
+		} else if (fcitx != null) {
+			try {
+				var input_methods = get_fcitx_proxy ().get_imlist_nofree ();
+
+				for (var i = 0; i < input_methods.length; i++) {
+					if (input_methods.get (i).unique_name == (!) fcitx) {
+						name = input_methods.get (i).name;
+						break;
+					}
+				}
+			} catch (Error error) {
+				warning ("error: %s", error.message);
+			}
+
+			if (name == null || ((!) name).get_char () == '\0') {
+				name = fcitx;
 			}
 		}
 
@@ -212,23 +245,36 @@ public class Indicator.Keyboard.Source : Object {
 
 		if (xkb != null) {
 			get_xkb_info ().get_layout_info ((!) xkb, null, out short_name, null, null);
-		}
 
-		var has_short_name = short_name != null && ((!) short_name).get_char () != '\0';
-
-		if (!has_short_name) {
+			if (short_name == null || ((!) short_name).get_char () == '\0') {
+				short_name = xkb;
+			}
+		} else if (ibus != null) {
 			var engine = get_engine ();
 
 			if (engine != null) {
 				short_name = ((!) engine).get_name ();
 			}
-		}
 
-		if (short_name == null || ((!) short_name).get_char () == '\0') {
-			if (ibus != null) {
+			if (short_name == null || ((!) short_name).get_char () == '\0') {
 				short_name = ibus;
-			} else if (xkb != null) {
-				short_name = xkb;
+			}
+		} else if (fcitx != null) {
+			try {
+				var input_methods = get_fcitx_proxy ().get_imlist_nofree ();
+
+				for (var i = 0; i < input_methods.length; i++) {
+					if (input_methods.get (i).unique_name == (!) fcitx) {
+						short_name = input_methods.get (i).langcode;
+						break;
+					}
+				}
+			} catch (Error error) {
+				warning ("error: %s", error.message);
+			}
+
+			if (short_name == null || ((!) short_name).get_char () == '\0') {
+				short_name = fcitx;
 			}
 		}
 

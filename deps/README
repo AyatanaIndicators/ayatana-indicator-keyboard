@@ -38,6 +38,10 @@ To generate ibus-1.0.vapi docs:
 
 valadoc --vapidir /path/to/vapi/dir -o ibus-1.0 /path/to/ibus-1.0.vapi
 
+To generate fcitx.vapi:
+
+vapigen --metadatadir . --pkg gio-2.0 --library fcitx /path/to/Fcitx-1.0.gir
+
 To generate libbamf3.vapi:
 
 vapigen --library libbamf3 /path/to/Bamf-3.gir
