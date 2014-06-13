@@ -146,6 +146,18 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private static bool is_ibus_active () {
+		var module = Environment.get_variable ("GTK_IM_MODULE");
+		return module != null && (!) module == "ibus";
+	}
+
+	[DBus (visible = false)]
+	private static bool is_fcitx_active () {
+		var module = Environment.get_variable ("GTK_IM_MODULE");
+		return module != null && (!) module == "fcitx";
+	}
+
+	[DBus (visible = false)]
 	private IBus.Bus get_ibus () {
 		if (ibus == null) {
 			IBus.init ();
@@ -788,30 +800,30 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_scroll_wheel_when_locked (Variant? parameter) {
 		if (parameter != null) {
 			var sources = get_sources ();
-			var non_ibus_length = 0;
+			var xkb_length = 0;
 
-			/* Figure out how many non-IBus sources we have. */
+			/* Figure out how many Xkb sources we have. */
 			foreach (var source in sources) {
-				if (!source.is_ibus) {
-					non_ibus_length++;
+				if (source.is_xkb) {
+					xkb_length++;
 				}
 			}
 
-			if (non_ibus_length > 1) {
+			if (xkb_length > 1) {
 				var active_action = get_active_action ();
 				var active = active_action.state.get_uint32 ();
-				var offset = -((!) parameter).get_int32 () % non_ibus_length;
+				var offset = -((!) parameter).get_int32 () % xkb_length;
 
-				/* Make offset positive modulo non_ibus_length. */
+				/* Make offset positive modulo xkb_length. */
 				if (offset < 0) {
-					offset += non_ibus_length;
+					offset += xkb_length;
 				}
 
-				/* We need to cycle through non-IBus sources only. */
+				/* We need to cycle through Xkb sources only. */
 				while (offset > 0) {
 					do {
 						active = (active + 1) % sources.length;
-					} while (sources[active].is_ibus);
+					} while (!sources[active].is_xkb);
 
 					offset--;
 				}
@@ -882,8 +894,15 @@ public class Indicator.Keyboard.Service : Object {
 	public IndicatorMenu get_desktop_menu () {
 		if (desktop_menu == null) {
 			var options = IndicatorMenu.Options.DCONF
-			            | IndicatorMenu.Options.IBUS
 			            | IndicatorMenu.Options.SETTINGS;
+
+			if (is_ibus_active ()) {
+				options |= IndicatorMenu.Options.IBUS;
+			}
+
+			if (is_fcitx_active ()) {
+				options |= IndicatorMenu.Options.FCITX;
+			}
 
 			desktop_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_menu).set_sources (get_sources ());
@@ -1040,9 +1059,9 @@ public class Indicator.Keyboard.Service : Object {
 				if (sources.length > 0) {
 					var current = source_settings.get_uint ("current");
 
-					if (current < sources.length && sources[current].is_ibus) {
+					if (current < sources.length && !sources[current].is_xkb) {
 						for (var i = 0; i < sources.length; i++) {
-							if (!sources[i].is_ibus) {
+							if (sources[i].is_xkb) {
 								get_active_action ().change_state (new Variant.uint32 (i));
 								break;
 							}
