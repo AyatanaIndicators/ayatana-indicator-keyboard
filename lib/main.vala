@@ -799,7 +799,7 @@ public class Indicator.Keyboard.Service : Object {
 
 			if (non_ibus_length > 1) {
 				var active_action = get_active_action ();
-				var active = active_action.state.get_uint32 ();
+				var active = active_action.get_state ().get_uint32 ();
 				var offset = -((!) parameter).get_int32 () % non_ibus_length;
 
 				/* Make offset positive modulo non_ibus_length. */
