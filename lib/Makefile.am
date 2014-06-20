@@ -1,4 +1,4 @@
-libexec_PROGRAMS = indicator-keyboard-service
+pkglibexec_PROGRAMS = indicator-keyboard-service
 
 AM_CFLAGS = -w -DGNOME_DESKTOP_USE_UNSTABLE_API
 AM_LDFLAGS = -lm
