@@ -1,3 +1,10 @@
+
+SUBDIRS = upstart
+
+###########################
+# Icon Generator
+###########################
+
 noinst_PROGRAMS = indicator-keyboard-icon-generator
 
 AM_CFLAGS = -w -DGNOME_DESKTOP_USE_UNSTABLE_API
@@ -31,14 +38,29 @@ indicator_keyboard_icon_generator_LDFLAGS = $(AM_LDFLAGS)         \
                                             $(LIBXKLAVIER_LIBS)   \
                                             $(COVERAGE_LDFLAGS)
 
-dist_service_DATA = indicator-keyboard.service
-servicedir = $(DBUS_SERVICE_DIR)
+###########################
+# Upstart Config
+###########################
 
-indicator-keyboard.service:
-	$(AM_V_GEN) (echo '[D-BUS Service]';                                                     \
-	             echo 'Name=com.canonical.indicator.keyboard';                               \
-	             echo 'Exec=${libexecdir}/indicator-keyboard-service --use-gtk') > $@.tmp && \
-	            mv $@.tmp $@
+upstart_jobsdir = $(datadir)/upstart/sessions/
+upstart_jobs_DATA = indicator-keyboard.conf
+
+%.conf: %.conf.in
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+
+###########################
+# XDG Autostart File
+###########################
+
+xdg_autostartdir = /etc/xdg/autostart
+xdg_autostart_DATA = indicator-keyboard.desktop
+
+%.desktop: %.desktop.in
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+
+###########################
+# Indicator Config
+###########################
 
 dist_indicator_DATA = com.canonical.indicator.keyboard
 indicatordir = $(INDICATOR_DIR)
@@ -62,6 +84,10 @@ com.canonical.indicator.keyboard:
 	             echo 'ObjectPath=/com/canonical/indicator/keyboard/desktop') > $@.tmp && \
 	            mv $@.tmp $@
 
+###########################
+# GSettings Schemas
+###########################
+
 gsettings_SCHEMAS = com.canonical.indicator.keyboard.gschema.xml
 
 @GSETTINGS_RULES@
@@ -73,4 +99,7 @@ gschemas.compiled: $(gsettings_SCHEMAS)
 
 EXTRA_DIST = $(dist_service_DATA)   \
 	     $(dist_indicator_DATA) \
-	     $(gsettings_SCHEMAS)
+	     $(gsettings_SCHEMAS) \
+	     indicator-keyboard.conf.in \
+	     indicator-keyboard.desktop.in
+

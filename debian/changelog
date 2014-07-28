@@ -1,3 +1,14 @@
+indicator-keyboard (0.0.0+14.10.20140620.1-0ubuntu1) utopic; urgency=low
+
+  [ Ted Gould ]
+  * Synchronize process management across indicators
+
+  [ William Hua ]
+  * Use get_state () on GLib.Action instead of the state member. Fixes
+    FTBFS.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 20 Jun 2014 09:58:51 +0000
+
 indicator-keyboard (0.0.0+14.04.20140410.1-0ubuntu1) trusty; urgency=low
 
   [ William Hua ]
