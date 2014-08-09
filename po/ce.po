@@ -1,4 +1,4 @@
-# Malagasy translation for indicator-keyboard
+# Chechen translation for indicator-keyboard
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the indicator-keyboard package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-08 07:02+0000\n"
-"PO-Revision-Date: 2014-04-12 05:12+0000\n"
+"PO-Revision-Date: 2014-08-08 12:43+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Malagasy <mg@li.org>\n"
+"Language-Team: Chechen <ce@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: ../lib/main.vala:706
 #, c-format
 msgid "%s input source"
-msgstr "%s fango iditra"
+msgstr ""
 
 #: ../lib/indicator-menu.vala:48
 msgid "Character Map"
@@ -28,8 +28,8 @@ msgstr ""
 
 #: ../lib/indicator-menu.vala:49
 msgid "Keyboard Layout Chart"
-msgstr "Tabilao famaritana ny fitendry"
+msgstr ""
 
 #: ../lib/indicator-menu.vala:50
 msgid "Text Entry Settings..."
-msgstr "Parametatry ny fampidiran-tsoratra"
+msgstr ""
