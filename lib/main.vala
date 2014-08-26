@@ -33,7 +33,7 @@ public class Indicator.Keyboard.Service : Object {
 	private SList<Act.User> users;
 
 	private WindowStack? window_stack;
-	private Gee.HashMap<uint, uint>? window_sources;
+	private Gee.HashMap<uint, Source>? window_sources;
 	private uint focused_window_id;
 
 	private IBus.Bus? ibus;
@@ -606,7 +606,7 @@ public class Indicator.Keyboard.Service : Object {
 						warning ("error: %s", error.message);
 					}
 
-					window_sources = new Gee.HashMap<uint, uint> ();
+					window_sources = new Gee.HashMap<uint, Source> ();
 					((!) window_stack).focused_window_changed.connect (handle_focused_window_changed);
 				} else {
 					((!) window_stack).focused_window_changed.disconnect (handle_focused_window_changed);
@@ -623,21 +623,43 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
+		var sources = get_sources ();
 		var old_current = source_settings.get_uint ("current");
 
-		((!) window_sources)[focused_window_id] = old_current;
+		if (old_current < sources.length) {
+			((!) window_sources)[focused_window_id] = sources[old_current];
+		}
 
 		if (!(((!) window_sources).has_key (window_id))) {
 			var default_group = per_window_settings.get_int ("default-group");
 
-			if (default_group >= 0 && default_group != old_current) {
-				source_settings.set_uint ("current", (uint) default_group);
+			if (default_group >= 0) {
+				for (var offset = 0; offset < sources.length; offset++) {
+					var current = (default_group + offset) % sources.length;
+					var source = sources[current];
+
+					if (source.is_xkb ||
+					    (source.is_ibus && is_ibus_active ()) ||
+					    (source.is_fcitx && is_fcitx_active ())) {
+						if (current != old_current) {
+							source_settings.set_uint ("current", current);
+						}
+
+						break;
+					}
+				}
 			}
 		} else {
-			var current = ((!) window_sources)[window_id];
+			var source = ((!) window_sources)[window_id];
 
-			if (current != old_current) {
-				source_settings.set_uint ("current", current);
+			for (var current = 0; current < sources.length; current++) {
+				if (sources[current] == source) {
+					if (current != old_current) {
+						source_settings.set_uint ("current", current);
+					}
+
+					break;
+				}
 			}
 		}
 
@@ -780,13 +802,41 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_scroll_wheel (Variant? parameter) {
 		if (parameter != null) {
-			var sources = source_settings.get_value ("sources");
-			var current = source_settings.get_uint ("current");
-			var length = (int) sources.n_children ();
+			var old_current = source_settings.get_uint ("current");
+			var sources = get_sources ();
+			var length = 0;
 
-			if (length > 0) {
-				var offset = ((!) parameter).get_int32 () % length;
-				source_settings.set_uint ("current", (current + (length - offset)) % length);
+			foreach (var source in sources) {
+				if (source.is_xkb ||
+				    (source.is_ibus && is_ibus_active ()) ||
+				    (source.is_fcitx && is_fcitx_active ())) {
+					length++;
+				}
+			}
+
+			if (length > 1) {
+				var current = old_current;
+				var offset = -((!) parameter).get_int32 () % length;
+
+				/* Go backward. */
+				for (; offset < 0; offset++) {
+					do {
+						current = (current + sources.length - 1) % sources.length;
+					} while ((sources[current].is_ibus && !is_ibus_active ()) ||
+					         (sources[current].is_fcitx && !is_fcitx_active ()));
+				}
+
+				/* Go forward. */
+				for (; offset > 0; offset--) {
+					do {
+						current = (current + 1) % sources.length;
+					} while ((sources[current].is_ibus && !is_ibus_active ()) ||
+					         (sources[current].is_fcitx && !is_fcitx_active ()));
+				}
+
+				if (current != old_current) {
+					source_settings.set_uint ("current", current);
+				}
 			}
 		}
 	}
