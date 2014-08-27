@@ -607,9 +607,11 @@ public class Indicator.Keyboard.Service : Object {
 					}
 
 					window_sources = new Gee.HashMap<uint, Source> ();
+					((!) window_stack).window_destroyed.connect (handle_window_destroyed);
 					((!) window_stack).focused_window_changed.connect (handle_focused_window_changed);
 				} else {
 					((!) window_stack).focused_window_changed.disconnect (handle_focused_window_changed);
+					((!) window_stack).window_destroyed.disconnect (handle_window_destroyed);
 					window_sources = null;
 				}
 			}
@@ -619,6 +621,11 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_changed_group_per_window (string key) {
 		update_window_sources ();
+	}
+
+	[DBus (visible = false)]
+	private void handle_window_destroyed (uint window_id, string app_id) {
+		((!) window_sources).unset (window_id);
 	}
 
 	[DBus (visible = false)]
