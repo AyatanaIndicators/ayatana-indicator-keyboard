@@ -70,6 +70,7 @@ namespace Fcitx {
 		public void set_current_im (string imname);
 		public void set_imlist (GLib.GenericArray<Fcitx.IMItem> array);
 		public void toggle ();
+		public string current_im { owned get; set construct; }
 		public signal void imlist_changed ();
 	}
 	[CCode (cheader_filename = "fcitx-gclient/fcitxkbd.h", type_id = "fcitx_kbd_get_type ()")]
