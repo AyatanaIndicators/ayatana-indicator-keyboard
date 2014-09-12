@@ -266,11 +266,9 @@ public class Indicator.Keyboard.Service : Object {
 				Act.User? user = manager.get_user ((!) greeter_user);
 
 				if (user != null && ((!) user).is_loaded) {
-					VariantIter outer;
-					VariantIter inner;
+					var outer = ((!) user).input_sources.iterator ();
 
-					var sources = ((!) user).input_sources;
-					sources.get ("aa{ss}", out outer);
+					VariantIter inner;
 
 					while (outer.next ("a{ss}", out inner)) {
 						unowned string key;
@@ -460,13 +458,10 @@ public class Indicator.Keyboard.Service : Object {
 
 		foreach (var user in users) {
 			if (user.is_loaded) {
+				var outer = user.input_sources.iterator ();
 				var done = false;
 
-				VariantIter outer;
 				VariantIter inner;
-
-				var sources = user.input_sources;
-				sources.get ("aa{ss}", out outer);
 
 				while (outer.next ("a{ss}", out inner)) {
 					unowned string key;

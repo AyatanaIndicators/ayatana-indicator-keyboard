@@ -100,11 +100,10 @@ public class Indicator.Keyboard.Source : Object {
 				fcitx = name;
 			}
 		} else if (variant.is_of_type (new VariantType ("a{ss}"))) {
-			VariantIter iter;
+			var iter = variant.iterator ();
+
 			unowned string key;
 			unowned string value;
-
-			variant.get ("a{ss}", out iter);
 
 			while (iter.next ("{&s&s}", out key, out value)) {
 				if (key == "xkb") {
