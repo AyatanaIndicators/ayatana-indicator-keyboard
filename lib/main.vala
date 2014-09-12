@@ -41,6 +41,8 @@ public class Indicator.Keyboard.Service : Object {
 	private ulong ibus_connected_id;
 	private uint panel_timeout;
 
+	private Fcitx.InputMethod? fcitx;
+
 	private Source[]? sources;
 
 	private SimpleActionGroup? action_group;
@@ -219,6 +221,19 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		return ibus_panel;
+	}
+
+	[DBus (visible = false)]
+	private Fcitx.InputMethod? get_fcitx () {
+		if (is_fcitx_active () && fcitx == null) {
+			try {
+				fcitx = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
+			} catch (Error error) {
+				warning ("error: %s", error.message);
+			}
+		}
+
+		return fcitx;
 	}
 
 	[DBus (visible = false)]
