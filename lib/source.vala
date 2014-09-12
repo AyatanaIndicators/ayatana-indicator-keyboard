@@ -136,7 +136,7 @@ public class Indicator.Keyboard.Source : Object {
 
 	private static Fcitx.InputMethod get_fcitx_proxy () throws Error {
 		if (fcitx_proxy == null) {
-			fcitx_proxy = new Fcitx.InputMethod (GLib.BusType.SESSION, GLib.DBusProxyFlags.NONE, 0);
+			fcitx_proxy = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
 		}
 
 		return (!) fcitx_proxy;
