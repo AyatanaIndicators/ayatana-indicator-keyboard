@@ -120,11 +120,13 @@ public class Indicator.Keyboard.Service : Object {
 			                handle_unity_name_appeared,
 			                handle_unity_name_vanished);
 
-			Bus.watch_name (BusType.SESSION,
-			                "com.canonical.Unity.WindowStack",
-			                BusNameWatcherFlags.NONE,
-			                handle_window_stack_name_appeared,
-			                handle_window_stack_name_vanished);
+			if (!is_fcitx_active ()) {
+				Bus.watch_name (BusType.SESSION,
+				                "com.canonical.Unity.WindowStack",
+				                BusNameWatcherFlags.NONE,
+				                handle_window_stack_name_appeared,
+				                handle_window_stack_name_vanished);
+			}
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -149,12 +151,20 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private static bool is_ibus_active () {
+		if (is_login_user ()) {
+			return false;
+		}
+
 		var module = Environment.get_variable ("GTK_IM_MODULE");
 		return module != null && (!) module == "ibus";
 	}
 
 	[DBus (visible = false)]
 	private static bool is_fcitx_active () {
+		if (is_login_user ()) {
+			return false;
+		}
+
 		var module = Environment.get_variable ("GTK_IM_MODULE");
 		return module != null && (!) module == "fcitx";
 	}
@@ -228,6 +238,7 @@ public class Indicator.Keyboard.Service : Object {
 		if (is_fcitx_active () && fcitx == null) {
 			try {
 				fcitx = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
+				((!) fcitx).notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
 			} catch (Error error) {
 				warning ("error: %s", error.message);
 			}
@@ -365,7 +376,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
 		if (is_login_user ()) {
-			lightdm_current = source_settings.get_uint ("current");
+			lightdm_current = get_current ();
 
 			var manager = Act.UserManager.get_default ();
 
@@ -570,7 +581,7 @@ public class Indicator.Keyboard.Service : Object {
 	private void update_login_layout () {
 		if (is_login_user ()) {
 			unowned List<LightDM.Layout> layouts = LightDM.get_layouts ();
-			var current = source_settings.get_uint ("current");
+			var current = get_current ();
 
 			if (current < get_sources ().length) {
 				var source = get_sources ()[current];
@@ -641,7 +652,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
 		var sources = get_sources ();
-		var old_current = source_settings.get_uint ("current");
+		var old_current = get_current ();
 
 		if (old_current < sources.length) {
 			((!) window_sources)[focused_window_id] = sources[old_current];
@@ -681,6 +692,40 @@ public class Indicator.Keyboard.Service : Object {
 		}
 
 		focused_window_id = window_id;
+	}
+
+	[DBus (visible = false)]
+	private uint get_current () {
+		if (is_fcitx_active () && get_fcitx () != null) {
+			string? engine = ((!) get_fcitx ()).current_im;
+
+			if (engine != null) {
+				var is_xkb = ((!) engine).has_prefix ("fcitx-keyboard-");
+				var type = is_xkb ? "xkb" : "fcitx";
+				var name = (!) engine;
+
+				if (is_xkb) {
+					name = name.substring ("fcitx-keyboard-".length);
+					var index = name.index_of ("-");
+					if (index >= 0) {
+						name.data[index] = '+';
+					}
+				}
+
+				var iter = source_settings.get_value ("sources").iterator ();
+
+				unowned string source_type;
+				unowned string source_name;
+
+				for (var i = 0; iter.next ("(&s&s)", out source_type, out source_name); i++) {
+					if (source_name == name && source_type == type) {
+						return i;
+					}
+				}
+			}
+		}
+
+		return source_settings.get_uint ("current");
 	}
 
 	[DBus (visible = false)]
@@ -794,7 +839,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void update_active_action () {
 		if (active_action != null) {
-			((!) active_action).set_state (source_settings.get_value ("current"));
+			((!) active_action).set_state (new Variant.uint32 (get_current ()));
 			update_indicator_action ();
 		}
 	}
@@ -802,8 +847,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Action get_active_action () {
 		if (active_action == null) {
-			var current = source_settings.get_value ("current");
-			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, current);
+			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, new Variant.uint32 (get_current ()));
 			((!) active_action).activate.connect ((parameter) => { ((!) active_action).change_state (parameter); });
 			((!) active_action).change_state.connect (handle_changed_active);
 		}
@@ -819,7 +863,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_scroll_wheel (Variant? parameter) {
 		if (parameter != null) {
-			var old_current = source_settings.get_uint ("current");
+			var old_current = get_current ();
 			var sources = get_sources ();
 			var length = 0;
 
@@ -1051,7 +1095,7 @@ public class Indicator.Keyboard.Service : Object {
 		string? variant = null;
 
 		var sources = get_sources ();
-		var current = source_settings.get_uint ("current");
+		var current = get_current ();
 
 		if (current < sources.length) {
 			layout = sources[current].layout;
@@ -1124,7 +1168,7 @@ public class Indicator.Keyboard.Service : Object {
 				var sources = get_sources ();
 
 				if (sources.length > 0) {
-					var current = source_settings.get_uint ("current");
+					var current = get_current ();
 
 					if (current < sources.length && !sources[current].is_xkb) {
 						for (var i = 0; i < sources.length; i++) {
@@ -1137,7 +1181,7 @@ public class Indicator.Keyboard.Service : Object {
 				}
 			});
 			((!) unity_session).unlocked.connect (() => {
-				get_active_action ().change_state (source_settings.get_value ("current"));
+				get_active_action ().change_state (new Variant.uint32 (get_current ()));
 			});
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
