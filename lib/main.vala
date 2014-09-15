@@ -1004,15 +1004,14 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_menu () {
 		if (desktop_menu == null) {
-			var options = IndicatorMenu.Options.DCONF
-			            | IndicatorMenu.Options.SETTINGS;
+			var options = IndicatorMenu.Options.DCONF;
 
-			if (is_ibus_active ()) {
-				options |= IndicatorMenu.Options.IBUS;
-			}
+			if (!is_fcitx_active ()) {
+				options |= IndicatorMenu.Options.XKB | IndicatorMenu.Options.SETTINGS;
 
-			if (is_fcitx_active ()) {
-				options |= IndicatorMenu.Options.FCITX;
+				if (is_ibus_active ()) {
+					options |= IndicatorMenu.Options.IBUS;
+				}
 			}
 
 			desktop_menu = new IndicatorMenu (get_action_group (), options);
@@ -1036,7 +1035,8 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_greeter_menu () {
 		if (desktop_greeter_menu == null) {
-			var options = IndicatorMenu.Options.DCONF;
+			var options = IndicatorMenu.Options.DCONF |
+			              IndicatorMenu.Options.XKB;
 
 			desktop_greeter_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_greeter_menu).set_sources (get_sources ());
@@ -1048,7 +1048,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_lockscreen_menu () {
 		if (desktop_lockscreen_menu == null) {
-			var options = IndicatorMenu.Options.NONE;
+			var options = IndicatorMenu.Options.XKB;
 
 			desktop_lockscreen_menu = new IndicatorMenu (get_action_group (), options);
 			((!) desktop_lockscreen_menu).set_sources (get_sources ());
