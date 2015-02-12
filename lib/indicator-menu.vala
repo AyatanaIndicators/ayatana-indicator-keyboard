@@ -131,7 +131,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		indicator_menu.get_item_attributes (item_index, out attributes);
 	}
 
-	public override void get_item_links (int item_index, out HashTable<string, MenuModel>? links) {
+	public override void get_item_links (int item_index, out HashTable<string, MenuModel> links) {
 		indicator_menu.get_item_links (item_index, out links);
 	}
 

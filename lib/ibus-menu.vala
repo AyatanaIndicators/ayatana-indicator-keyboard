@@ -295,7 +295,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 		return menu.get_item_link (item_index, link);
 	}
 
-	public override void get_item_links (int item_index, out HashTable<string, MenuModel>? links) {
+	public override void get_item_links (int item_index, out HashTable<string, MenuModel> links) {
 		menu.get_item_links (item_index, out links);
 	}
 
