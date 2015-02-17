@@ -42,6 +42,7 @@ public class Indicator.Keyboard.Service : Object {
 	private uint panel_timeout;
 
 	private Fcitx.InputMethod? fcitx;
+	private bool fcitx_initialized;
 
 	private Source[]? sources;
 
@@ -235,12 +236,16 @@ public class Indicator.Keyboard.Service : Object {
 
 	[DBus (visible = false)]
 	private Fcitx.InputMethod? get_fcitx () {
-		if (is_fcitx_active () && fcitx == null) {
-			try {
-				fcitx = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
-				((!) fcitx).notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
-			} catch (Error error) {
-				warning ("error: %s", error.message);
+		if (!fcitx_initialized) {
+			fcitx_initialized = true;
+
+			if (is_fcitx_active ()) {
+				try {
+					fcitx = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
+					((!) fcitx).notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
+				} catch (Error error) {
+					warning ("error: %s", error.message);
+				}
 			}
 		}
 
