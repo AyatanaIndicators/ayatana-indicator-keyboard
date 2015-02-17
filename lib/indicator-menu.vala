@@ -44,13 +44,13 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 			submenu.append_section (null, sources_section);
 
-			if ((options & Options.IBUS) != Options.NONE) {
+			if (Options.IBUS in options) {
 				properties_section = new IBusMenu (action_map);
 				properties_section.activate.connect ((property, state) => { activate (property, state); });
 				submenu.append_section (null, properties_section);
 			}
 
-			if ((options & Options.SETTINGS) != Options.NONE) {
+			if (Options.SETTINGS in options) {
 				var settings_section = new Menu ();
 				settings_section.append (_ ("Character Map"), "indicator.map");
 				settings_section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
@@ -63,7 +63,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 			indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
 
 			/* We need special mouse actions on the lock screen. */
-			if ((options & Options.DCONF) != Options.NONE) {
+			if (Options.DCONF in options) {
 				indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
 				indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
 			} else {
@@ -81,14 +81,14 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		sources_section.remove_all ();
 
 		for (var i = 0; i < sources.length; i++) {
-			var visible = (sources[i].is_xkb && (options & Options.XKB) != Options.NONE) ||
-			              (sources[i].is_ibus && (options & Options.IBUS) != Options.NONE) ||
-			              (sources[i].is_fcitx && (options & Options.FCITX) != Options.NONE);
+			var visible = (sources[i].is_xkb && Options.XKB in options) ||
+			              (sources[i].is_ibus && Options.IBUS in options) ||
+			              (sources[i].is_fcitx && Options.FCITX in options);
 
 			if (visible) {
 				string action;
 
-				if ((options & Options.DCONF) != Options.NONE) {
+				if (Options.DCONF in options) {
 					action = "indicator.current";
 				} else {
 					action = "indicator.active";
@@ -108,13 +108,13 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 	}
 
 	public void set_properties (IBus.PropList properties) {
-		if ((options & Options.IBUS) != Options.NONE) {
+		if (Options.IBUS in options) {
 			properties_section.set_properties (properties);
 		}
 	}
 
 	public void update_property (IBus.Property property) {
-		if ((options & Options.IBUS) != Options.NONE) {
+		if (Options.IBUS in options) {
 			properties_section.update_property (property);
 		}
 	}
