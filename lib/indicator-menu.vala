@@ -19,12 +19,12 @@
 public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 	public enum Options {
-		NONE     = 0x00,
-		DCONF    = 0x01,
-		XKB      = 0x02,
-		IBUS     = 0x04,
-		FCITX    = 0x08,
-		SETTINGS = 0x10
+		NONE     = 0,
+		DCONF    = 1 << 0,
+		XKB      = 1 << 1,
+		IBUS     = 1 << 2,
+		FCITX    = 1 << 3,
+		SETTINGS = 1 << 4
 	}
 
 	private Options options;
