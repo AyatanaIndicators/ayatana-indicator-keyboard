@@ -305,15 +305,13 @@ public class Indicator.Keyboard.Service : Object {
 				Act.User? user = manager.get_user ((!) greeter_user);
 
 				if (user != null && ((!) user).is_loaded) {
-					var outer = ((!) user).input_sources.iterator ();
+					foreach (var outer in ((!) user).input_sources) {
+						foreach (var inner in (!) outer) {
+							unowned string key;
+							unowned string value;
 
-					VariantIter inner;
+							((!) inner).get ("{&s&s}", out key, out value);
 
-					while (outer.next ("a{ss}", out inner)) {
-						unowned string key;
-						unowned string value;
-
-						while (inner.next ("{&s&s}", out key, out value)) {
 							if (key == "xkb") {
 								source = value;
 								break;
@@ -495,16 +493,15 @@ public class Indicator.Keyboard.Service : Object {
 
 		foreach (var user in users) {
 			if (user.is_loaded) {
-				var outer = user.input_sources.iterator ();
 				var done = false;
 
-				VariantIter inner;
+				foreach (var outer in user.input_sources) {
+					foreach (var inner in (!) outer) {
+						unowned string key;
+						unowned string source;
 
-				while (outer.next ("a{ss}", out inner)) {
-					unowned string key;
-					unowned string source;
+						((!) inner).get ("{&s&s}", out key, out source);
 
-					while (inner.next ("{&s&s}", out key, out source)) {
 						if (key == "xkb") {
 							done = true;
 
@@ -723,15 +720,19 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 
-				var iter = source_settings.get_value ("sources").iterator ();
+				var i = 0;
 
-				unowned string source_type;
-				unowned string source_name;
+				foreach (var pair in source_settings.get_value ("sources")) {
+					unowned string source_type;
+					unowned string source_name;
 
-				for (var i = 0; iter.next ("(&s&s)", out source_type, out source_name); i++) {
+					((!) pair).get ("(&s&s)", out source_type, out source_name);
+
 					if (source_name == name && source_type == type) {
 						return i;
 					}
+
+					i++;
 				}
 			}
 		}
