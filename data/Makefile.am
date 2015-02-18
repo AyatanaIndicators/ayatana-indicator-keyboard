@@ -17,12 +17,12 @@ indicator_keyboard_icon_generator_SOURCES = main.vala                     \
                                             $(top_srcdir)/lib/common.vala
 indicator_keyboard_icon_generator_VALAFLAGS = $(AM_VALAFLAGS)         \
                                               --pkg gee-1.0           \
-                                              --pkg fontconfig        \
-                                              --pkg freetype2         \
-                                              --pkg pangoft2          \
+                                              --pkg fontconfig-2.0    \
+                                              --pkg freetype2-2.0     \
+                                              --pkg PangoFT2-1.0      \
                                               --pkg gtk+-3.0          \
                                               --pkg GDesktopEnums-3.0 \
-                                              --pkg gnome-desktop-3.0 \
+                                              --pkg GnomeDesktop-3.0  \
                                               --pkg Xkl-1.0
 indicator_keyboard_icon_generator_CFLAGS = $(AM_CFLAGS)            \
                                            $(GEE_CFLAGS)           \

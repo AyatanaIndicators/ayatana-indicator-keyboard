@@ -22,12 +22,12 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg pangocairo           \
                                        --pkg gtk+-3.0             \
                                        --pkg GDesktopEnums-3.0    \
-                                       --pkg gnome-desktop-3.0    \
+                                       --pkg GnomeDesktop-3.0     \
                                        --pkg Xkl-1.0              \
                                        --pkg Gkbd-3.0             \
                                        --pkg ibus-1.0             \
-                                       --pkg fcitx                \
-                                       --pkg accountsservice      \
+                                       --pkg Fcitx-1.0            \
+                                       --pkg AccountsService-1.0  \
                                        --pkg liblightdm-gobject-1
 indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(GEE_CFLAGS)             \
