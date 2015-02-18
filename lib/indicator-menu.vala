@@ -23,8 +23,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		DCONF    = 1 << 0,
 		XKB      = 1 << 1,
 		IBUS     = 1 << 2,
-		FCITX    = 1 << 3,
-		SETTINGS = 1 << 4
+		SETTINGS = 1 << 3
 	}
 
 	private Options options;
@@ -82,8 +81,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 		for (var i = 0; i < sources.length; i++) {
 			var visible = (sources[i].is_xkb && Options.XKB in options) ||
-			              (sources[i].is_ibus && Options.IBUS in options) ||
-			              (sources[i].is_fcitx && Options.FCITX in options);
+			              (sources[i].is_ibus && Options.IBUS in options);
 
 			if (visible) {
 				string action;
