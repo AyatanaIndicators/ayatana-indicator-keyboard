@@ -174,8 +174,10 @@ public class Indicator.Keyboard.Service : Object {
 	private IBus.Bus get_ibus () {
 		if (ibus == null) {
 			IBus.init ();
-			ibus = new IBus.Bus ();
-			((!) ibus).connected.connect (() => {
+
+			var proxy = new IBus.Bus ();
+
+			proxy.connected.connect (() => {
 				if (desktop_menu != null) {
 					get_desktop_menu ().set_sources (get_sources ());
 				}
@@ -192,6 +194,8 @@ public class Indicator.Keyboard.Service : Object {
 					update_indicator_action ();
 				}
 			});
+
+			ibus = proxy;
 		}
 
 		return (!) ibus;
@@ -205,9 +209,9 @@ public class Indicator.Keyboard.Service : Object {
 			var path = "/org/freedesktop/IBus/Panel";
 
 			try {
-				ibus_panel = connection.get_proxy_sync (name, path);
+				var proxy = connection.get_proxy_sync<IBusPanel> (name, path);
 
-				((!) ibus_panel).properties_registered.connect ((variant) => {
+				proxy.properties_registered.connect ((variant) => {
 					var properties = new IBus.PropList ();
 					properties.deserialize (variant);
 
@@ -215,7 +219,7 @@ public class Indicator.Keyboard.Service : Object {
 						handle_properties_registered ((!) (properties as IBus.PropList));
 					}
 				});
-				((!) ibus_panel).property_updated.connect ((variant) => {
+				proxy.property_updated.connect ((variant) => {
 					var type = IBus.PropType.NORMAL;
 					var state = IBus.PropState.INCONSISTENT;
 					var text = new IBus.Text.from_static_string ("");
@@ -226,6 +230,8 @@ public class Indicator.Keyboard.Service : Object {
 						handle_property_updated ((!) (property as IBus.Property));
 					}
 				});
+
+				ibus_panel = proxy;
 			} catch (IOError error) {
 				warning ("error: %s", error.message);
 			}
@@ -241,8 +247,9 @@ public class Indicator.Keyboard.Service : Object {
 
 			if (is_fcitx_active ()) {
 				try {
-					fcitx = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
-					((!) fcitx).notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
+					var proxy = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
+					proxy.notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
+					fcitx = proxy;
 				} catch (Error error) {
 					warning ("error: %s", error.message);
 				}
@@ -255,8 +262,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public void up () {
 		if (loop == null) {
-			loop = new MainLoop ();
-			((!) loop).run ();
+			var main_loop = new MainLoop ();
+			loop = main_loop;
+			main_loop.run ();
 		}
 	}
 
@@ -330,9 +338,7 @@ public class Indicator.Keyboard.Service : Object {
 						}
 
 						if (layouts.length > 0) {
-							source = layouts[0];
-							source = ((!) source).replace (" ", "+");
-							source = ((!) source).replace ("\t", "+");
+							source = layouts[0].replace (" ", "+").replace ("\t", "+");
 						}
 					}
 				}
@@ -852,9 +858,10 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Action get_active_action () {
 		if (active_action == null) {
-			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, new Variant.uint32 (get_current ()));
-			((!) active_action).activate.connect ((parameter) => { ((!) active_action).change_state (parameter); });
-			((!) active_action).change_state.connect (handle_changed_active);
+			var action = new SimpleAction.stateful ("active", VariantType.UINT32, new Variant.uint32 (get_current ()));
+			action.activate.connect ((parameter) => { action.change_state (parameter); });
+			action.change_state.connect (handle_changed_active);
+			active_action = action;
 		}
 
 		return (!) active_action;
@@ -1019,9 +1026,10 @@ public class Indicator.Keyboard.Service : Object {
 				}
 			}
 
-			desktop_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_menu).set_sources (get_sources ());
-			((!) desktop_menu).activate.connect ((property, state) => {
+			var menu = new IndicatorMenu (get_action_group (), options);
+
+			menu.set_sources (get_sources ());
+			menu.activate.connect ((property, state) => {
 				var panel = get_ibus_panel ();
 
 				if (panel != null) {
@@ -1032,6 +1040,8 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 			});
+
+			desktop_menu = menu;
 		}
 
 		return (!) desktop_menu;
@@ -1043,8 +1053,9 @@ public class Indicator.Keyboard.Service : Object {
 			var options = IndicatorMenu.Options.DCONF |
 			              IndicatorMenu.Options.XKB;
 
-			desktop_greeter_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_greeter_menu).set_sources (get_sources ());
+			var menu = new IndicatorMenu (get_action_group (), options);
+			menu.set_sources (get_sources ());
+			desktop_greeter_menu = menu;
 		}
 
 		return (!) desktop_greeter_menu;
@@ -1055,8 +1066,9 @@ public class Indicator.Keyboard.Service : Object {
 		if (desktop_lockscreen_menu == null) {
 			var options = IndicatorMenu.Options.XKB;
 
-			desktop_lockscreen_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_lockscreen_menu).set_sources (get_sources ());
+			var menu = new IndicatorMenu (get_action_group (), options);
+			menu.set_sources (get_sources ());
+			desktop_lockscreen_menu = menu;
 		}
 
 		return (!) desktop_lockscreen_menu;
@@ -1139,8 +1151,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_greeter_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			unity_greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
-			((!) unity_greeter).entry_selected.connect (handle_entry_selected);
+			var greeter = Bus.get_proxy_sync<UnityGreeter> (BusType.SESSION, name, "/list");
+			greeter.entry_selected.connect (handle_entry_selected);
+			unity_greeter = greeter;
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}
@@ -1168,8 +1181,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			unity_session = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/Session");
-			((!) unity_session).locked.connect (() => {
+			var session = Bus.get_proxy_sync<UnitySession> (BusType.SESSION, name, "/com/canonical/Unity/Session");
+
+			session.locked.connect (() => {
 				var sources = get_sources ();
 
 				if (sources.length > 0) {
@@ -1185,9 +1199,11 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 			});
-			((!) unity_session).unlocked.connect (() => {
+			session.unlocked.connect (() => {
 				get_active_action ().change_state (new Variant.uint32 (get_current ()));
 			});
+
+			unity_session = session;
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}

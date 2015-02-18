@@ -154,26 +154,30 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 				/* Create a single action for all radio properties. */
 				if (action_map != null && radio_name == null) {
 					radio_counter++;
-					radio_name = @"-private-radio-$radio_counter";
-					radio_action = new SimpleAction.stateful ((!) radio_name, VariantType.STRING, new Variant.string (""));
 
-					((!) radio_action).activate.connect ((parameter) => {
-						((!) radio_action).change_state (parameter);
+					var name = @"-private-radio-$radio_counter";
+					var action = new SimpleAction.stateful (name, VariantType.STRING, new Variant.string (""));
+
+					action.activate.connect ((parameter) => {
+						action.change_state (parameter);
 					});
 
-					((!) radio_action).change_state.connect ((value) => {
+					action.change_state.connect ((value) => {
 						if (value != null) {
 							var key = ((!) value).get_string ();
 
 							if (radio_properties.has_key (key)) {
-								((!) radio_action).set_state ((!) value);
+								action.set_state ((!) value);
 								activate (radio_properties[key], IBus.PropState.CHECKED);
 							}
 						}
 					});
 
-					((!) action_map).add_action ((!) radio_action);
-					names.add ((!) radio_name);
+					((!) action_map).add_action (action);
+					names.add (name);
+
+					radio_name = name;
+					radio_action = action;
 				}
 
 				radio_properties[property.key] = property;
@@ -195,7 +199,7 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 
 	private void append_menu_property (IBus.Property property) {
 		if (property.prop_type == IBus.PropType.MENU) {
-			var submenu = new IBusMenu (action_map, ((!) property).sub_props);
+			var submenu = new IBusMenu (action_map, property.sub_props);
 			submenu.activate.connect ((property, state) => { activate (property, state); });
 			menu.append_submenu (get_label (property), submenu);
 		}

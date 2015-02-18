@@ -335,12 +335,14 @@ public class Indicator.Keyboard.Source : Object {
 			Gdk.Screen? screen = Gdk.Screen.get_default ();
 
 			if (screen != null) {
-				context = new Gtk.StyleContext ();
-				((!) context).set_screen ((!) screen);
+				var style_context = new Gtk.StyleContext ();
+				style_context.set_screen ((!) screen);
 
 				var path = new Gtk.WidgetPath ();
 				path.append_type (typeof (Gtk.MenuItem));
-				((!) context).set_path (path);
+				style_context.set_path (path);
+
+				context = style_context;
 			}
 		}
 
