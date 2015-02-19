@@ -890,19 +890,16 @@ public class Indicator.Keyboard.Service : Object {
 			if (length > 1) {
 				var current = old_current;
 				var offset = -((!) parameter).get_int32 () % length;
+				var jump = 1;
 
-				/* Go backward. */
-				for (; offset < 0; offset++) {
-					do {
-						current = (current + sources.length - 1) % sources.length;
-					} while ((sources[current].is_ibus && !is_ibus_active ()) ||
-					         (sources[current].is_fcitx && !is_fcitx_active ()));
+				if (offset < 0) {
+					offset = -offset;
+					jump = sources.length - jump;
 				}
 
-				/* Go forward. */
 				for (; offset > 0; offset--) {
 					do {
-						current = (current + 1) % sources.length;
+						current = (current + jump) % sources.length;
 					} while ((sources[current].is_ibus && !is_ibus_active ()) ||
 					         (sources[current].is_fcitx && !is_fcitx_active ()));
 				}
