@@ -128,10 +128,6 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 					var state = new Variant.boolean (property.state == IBus.PropState.CHECKED);
 					var action = new SimpleAction.stateful (name, null, state);
 
-					action.activate.connect ((parameter) => {
-						action.change_state (new Variant.boolean (!action.get_state ().get_boolean ()));
-					});
-
 					action.change_state.connect ((value) => {
 						if (value != null) {
 							action.set_state ((!) value);
@@ -157,10 +153,6 @@ public class Indicator.Keyboard.IBusMenu : MenuModel {
 
 					var name = @"-private-radio-$radio_counter";
 					var action = new SimpleAction.stateful (name, VariantType.STRING, new Variant.string (""));
-
-					action.activate.connect ((parameter) => {
-						action.change_state (parameter);
-					});
 
 					action.change_state.connect ((value) => {
 						if (value != null) {

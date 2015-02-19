@@ -860,7 +860,6 @@ public class Indicator.Keyboard.Service : Object {
 	private Action get_active_action () {
 		if (active_action == null) {
 			var action = new SimpleAction.stateful ("active", VariantType.UINT32, new Variant.uint32 (get_current ()));
-			action.activate.connect ((parameter) => { action.change_state (parameter); });
 			action.change_state.connect (handle_changed_active);
 			active_action = action;
 		}
