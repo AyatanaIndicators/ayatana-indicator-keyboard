@@ -897,6 +897,13 @@ public class Indicator.Keyboard.Service : Object {
 					jump = sources.length - jump;
 				}
 
+				/*
+				 * We need to cycle through offset valid input sources, skipping those that aren't
+				 * valid for this session (i.e. skipping Fcitx ones if IBus is active and vice-versa.
+				 * jump is the direction we need to cycle in, which is 1 if we want to cycle forward
+				 * and -1 (mod sources.length) if we want to cycle backward.
+				 */
+
 				for (; offset > 0; offset--) {
 					do {
 						current = (current + jump) % sources.length;
