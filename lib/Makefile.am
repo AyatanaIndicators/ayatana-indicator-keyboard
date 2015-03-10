@@ -22,11 +22,12 @@ indicator_keyboard_service_VALAFLAGS = $(AM_VALAFLAGS)            \
                                        --pkg pangocairo           \
                                        --pkg gtk+-3.0             \
                                        --pkg GDesktopEnums-3.0    \
-                                       --pkg gnome-desktop-3.0    \
+                                       --pkg GnomeDesktop-3.0     \
                                        --pkg Xkl-1.0              \
                                        --pkg Gkbd-3.0             \
                                        --pkg ibus-1.0             \
-                                       --pkg accountsservice      \
+                                       --pkg Fcitx-1.0            \
+                                       --pkg AccountsService-1.0  \
                                        --pkg liblightdm-gobject-1
 indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(GEE_CFLAGS)             \
@@ -36,6 +37,7 @@ indicator_keyboard_service_CFLAGS = $(AM_CFLAGS)              \
                                     $(LIBXKLAVIER_CFLAGS)     \
                                     $(LIBGNOMEKBD_CFLAGS)     \
                                     $(IBUS_CFLAGS)            \
+                                    $(FCITX_GCLIENT_CFLAGS)   \
                                     $(ACCOUNTSSERVICE_CFLAGS) \
                                     $(LIGHTDM_CFLAGS)         \
                                     $(COVERAGE_CFLAGS)
@@ -47,6 +49,7 @@ indicator_keyboard_service_LDFLAGS = $(AM_LDFLAGS)           \
                                      $(LIBXKLAVIER_LIBS)     \
                                      $(LIBGNOMEKBD_LIBS)     \
                                      $(IBUS_LIBS)            \
+                                     $(FCITX_GCLIENT_LIBS)   \
                                      $(ACCOUNTSSERVICE_LIBS) \
                                      $(LIGHTDM_LIBS)         \
                                      $(COVERAGE_LDFLAGS)

@@ -1,0 +1,7 @@
+Client cheader_filename="fcitx-gclient/fcitxclient.h"
+Connection cheader_filename="fcitx-gclient/fcitxconnection.h"
+IMItem cheader_filename="fcitx-gclient/fcitxinputmethod.h"
+InputMethod cheader_filename="fcitx-gclient/fcitxinputmethod.h"
+Kbd cheader_filename="fcitx-gclient/fcitxkbd.h"
+LayoutItem cheader_filename="fcitx-gclient/fcitxkbd.h"
+PreeditItem cheader_filename="fcitx-gclient/fcitxclient.h"

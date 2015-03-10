@@ -33,13 +33,16 @@ public class Indicator.Keyboard.Service : Object {
 	private SList<Act.User> users;
 
 	private WindowStack? window_stack;
-	private Gee.HashMap<uint, uint>? window_sources;
+	private Gee.HashMap<uint, Source>? window_sources;
 	private uint focused_window_id;
 
 	private IBus.Bus? ibus;
 	private IBusPanel? ibus_panel;
 	private ulong ibus_connected_id;
 	private uint panel_timeout;
+
+	private Fcitx.InputMethod? fcitx;
+	private bool fcitx_initialized;
 
 	private Source[]? sources;
 
@@ -118,11 +121,13 @@ public class Indicator.Keyboard.Service : Object {
 			                handle_unity_name_appeared,
 			                handle_unity_name_vanished);
 
-			Bus.watch_name (BusType.SESSION,
-			                "com.canonical.Unity.WindowStack",
-			                BusNameWatcherFlags.NONE,
-			                handle_window_stack_name_appeared,
-			                handle_window_stack_name_vanished);
+			if (!is_fcitx_active ()) {
+				Bus.watch_name (BusType.SESSION,
+				                "com.canonical.Unity.WindowStack",
+				                BusNameWatcherFlags.NONE,
+				                handle_window_stack_name_appeared,
+				                handle_window_stack_name_vanished);
+			}
 		}
 
 		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
@@ -146,11 +151,33 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private static bool is_ibus_active () {
+		if (is_login_user ()) {
+			return false;
+		}
+
+		var module = Environment.get_variable ("GTK_IM_MODULE");
+		return module != null && (!) module == "ibus";
+	}
+
+	[DBus (visible = false)]
+	private static bool is_fcitx_active () {
+		if (is_login_user ()) {
+			return false;
+		}
+
+		var module = Environment.get_variable ("GTK_IM_MODULE");
+		return module != null && (!) module == "fcitx";
+	}
+
+	[DBus (visible = false)]
 	private IBus.Bus get_ibus () {
 		if (ibus == null) {
 			IBus.init ();
-			ibus = new IBus.Bus ();
-			((!) ibus).connected.connect (() => {
+
+			var proxy = new IBus.Bus ();
+
+			proxy.connected.connect (() => {
 				if (desktop_menu != null) {
 					get_desktop_menu ().set_sources (get_sources ());
 				}
@@ -167,6 +194,8 @@ public class Indicator.Keyboard.Service : Object {
 					update_indicator_action ();
 				}
 			});
+
+			ibus = proxy;
 		}
 
 		return (!) ibus;
@@ -180,9 +209,9 @@ public class Indicator.Keyboard.Service : Object {
 			var path = "/org/freedesktop/IBus/Panel";
 
 			try {
-				ibus_panel = connection.get_proxy_sync (name, path);
+				var proxy = connection.get_proxy_sync<IBusPanel> (name, path);
 
-				((!) ibus_panel).properties_registered.connect ((variant) => {
+				proxy.properties_registered.connect ((variant) => {
 					var properties = new IBus.PropList ();
 					properties.deserialize (variant);
 
@@ -190,7 +219,7 @@ public class Indicator.Keyboard.Service : Object {
 						handle_properties_registered ((!) (properties as IBus.PropList));
 					}
 				});
-				((!) ibus_panel).property_updated.connect ((variant) => {
+				proxy.property_updated.connect ((variant) => {
 					var type = IBus.PropType.NORMAL;
 					var state = IBus.PropState.INCONSISTENT;
 					var text = new IBus.Text.from_static_string ("");
@@ -201,6 +230,8 @@ public class Indicator.Keyboard.Service : Object {
 						handle_property_updated ((!) (property as IBus.Property));
 					}
 				});
+
+				ibus_panel = proxy;
 			} catch (IOError error) {
 				warning ("error: %s", error.message);
 			}
@@ -210,10 +241,30 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
+	private Fcitx.InputMethod? get_fcitx () {
+		if (!fcitx_initialized) {
+			fcitx_initialized = true;
+
+			if (is_fcitx_active ()) {
+				try {
+					var proxy = new Fcitx.InputMethod (BusType.SESSION, DBusProxyFlags.NONE, 0);
+					proxy.notify["current-im"].connect ((pspec) => { handle_changed_current ("current"); });
+					fcitx = proxy;
+				} catch (Error error) {
+					warning ("error: %s", error.message);
+				}
+			}
+		}
+
+		return fcitx;
+	}
+
+	[DBus (visible = false)]
 	public void up () {
 		if (loop == null) {
-			loop = new MainLoop ();
-			((!) loop).run ();
+			var main_loop = new MainLoop ();
+			loop = main_loop;
+			main_loop.run ();
 		}
 	}
 
@@ -254,17 +305,13 @@ public class Indicator.Keyboard.Service : Object {
 				Act.User? user = manager.get_user ((!) greeter_user);
 
 				if (user != null && ((!) user).is_loaded) {
-					VariantIter outer;
-					VariantIter inner;
+					foreach (var outer in ((!) user).input_sources) {
+						foreach (var inner in (!) outer) {
+							unowned string key;
+							unowned string value;
 
-					var sources = ((!) user).input_sources;
-					sources.get ("aa{ss}", out outer);
+							((!) inner).get ("{&s&s}", out key, out value);
 
-					while (outer.next ("a{ss}", out inner)) {
-						unowned string key;
-						unowned string value;
-
-						while (inner.next ("{&s&s}", out key, out value)) {
 							if (key == "xkb") {
 								source = value;
 								break;
@@ -289,9 +336,7 @@ public class Indicator.Keyboard.Service : Object {
 						}
 
 						if (layouts.length > 0) {
-							source = layouts[0];
-							source = ((!) source).replace (" ", "+");
-							source = ((!) source).replace ("\t", "+");
+							source = layouts[0].replace (" ", "+").replace ("\t", "+");
 						}
 					}
 				}
@@ -340,7 +385,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void migrate_keyboard_layouts () {
 		if (is_login_user ()) {
-			lightdm_current = source_settings.get_uint ("current");
+			lightdm_current = get_current ();
 
 			var manager = Act.UserManager.get_default ();
 
@@ -450,17 +495,13 @@ public class Indicator.Keyboard.Service : Object {
 			if (user.is_loaded) {
 				var done = false;
 
-				VariantIter outer;
-				VariantIter inner;
+				foreach (var outer in user.input_sources) {
+					foreach (var inner in (!) outer) {
+						unowned string key;
+						unowned string source;
 
-				var sources = user.input_sources;
-				sources.get ("aa{ss}", out outer);
+						((!) inner).get ("{&s&s}", out key, out source);
 
-				while (outer.next ("a{ss}", out inner)) {
-					unowned string key;
-					unowned string source;
-
-					while (inner.next ("{&s&s}", out key, out source)) {
 						if (key == "xkb") {
 							done = true;
 
@@ -548,7 +589,7 @@ public class Indicator.Keyboard.Service : Object {
 	private void update_login_layout () {
 		if (is_login_user ()) {
 			unowned List<LightDM.Layout> layouts = LightDM.get_layouts ();
-			var current = source_settings.get_uint ("current");
+			var current = get_current ();
 
 			if (current < get_sources ().length) {
 				var source = get_sources ()[current];
@@ -594,10 +635,12 @@ public class Indicator.Keyboard.Service : Object {
 						warning ("error: %s", error.message);
 					}
 
-					window_sources = new Gee.HashMap<uint, uint> ();
+					window_sources = new Gee.HashMap<uint, Source> ();
+					((!) window_stack).window_destroyed.connect (handle_window_destroyed);
 					((!) window_stack).focused_window_changed.connect (handle_focused_window_changed);
 				} else {
 					((!) window_stack).focused_window_changed.disconnect (handle_focused_window_changed);
+					((!) window_stack).window_destroyed.disconnect (handle_window_destroyed);
 					window_sources = null;
 				}
 			}
@@ -610,26 +653,91 @@ public class Indicator.Keyboard.Service : Object {
 	}
 
 	[DBus (visible = false)]
-	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
-		var old_current = source_settings.get_uint ("current");
+	private void handle_window_destroyed (uint window_id, string app_id) {
+		((!) window_sources).unset (window_id);
+	}
 
-		((!) window_sources)[focused_window_id] = old_current;
+	[DBus (visible = false)]
+	private void handle_focused_window_changed (uint window_id, string app_id, uint stage) {
+		var sources = get_sources ();
+		var old_current = get_current ();
+
+		if (old_current < sources.length) {
+			((!) window_sources)[focused_window_id] = sources[old_current];
+		}
 
 		if (!(((!) window_sources).has_key (window_id))) {
 			var default_group = per_window_settings.get_int ("default-group");
 
-			if (default_group >= 0 && default_group != old_current) {
-				source_settings.set_uint ("current", (uint) default_group);
+			if (default_group >= 0) {
+				for (var offset = 0; offset < sources.length; offset++) {
+					var current = (default_group + offset) % sources.length;
+					var source = sources[current];
+
+					if (source.is_xkb ||
+					    (source.is_ibus && is_ibus_active ()) ||
+					    (source.is_fcitx && is_fcitx_active ())) {
+						if (current != old_current) {
+							source_settings.set_uint ("current", current);
+						}
+
+						break;
+					}
+				}
 			}
 		} else {
-			var current = ((!) window_sources)[window_id];
+			var source = ((!) window_sources)[window_id];
 
-			if (current != old_current) {
-				source_settings.set_uint ("current", current);
+			for (var current = 0; current < sources.length; current++) {
+				if (sources[current] == source) {
+					if (current != old_current) {
+						source_settings.set_uint ("current", current);
+					}
+
+					break;
+				}
 			}
 		}
 
 		focused_window_id = window_id;
+	}
+
+	[DBus (visible = false)]
+	private uint get_current () {
+		if (is_fcitx_active () && get_fcitx () != null) {
+			string? engine = ((!) get_fcitx ()).current_im;
+
+			if (engine != null) {
+				var is_xkb = ((!) engine).has_prefix ("fcitx-keyboard-");
+				var type = is_xkb ? "xkb" : "fcitx";
+				var name = (!) engine;
+
+				if (is_xkb) {
+					name = name.substring ("fcitx-keyboard-".length);
+					var index = name.index_of ("-");
+					if (index >= 0) {
+						name.data[index] = '+';
+					}
+				}
+
+				var i = 0;
+
+				foreach (var pair in source_settings.get_value ("sources")) {
+					unowned string source_type;
+					unowned string source_name;
+
+					((!) pair).get ("(&s&s)", out source_type, out source_name);
+
+					if (source_name == name && source_type == type) {
+						return i;
+					}
+
+					i++;
+				}
+			}
+		}
+
+		return source_settings.get_uint ("current");
 	}
 
 	[DBus (visible = false)]
@@ -743,7 +851,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void update_active_action () {
 		if (active_action != null) {
-			((!) active_action).set_state (source_settings.get_value ("current"));
+			((!) active_action).set_state (new Variant.uint32 (get_current ()));
 			update_indicator_action ();
 		}
 	}
@@ -751,10 +859,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private Action get_active_action () {
 		if (active_action == null) {
-			var current = source_settings.get_value ("current");
-			active_action = new SimpleAction.stateful ("active", VariantType.UINT32, current);
-			((!) active_action).activate.connect ((parameter) => { ((!) active_action).change_state (parameter); });
-			((!) active_action).change_state.connect (handle_changed_active);
+			var action = new SimpleAction.stateful ("active", VariantType.UINT32, new Variant.uint32 (get_current ()));
+			action.change_state.connect (handle_changed_active);
+			active_action = action;
 		}
 
 		return (!) active_action;
@@ -768,13 +875,45 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_scroll_wheel (Variant? parameter) {
 		if (parameter != null) {
-			var sources = source_settings.get_value ("sources");
-			var current = source_settings.get_uint ("current");
-			var length = (int) sources.n_children ();
+			var old_current = get_current ();
+			var sources = get_sources ();
+			var length = 0;
 
-			if (length > 0) {
-				var offset = ((!) parameter).get_int32 () % length;
-				source_settings.set_uint ("current", (current + (length - offset)) % length);
+			foreach (var source in sources) {
+				if (source.is_xkb ||
+				    (source.is_ibus && is_ibus_active ()) ||
+				    (source.is_fcitx && is_fcitx_active ())) {
+					length++;
+				}
+			}
+
+			if (length > 1) {
+				var current = old_current;
+				var offset = -((!) parameter).get_int32 () % length;
+				var jump = 1;
+
+				if (offset < 0) {
+					offset = -offset;
+					jump = sources.length - jump;
+				}
+
+				/*
+				 * We need to cycle through offset valid input sources, skipping those that aren't
+				 * valid for this session (i.e. skipping Fcitx ones if IBus is active and vice-versa.
+				 * jump is the direction we need to cycle in, which is 1 if we want to cycle forward
+				 * and -1 (mod sources.length) if we want to cycle backward.
+				 */
+
+				for (; offset > 0; offset--) {
+					do {
+						current = (current + jump) % sources.length;
+					} while ((sources[current].is_ibus && !is_ibus_active ()) ||
+					         (sources[current].is_fcitx && !is_fcitx_active ()));
+				}
+
+				if (current != old_current) {
+					source_settings.set_uint ("current", current);
+				}
 			}
 		}
 	}
@@ -788,30 +927,30 @@ public class Indicator.Keyboard.Service : Object {
 	private void handle_scroll_wheel_when_locked (Variant? parameter) {
 		if (parameter != null) {
 			var sources = get_sources ();
-			var non_ibus_length = 0;
+			var xkb_length = 0;
 
-			/* Figure out how many non-IBus sources we have. */
+			/* Figure out how many Xkb sources we have. */
 			foreach (var source in sources) {
-				if (!source.is_ibus) {
-					non_ibus_length++;
+				if (source.is_xkb) {
+					xkb_length++;
 				}
 			}
 
-			if (non_ibus_length > 1) {
+			if (xkb_length > 1) {
 				var active_action = get_active_action ();
 				var active = active_action.get_state ().get_uint32 ();
-				var offset = -((!) parameter).get_int32 () % non_ibus_length;
+				var offset = -((!) parameter).get_int32 () % xkb_length;
 
-				/* Make offset positive modulo non_ibus_length. */
+				/* Make offset positive modulo xkb_length. */
 				if (offset < 0) {
-					offset += non_ibus_length;
+					offset += xkb_length;
 				}
 
-				/* We need to cycle through non-IBus sources only. */
+				/* We need to cycle through Xkb sources only. */
 				while (offset > 0) {
 					do {
 						active = (active + 1) % sources.length;
-					} while (sources[active].is_ibus);
+					} while (!sources[active].is_xkb);
 
 					offset--;
 				}
@@ -881,13 +1020,20 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_menu () {
 		if (desktop_menu == null) {
-			var options = IndicatorMenu.Options.DCONF
-			            | IndicatorMenu.Options.IBUS
-			            | IndicatorMenu.Options.SETTINGS;
+			var options = IndicatorMenu.Options.DCONF;
 
-			desktop_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_menu).set_sources (get_sources ());
-			((!) desktop_menu).activate.connect ((property, state) => {
+			if (!is_fcitx_active ()) {
+				options |= IndicatorMenu.Options.XKB | IndicatorMenu.Options.SETTINGS;
+
+				if (is_ibus_active ()) {
+					options |= IndicatorMenu.Options.IBUS;
+				}
+			}
+
+			var menu = new IndicatorMenu (get_action_group (), options);
+
+			menu.set_sources (get_sources ());
+			menu.activate.connect ((property, state) => {
 				var panel = get_ibus_panel ();
 
 				if (panel != null) {
@@ -898,6 +1044,8 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 			});
+
+			desktop_menu = menu;
 		}
 
 		return (!) desktop_menu;
@@ -906,10 +1054,12 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_greeter_menu () {
 		if (desktop_greeter_menu == null) {
-			var options = IndicatorMenu.Options.DCONF;
+			var options = IndicatorMenu.Options.DCONF |
+			              IndicatorMenu.Options.XKB;
 
-			desktop_greeter_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_greeter_menu).set_sources (get_sources ());
+			var menu = new IndicatorMenu (get_action_group (), options);
+			menu.set_sources (get_sources ());
+			desktop_greeter_menu = menu;
 		}
 
 		return (!) desktop_greeter_menu;
@@ -918,10 +1068,11 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	public IndicatorMenu get_desktop_lockscreen_menu () {
 		if (desktop_lockscreen_menu == null) {
-			var options = IndicatorMenu.Options.NONE;
+			var options = IndicatorMenu.Options.XKB;
 
-			desktop_lockscreen_menu = new IndicatorMenu (get_action_group (), options);
-			((!) desktop_lockscreen_menu).set_sources (get_sources ());
+			var menu = new IndicatorMenu (get_action_group (), options);
+			menu.set_sources (get_sources ());
+			desktop_lockscreen_menu = menu;
 		}
 
 		return (!) desktop_lockscreen_menu;
@@ -965,7 +1116,7 @@ public class Indicator.Keyboard.Service : Object {
 		string? variant = null;
 
 		var sources = get_sources ();
-		var current = source_settings.get_uint ("current");
+		var current = get_current ();
 
 		if (current < sources.length) {
 			layout = sources[current].layout;
@@ -1004,8 +1155,9 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_greeter_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			unity_greeter = Bus.get_proxy_sync (BusType.SESSION, name, "/list");
-			((!) unity_greeter).entry_selected.connect (handle_entry_selected);
+			var greeter = Bus.get_proxy_sync<UnityGreeter> (BusType.SESSION, name, "/list");
+			greeter.entry_selected.connect (handle_entry_selected);
+			unity_greeter = greeter;
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}
@@ -1033,16 +1185,17 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			unity_session = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/Session");
-			((!) unity_session).locked.connect (() => {
+			var session = Bus.get_proxy_sync<UnitySession> (BusType.SESSION, name, "/com/canonical/Unity/Session");
+
+			session.locked.connect (() => {
 				var sources = get_sources ();
 
 				if (sources.length > 0) {
-					var current = source_settings.get_uint ("current");
+					var current = get_current ();
 
-					if (current < sources.length && sources[current].is_ibus) {
+					if (current < sources.length && !sources[current].is_xkb) {
 						for (var i = 0; i < sources.length; i++) {
-							if (!sources[i].is_ibus) {
+							if (sources[i].is_xkb) {
 								get_active_action ().change_state (new Variant.uint32 (i));
 								break;
 							}
@@ -1050,9 +1203,11 @@ public class Indicator.Keyboard.Service : Object {
 					}
 				}
 			});
-			((!) unity_session).unlocked.connect (() => {
-				get_active_action ().change_state (source_settings.get_value ("current"));
+			session.unlocked.connect (() => {
+				get_active_action ().change_state (new Variant.uint32 (get_current ()));
 			});
+
+			unity_session = session;
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
 		}

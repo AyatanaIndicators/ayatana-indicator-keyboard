@@ -19,10 +19,11 @@
 public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 	public enum Options {
-		NONE     = 0x0,
-		DCONF    = 0x1,
-		IBUS     = 0x2,
-		SETTINGS = 0x4
+		NONE     = 0,
+		DCONF    = 1 << 0,
+		XKB      = 1 << 1,
+		IBUS     = 1 << 2,
+		SETTINGS = 1 << 3
 	}
 
 	private Options options;
@@ -32,42 +33,45 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 	private IBusMenu properties_section;
 
 	public IndicatorMenu (ActionMap? action_map = null, Options options = Options.NONE) {
-		var submenu = new Menu ();
-
-		sources_section = new Menu ();
-		submenu.append_section (null, sources_section);
-
-		if ((options & Options.IBUS) != Options.NONE) {
-			properties_section = new IBusMenu (action_map);
-			properties_section.activate.connect ((property, state) => { activate (property, state); });
-			submenu.append_section (null, properties_section);
-		}
-
-		if ((options & Options.SETTINGS) != Options.NONE) {
-			var settings_section = new Menu ();
-			settings_section.append (_ ("Character Map"), "indicator.map");
-			settings_section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
-			settings_section.append (_ ("Text Entry Settings..."), "indicator.settings");
-			submenu.append_section (null, settings_section);
-		}
-
-		var indicator = new MenuItem.submenu (null, submenu);
-		indicator.set_detailed_action ("indicator.indicator");
-		indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
-
-		/* We need special mouse actions on the lock screen. */
-		if ((options & Options.DCONF) != Options.NONE) {
-			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
-			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
-		} else {
-			indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.locked_next");
-			indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.locked_scroll");
-		}
+		this.options = options;
 
 		indicator_menu = new Menu ();
-		indicator_menu.append_item (indicator);
+		sources_section = new Menu ();
 
-		this.options = options;
+		if ((options & ~Options.DCONF) != Options.NONE) {
+			var submenu = new Menu ();
+
+			submenu.append_section (null, sources_section);
+
+			if (Options.IBUS in options) {
+				properties_section = new IBusMenu (action_map);
+				properties_section.activate.connect ((property, state) => { activate (property, state); });
+				submenu.append_section (null, properties_section);
+			}
+
+			if (Options.SETTINGS in options) {
+				var settings_section = new Menu ();
+				settings_section.append (_ ("Character Map"), "indicator.map");
+				settings_section.append (_ ("Keyboard Layout Chart"), "indicator.chart");
+				settings_section.append (_ ("Text Entry Settings..."), "indicator.settings");
+				submenu.append_section (null, settings_section);
+			}
+
+			var indicator = new MenuItem.submenu (null, submenu);
+			indicator.set_detailed_action ("indicator.indicator");
+			indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
+
+			/* We need special mouse actions on the lock screen. */
+			if (Options.DCONF in options) {
+				indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.next");
+				indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.scroll");
+			} else {
+				indicator.set_attribute ("x-canonical-secondary-action", "s", "indicator.locked_next");
+				indicator.set_attribute ("x-canonical-scroll-action", "s", "indicator.locked_scroll");
+			}
+
+			indicator_menu.append_item (indicator);
+		}
 	}
 
 	public signal void activate (IBus.Property property, IBus.PropState state);
@@ -76,10 +80,13 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		sources_section.remove_all ();
 
 		for (var i = 0; i < sources.length; i++) {
-			if (!sources[i].is_ibus || (options & Options.IBUS) != Options.NONE) {
+			var visible = (sources[i].is_xkb && Options.XKB in options) ||
+			              (sources[i].is_ibus && Options.IBUS in options);
+
+			if (visible) {
 				string action;
 
-				if ((options & Options.DCONF) != Options.NONE) {
+				if (Options.DCONF in options) {
 					action = "indicator.current";
 				} else {
 					action = "indicator.active";
@@ -99,13 +106,13 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 	}
 
 	public void set_properties (IBus.PropList properties) {
-		if ((options & Options.IBUS) != Options.NONE) {
+		if (Options.IBUS in options) {
 			properties_section.set_properties (properties);
 		}
 	}
 
 	public void update_property (IBus.Property property) {
-		if ((options & Options.IBUS) != Options.NONE) {
+		if (Options.IBUS in options) {
 			properties_section.update_property (property);
 		}
 	}
@@ -122,7 +129,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 		indicator_menu.get_item_attributes (item_index, out attributes);
 	}
 
-	public override void get_item_links (int item_index, out HashTable<string, MenuModel>? links) {
+	public override void get_item_links (int item_index, out HashTable<string, MenuModel> links) {
 		indicator_menu.get_item_links (item_index, out links);
 	}
 
