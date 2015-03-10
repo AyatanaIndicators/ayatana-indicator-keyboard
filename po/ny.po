@@ -1,16 +1,16 @@
-# Ukrainian translation for indicator-keyboard
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Chewa; Chichewa; Nyanja translation for indicator-keyboard
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the indicator-keyboard package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-03-09 05:59+0000\n"
-"PO-Revision-Date: 2013-09-27 17:20+0000\n"
+"PO-Revision-Date: 2015-03-09 10:38+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Ukrainian <uk@li.org>\n"
+"Language-Team: Chewa; Chichewa; Nyanja <ny@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: ../lib/main.vala:706
 #, c-format
 msgid "%s input source"
-msgstr "Джерело введення %s"
+msgstr "%s ikani chiyambi"
 
 #: ../lib/indicator-menu.vala:48
 msgid "Character Map"
-msgstr "Таблиця символів"
+msgstr "mapu a malemba"
 
 #: ../lib/indicator-menu.vala:49
 msgid "Keyboard Layout Chart"
-msgstr "Таблиця розкладки клавіатури"
+msgstr "Kasanjidwe kamakiyi"
 
 #: ../lib/indicator-menu.vala:50
 msgid "Text Entry Settings..."
-msgstr "Параметри введення тексту…"
+msgstr "Khonzekeletsa kalowetsedwe kamalemba"
