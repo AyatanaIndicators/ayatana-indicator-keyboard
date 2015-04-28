@@ -1,16 +1,16 @@
-# Chinese (Traditional) translation for indicator-keyboard
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Interlingua translation for indicator-keyboard
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the indicator-keyboard package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-04-27 05:26+0000\n"
-"PO-Revision-Date: 2013-10-14 14:50+0000\n"
+"PO-Revision-Date: 2015-04-27 11:22+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Language-Team: Interlingua <ia@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,16 +20,16 @@ msgstr ""
 #: ../lib/main.vala:814
 #, c-format
 msgid "%s input source"
-msgstr "%s 輸入來源"
+msgstr "%s fonte de input"
 
 #: ../lib/indicator-menu.vala:54
 msgid "Character Map"
-msgstr "字元對應表"
+msgstr "Mappa del characteres"
 
 #: ../lib/indicator-menu.vala:55
 msgid "Keyboard Layout Chart"
-msgstr "鍵盤配置圖"
+msgstr "Plano del arrangiamento del claviero"
 
 #: ../lib/indicator-menu.vala:56
 msgid "Text Entry Settings..."
-msgstr "文字輸入設定..."
+msgstr "Optiones del entratas de texto"
