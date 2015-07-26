@@ -1,16 +1,16 @@
-# Maori translation for indicator-keyboard
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# Burmese translation for indicator-keyboard
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
 # This file is distributed under the same license as the indicator-keyboard package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-07-25 05:37+0000\n"
-"PO-Revision-Date: 2014-05-19 20:25+0000\n"
+"PO-Revision-Date: 2015-07-25 07:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Maori <mi@li.org>\n"
+"Language-Team: Burmese <my@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: ../lib/indicator-menu.vala:54
 msgid "Character Map"
-msgstr ""
+msgstr "စကားလုံးမြေပုံ"
 
 #: ../lib/indicator-menu.vala:55
 msgid "Keyboard Layout Chart"
