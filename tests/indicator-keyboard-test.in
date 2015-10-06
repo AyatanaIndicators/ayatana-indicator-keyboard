@@ -5,6 +5,7 @@ export DCONF_PROFILE="@abs_top_builddir@/tests/profiles/indicator-keyboard-test"
 export GSETTINGS_SCHEMA_DIR="@abs_top_builddir@/data"
 export XDG_RUNTIME_DIR="@abs_top_builddir@/tests"
 export GTK_IM_MODULE="ibus"
+export GDK_BACKEND="x11"
 
 if xvfb-run -a ./indicator-keyboard-tests
 then

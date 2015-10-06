@@ -77,6 +77,8 @@ public class Tests : Object, Fixture {
 		((!) _bus).add_service_dir (SERVICE_DIR);
 		((!) _bus).up ();
 
+		Environment.set_variable ("XDG_RUNTIME_DIR", XDG_RUNTIME_DIR, true);
+
 		var loop = new MainLoop (null, false);
 
 		_service_name = Bus.own_name (BusType.SESSION,
@@ -130,6 +132,8 @@ public class Tests : Object, Fixture {
 		if (_bus != null) {
 			((!) _bus).down ();
 			_bus = null;
+
+			Environment.set_variable ("XDG_RUNTIME_DIR", XDG_RUNTIME_DIR, true);
 		}
 	}
 
