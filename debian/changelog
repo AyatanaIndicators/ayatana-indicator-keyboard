@@ -1,3 +1,13 @@
+indicator-keyboard (0.0.0+15.10.20151006-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ William Hua ]
+  * Manually set XDG_RUNTIME_DIR to fix the tests.
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 06 Oct 2015 17:26:37 +0000
+
 indicator-keyboard (0.0.0+15.04.20150310-0ubuntu1) vivid; urgency=medium
 
   [ William Hua ]
