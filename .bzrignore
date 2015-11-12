@@ -16,7 +16,7 @@ build-aux
 config.log
 config.status
 configure
-data/com.canonical.indicator.keyboard
+data/org.ayatana.indicator.keyboard
 data/gschemas.compiled
 data/indicator-keyboard-icon-generator
 data/indicator-keyboard.conf

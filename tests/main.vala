@@ -22,7 +22,7 @@ const int LONG_TIMEOUT_S = 10;
 
 static string display;
 
-[DBus (name = "com.canonical.indicator.keyboard.test")]
+[DBus (name = "org.ayatana.indicator.keyboard.test")]
 public class Service : Object {
 
 	[DBus (visible = false)]
@@ -56,7 +56,7 @@ public class Tests : Object, Fixture {
 		if (_connection != null) {
 			try {
 				_service = new Service ();
-				_object_name = ((!) _connection).register_object ("/com/canonical/indicator/keyboard/test", _service);
+				_object_name = ((!) _connection).register_object ("/org/ayatana/indicator/keyboard/test", _service);
 			} catch (IOError error) {
 				_connection = null;
 				_service = null;
@@ -82,7 +82,7 @@ public class Tests : Object, Fixture {
 		var loop = new MainLoop (null, false);
 
 		_service_name = Bus.own_name (BusType.SESSION,
-		                              "com.canonical.indicator.keyboard.test",
+		                              "org.ayatana.indicator.keyboard.test",
 		                              BusNameOwnerFlags.ALLOW_REPLACEMENT | BusNameOwnerFlags.REPLACE,
 		                              (connection, name) => {
 		                                      if (loop.is_running ()) {
@@ -104,7 +104,7 @@ public class Tests : Object, Fixture {
 		loop.run ();
 
 		if (_connection == null) {
-			Test.message ("error: Unable to connect to com.canonical.indicator.keyboard.test.");
+			Test.message ("error: Unable to connect to org.ayatana.indicator.keyboard.test.");
 			Test.fail ();
 		}
 
@@ -150,8 +150,8 @@ public class Tests : Object, Fixture {
 		}
 
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		action_group.list_actions ();
 		action_group.activate_action ("current", new Variant.uint32 (2));
 
@@ -178,8 +178,8 @@ public class Tests : Object, Fixture {
 
 	public void test_activate_character_map () {
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		var loop = new MainLoop (null, false);
 		var signal_name = ((!) _service).notify["command"].connect ((pspec) => {
 		        loop.quit ();
@@ -209,8 +209,8 @@ public class Tests : Object, Fixture {
 		}
 
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		var loop = new MainLoop (null, false);
 		var signal_name = ((!) _service).notify["command"].connect ((pspec) => {
 		        loop.quit ();
@@ -229,8 +229,8 @@ public class Tests : Object, Fixture {
 
 	public void test_activate_text_entry_settings () {
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		var loop = new MainLoop (null, false);
 		var signal_name = ((!) _service).notify["command"].connect ((pspec) => {
 		        loop.quit ();
@@ -252,7 +252,7 @@ public class Tests : Object, Fixture {
 			var migrated = false;
 			var sources = "[('xkb', 'us')]";
 			var layouts = "['us', 'ca\teng', 'epo']";
-			Process.spawn_command_line_sync (@"gsettings set com.canonical.indicator.keyboard migrated $migrated");
+			Process.spawn_command_line_sync (@"gsettings set org.ayatana.indicator.keyboard migrated $migrated");
 			Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
 			Process.spawn_command_line_sync (@"gsettings set org.gnome.libgnomekbd.keyboard layouts \"$layouts\"");
 		} catch (SpawnError error) {
@@ -282,7 +282,7 @@ public class Tests : Object, Fixture {
 				return;
 			}
 
-			dbus_proxy.call_sync ("StartServiceByName", new Variant ("(su)", "com.canonical.indicator.keyboard", 0), DBusCallFlags.NONE, TIMEOUT_MS);
+			dbus_proxy.call_sync ("StartServiceByName", new Variant ("(su)", "org.ayatana.indicator.keyboard", 0), DBusCallFlags.NONE, TIMEOUT_MS);
 		} catch (Error error) {
 			Test.message ("error: %s", error.message);
 			Test.fail ();
@@ -310,7 +310,7 @@ public class Tests : Object, Fixture {
 			var migrated = true;
 			var sources = "[('xkb', 'us')]";
 			var layouts = "['us', 'ca\teng', 'epo']";
-			Process.spawn_command_line_sync (@"gsettings set com.canonical.indicator.keyboard migrated $migrated");
+			Process.spawn_command_line_sync (@"gsettings set org.ayatana.indicator.keyboard migrated $migrated");
 			Process.spawn_command_line_sync (@"gsettings set org.gnome.desktop.input-sources sources \"$sources\"");
 			Process.spawn_command_line_sync (@"gsettings set org.gnome.libgnomekbd.keyboard layouts \"$layouts\"");
 		} catch (SpawnError error) {
@@ -340,7 +340,7 @@ public class Tests : Object, Fixture {
 				return;
 			}
 
-			dbus_proxy.call_sync ("StartServiceByName", new Variant ("(su)", "com.canonical.indicator.keyboard", 0), DBusCallFlags.NONE, TIMEOUT_MS);
+			dbus_proxy.call_sync ("StartServiceByName", new Variant ("(su)", "org.ayatana.indicator.keyboard", 0), DBusCallFlags.NONE, TIMEOUT_MS);
 		} catch (Error error) {
 			Test.message ("error: %s", error.message);
 			Test.fail ();
@@ -368,7 +368,7 @@ public class Tests : Object, Fixture {
 
 		try {
 			visible = true;
-			Process.spawn_command_line_sync (@"gsettings set com.canonical.indicator.keyboard visible $visible");
+			Process.spawn_command_line_sync (@"gsettings set org.ayatana.indicator.keyboard visible $visible");
 		} catch (SpawnError error) {
 			Test.message ("error: %s", error.message);
 			Test.fail ();
@@ -376,8 +376,8 @@ public class Tests : Object, Fixture {
 		}
 
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		var loop = new MainLoop (null, false);
 		var signal_name = action_group.action_added["indicator"].connect ((action) => {
 		        loop.quit ();
@@ -402,7 +402,7 @@ public class Tests : Object, Fixture {
 
 		try {
 			visible = false;
-			Process.spawn_command_line_sync (@"gsettings set com.canonical.indicator.keyboard visible $visible");
+			Process.spawn_command_line_sync (@"gsettings set org.ayatana.indicator.keyboard visible $visible");
 		} catch (SpawnError error) {
 			Test.message ("error: %s", error.message);
 			Test.fail ();
@@ -426,7 +426,7 @@ public class Tests : Object, Fixture {
 
 		try {
 			visible = true;
-			Process.spawn_command_line_sync (@"gsettings set com.canonical.indicator.keyboard visible $visible");
+			Process.spawn_command_line_sync (@"gsettings set org.ayatana.indicator.keyboard visible $visible");
 		} catch (SpawnError error) {
 			Test.message ("error: %s", error.message);
 			Test.fail ();
@@ -457,8 +457,8 @@ public class Tests : Object, Fixture {
 		}
 
 		var action_group = DBusActionGroup.get ((!) _connection,
-		                                        "com.canonical.indicator.keyboard",
-		                                        "/com/canonical/indicator/keyboard");
+		                                        "org.ayatana.indicator.keyboard",
+		                                        "/org/ayatana/indicator/keyboard");
 		var loop = new MainLoop (null, false);
 		var signal_name = action_group.action_state_changed["current"].connect ((action, state) => {
 		        loop.quit ();
@@ -545,8 +545,8 @@ public class Tests : Object, Fixture {
 		}
 
 		var menu_model = DBusMenuModel.get ((!) _connection,
-		                                    "com.canonical.indicator.keyboard",
-		                                    "/com/canonical/indicator/keyboard/desktop");
+		                                    "org.ayatana.indicator.keyboard",
+		                                    "/org/ayatana/indicator/keyboard/desktop");
 		var loop = new MainLoop (null, false);
 		var signal_name = menu_model.items_changed.connect ((position, removed, added) => {
 		        loop.quit ();

@@ -16,7 +16,7 @@
  * Authors: William Hua <william.hua@canonical.com>
  */
 
-[DBus (name="com.canonical.UnityGreeter.List")]
+[DBus (name="org.ayatana.UnityGreeter.List")]
 public interface UnityGreeter : Object {
 
 	public abstract string get_active_entry () throws IOError;

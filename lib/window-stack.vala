@@ -24,7 +24,7 @@ public struct WindowInfo {
 	public uint stage;
 }
 
-[DBus (name="com.canonical.Unity.WindowStack")]
+[DBus (name="org.ayatana.Unity.WindowStack")]
 public interface WindowStack : Object {
 
 	public abstract string get_app_id_from_pid (uint pid) throws IOError;

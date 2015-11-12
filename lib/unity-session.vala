@@ -16,7 +16,7 @@
  * Authors: William Hua <william.hua@canonical.com>
  */
 
-[DBus (name="com.canonical.Unity.Session")]
+[DBus (name="org.ayatana.Unity.Session")]
 public interface UnitySession : Object {
 
 	public signal void locked ();

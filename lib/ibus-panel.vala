@@ -16,7 +16,7 @@
  * Authors: William Hua <william.hua@canonical.com>
  */
 
-[DBus (name="com.canonical.IBus.Panel.Private")]
+[DBus (name="org.ayatana.IBus.Panel.Private")]
 public interface IBusPanel : Object {
 
 	public abstract void activate_property (string name, uint state) throws IOError;

@@ -1,7 +1,7 @@
 AC_PREREQ([2.69])
 
-AC_INIT([indicator-keyboard], [0.0.0])
-AC_REVISION([0.0.0])
+AC_INIT([ayatana-indicator-keyboard], [0.1.0])
+AC_REVISION([0.1.0])
 
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -19,14 +19,14 @@ AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG([0.26])
 
 AC_ARG_WITH([dbus-service-dir], [AS_HELP_STRING([--with-dbus-service-dir=DIR], [D-Bus service directory [default=$datadir/dbus-1/services]])], [], [with_dbus_service_dir=$datadir/dbus-1/services])
-AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indicator directory [default=$datadir/unity/indicators]])], [], [with_indicator_dir=$datadir/unity/indicators])
+AC_ARG_WITH([indicator-dir], [AS_HELP_STRING([--with-indicator-dir=DIR], [Indicator directory [default=$datadir/ayatana/indicators]])], [], [with_indicator_dir=$datadir/ayatana/indicators])
 
 AM_PATH_PYTHON
 
 AC_SUBST([DBUS_SERVICE_DIR], [$with_dbus_service_dir])
 AC_SUBST([INDICATOR_DIR], [$with_indicator_dir])
 
-GETTEXT_PACKAGE=indicator-keyboard
+GETTEXT_PACKAGE=ayatana-indicator-keyboard
 AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [The prefix for our gettext translation domains.])
 AM_GLIB_GNU_GETTEXT
@@ -64,7 +64,7 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  tests/autopilot/Makefile
                  tests/config.vala
-                 tests/services/indicator-keyboard.service])
+                 tests/services/ayatana-indicator-keyboard.service])
 AC_CONFIG_FILES([tests/indicator-keyboard-test],
                 [chmod +x tests/indicator-keyboard-test])
 

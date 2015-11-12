@@ -1,11 +1,9 @@
 Source: indicator-keyboard
 Section: gnome
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: William Hua <william.hua@canonical.com>
+Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: debhelper (>= 9.0.0),
                dh-autoreconf,
-               dh-translations,
                dbus,
                fcitx-libs-dev (>= 1:4.2.8.3),
                gir1.2-fcitx-1.0,
@@ -21,20 +19,18 @@ Build-Depends: debhelper (>= 9.0.0),
                xauth,
                xvfb,
 Standards-Version: 3.9.4
-Homepage: https://code.launchpad.net/indicator-keyboard
-# If you aren't a member of ~indicator-applet-developers but need to upload
-# packaging changes, just go ahead. ~indicator-applet-developers will notice
-# and sync up the code again.
-Vcs-Bzr: https://code.launchpad.net/~indicator-applet-developers/indicator-keyboard/trunk
-Vcs-Browser: https://bazaar.launchpad.net/~indicator-applet-develpers/indicator-keyboard/trunk/files
+Homepage: https://github.com/ArcticaProject/ayatana-indicator-keyboard
+Vcs-Git: git://cgit.arctica-project.org/ayatana/ayatana-indicator-keyboard.git
+Vcs-Browser: https://cgit.arctica-project.org/ayatana/ayatana-indicator-keyboard.git/
 
-Package: indicator-keyboard
+Package: ayatana-indicator-keyboard
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
 Breaks: ibus (<< 1.5.5-1ubuntu3),
-Description: Keyboard indicator
- This package contains the keyboard indicator, which should show as an icon in
- the top panel when using the Unity environment. It can be used to switch
- key layouts or languages, and helps the user identifying which layouts are
- currently in use.
+Description: Ayatana Keyboard indicator
+ This package contains the keyboard indicator, which should show as an
+ icon in the top panel of indicator aware destkop environments.
+ .
+ It can be used to switch key layouts or languages, and helps the user
+ identifying which layouts are currently in use.

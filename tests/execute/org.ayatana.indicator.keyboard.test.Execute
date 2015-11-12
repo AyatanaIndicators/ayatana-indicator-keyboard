@@ -1,0 +1,3 @@
+#!/bin/sh
+
+gdbus call -e -d org.ayatana.indicator.keyboard.test -o /org/ayatana/indicator/keyboard/test -m org.ayatana.indicator.keyboard.test.Execute "\'`basename $0` $*\'"

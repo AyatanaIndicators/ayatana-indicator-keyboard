@@ -16,7 +16,7 @@
  * Authors: William Hua <william.hua@canonical.com>
  */
 
-[DBus (name = "com.canonical.indicator.keyboard")]
+[DBus (name = "org.ayatana.indicator.keyboard")]
 public class Indicator.Keyboard.Service : Object {
 
 	private static const uint PROPERTIES_DELAY = 250;
@@ -116,21 +116,21 @@ public class Indicator.Keyboard.Service : Object {
 			                handle_keyboard_name_vanished);
 
 			Bus.watch_name (BusType.SESSION,
-			                "com.canonical.Unity",
+			                "org.ayatana.Unity",
 			                BusNameWatcherFlags.NONE,
 			                handle_unity_name_appeared,
 			                handle_unity_name_vanished);
 
 			if (!is_fcitx_active ()) {
 				Bus.watch_name (BusType.SESSION,
-				                "com.canonical.Unity.WindowStack",
+				                "org.ayatana.Unity.WindowStack",
 				                BusNameWatcherFlags.NONE,
 				                handle_window_stack_name_appeared,
 				                handle_window_stack_name_vanished);
 			}
 		}
 
-		indicator_settings = new Settings ("com.canonical.indicator.keyboard");
+		indicator_settings = new Settings ("org.ayatana.indicator.keyboard");
 		indicator_settings.changed["visible"].connect (handle_changed_visible);
 
 		source_settings = new Settings ("org.gnome.desktop.input-sources");
@@ -279,7 +279,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void acquire_bus_name () {
 		Bus.own_name (BusType.SESSION,
-		              "com.canonical.indicator.keyboard",
+		              "org.ayatana.indicator.keyboard",
 		              BusNameOwnerFlags.ALLOW_REPLACEMENT | (force ? BusNameOwnerFlags.REPLACE : 0),
 		              handle_bus_acquired,
 		              null,
@@ -1185,7 +1185,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_unity_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			var session = Bus.get_proxy_sync<UnitySession> (BusType.SESSION, name, "/com/canonical/Unity/Session");
+			var session = Bus.get_proxy_sync<UnitySession> (BusType.SESSION, name, "/org/ayatana/Unity/Session");
 
 			session.locked.connect (() => {
 				var sources = get_sources ();
@@ -1221,7 +1221,7 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_window_stack_name_appeared (DBusConnection connection, string name, string name_owner) {
 		try {
-			window_stack = Bus.get_proxy_sync (BusType.SESSION, name, "/com/canonical/Unity/WindowStack");
+			window_stack = Bus.get_proxy_sync (BusType.SESSION, name, "/org/ayatana/Unity/WindowStack");
 			update_window_sources ();
 		} catch (IOError error) {
 			warning ("error: %s", error.message);
@@ -1236,10 +1236,10 @@ public class Indicator.Keyboard.Service : Object {
 	[DBus (visible = false)]
 	private void handle_bus_acquired (DBusConnection connection, string name) {
 		try {
-			connection.export_action_group ("/com/canonical/indicator/keyboard", get_action_group ());
-			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop", get_desktop_menu ());
-			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_greeter", get_desktop_greeter_menu ());
-			connection.export_menu_model ("/com/canonical/indicator/keyboard/desktop_lockscreen", get_desktop_lockscreen_menu ());
+			connection.export_action_group ("/org/ayatana/indicator/keyboard", get_action_group ());
+			connection.export_menu_model ("/org/ayatana/indicator/keyboard/desktop", get_desktop_menu ());
+			connection.export_menu_model ("/org/ayatana/indicator/keyboard/desktop_greeter", get_desktop_greeter_menu ());
+			connection.export_menu_model ("/org/ayatana/indicator/keyboard/desktop_lockscreen", get_desktop_lockscreen_menu ());
 		} catch (Error error) {
 			warning ("error: %s", error.message);
 		}

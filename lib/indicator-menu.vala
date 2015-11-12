@@ -59,7 +59,7 @@ public class Indicator.Keyboard.IndicatorMenu : MenuModel {
 
 			var indicator = new MenuItem.submenu (null, submenu);
 			indicator.set_detailed_action ("indicator.indicator");
-			indicator.set_attribute ("x-canonical-type", "s", "com.canonical.indicator.root");
+			indicator.set_attribute ("x-canonical-type", "s", "org.ayatana.indicator.root");
 
 			/* We need special mouse actions on the lock screen. */
 			if (Options.DCONF in options) {

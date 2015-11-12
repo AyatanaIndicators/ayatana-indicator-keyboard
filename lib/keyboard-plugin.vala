@@ -16,7 +16,7 @@
  * Authors: William Hua <william.hua@canonical.com>
  */
 
-[DBus (name="com.canonical.SettingsDaemon.Keyboard.Private")]
+[DBus (name="org.ayatana.SettingsDaemon.Keyboard.Private")]
 public interface KeyboardPlugin : Object {
 
 	public abstract void activate_input_source (uint index) throws IOError;

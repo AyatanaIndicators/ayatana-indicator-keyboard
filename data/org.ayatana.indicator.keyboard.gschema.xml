@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="com.canonical.indicator.keyboard" path="/com/canonical/indicator/keyboard/">
+  <schema id="org.ayatana.indicator.keyboard" path="/org/ayatana/indicator/keyboard/">
     <key name="migrated" type="b">
       <summary>Keyboard layouts migrated</summary>
       <description>True if keyboard layouts were migrated, false otherwise.</description>

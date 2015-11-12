@@ -1,3 +1,9 @@
+ayatana-indicator-keyboard (0.1.0-0) UNRELEASED; urgency=medium
+
+  * Fork from Ubuntu's indicator-keyboard.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Thu, 12 Nov 2015 13:32:10 +0100
+
 indicator-keyboard (0.0.0+15.10.20151006-0ubuntu1) wily; urgency=medium
 
   [ CI Train Bot ]
