@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ayatana Indicator Keyboard
+Exec=@pkglibexecdir@/ayatana-indicator-keyboard-service
+OnlyShowIn=MATE;
+NoDisplay=true
+StartupNotify=false
+Terminal=false

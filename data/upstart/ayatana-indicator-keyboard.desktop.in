@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Indicator Keyboard
-Exec=@pkglibexecdir@/indicator-keyboard-service
+Name=Ayatana Indicator Keyboard
+Exec=@pkglibexecdir@/ayatana-indicator-keyboard-service
 OnlyShowIn=Unity;
 NoDisplay=true
 StartupNotify=false

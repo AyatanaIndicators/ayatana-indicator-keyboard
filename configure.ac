@@ -1,6 +1,6 @@
 AC_PREREQ([2.69])
 
-AC_INIT([ayatana-indicator-keyboard], [0.1.0])
+AC_INIT([ayatana-indicator-keyboard], [0.1.1])
 AC_REVISION([0.1.0])
 
 AC_CONFIG_SRCDIR([configure.ac])
@@ -39,7 +39,6 @@ PKG_CHECK_MODULES([GIO], [gio-2.0])
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
 PKG_CHECK_MODULES([PANGOFT2], [pangoft2])
 PKG_CHECK_MODULES([PANGOCAIRO], [pangocairo])
-PKG_CHECK_MODULES([GNOME_DESKTOP], [gnome-desktop-3.0])
 PKG_CHECK_MODULES([LIBXKLAVIER], [libxklavier])
 PKG_CHECK_MODULES([LIBGNOMEKBD], [libgnomekbdui])
 PKG_CHECK_MODULES([IBUS], [ibus-1.0])
@@ -59,7 +58,7 @@ AC_SUBST(COVERAGE_LDFLAGS)
 AC_CONFIG_FILES([Makefile
                  data/Makefile
                  data/upstart/Makefile
-                 lib/Makefile
+                 src/Makefile
                  po/Makefile.in
                  tests/Makefile
                  tests/autopilot/Makefile

@@ -1,16 +1,18 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: indicator-keyboard
+Upstream-Name: ayatana-indicator-keyboard
+Upstream-Contact: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Source: https://code.launchpad.net/indicator-keyboard
 
 Files: *
 Copyright: 2013 Canonical Ltd.
-License: GPL-3.0
+License: GPL-3
 
 Files: debian/*
 Copyright: 2013 Canonical Ltd.
-License: GPL-3.0
+  2017, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+License: GPL-3
 
-License: GPL-3.0
+License: GPL-3
  This package is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License as
  published by the Free Software Foundation; version 3 of the

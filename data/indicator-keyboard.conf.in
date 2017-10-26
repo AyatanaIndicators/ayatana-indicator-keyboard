@@ -1,9 +1,0 @@
-description "Indicator Keyboard Backend"
-
-start on indicator-services-start
-stop on desktop-end or indicator-services-end
-
-respawn
-respawn limit 2 10
-
-exec @pkglibexecdir@/indicator-keyboard-service --use-gtk

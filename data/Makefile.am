@@ -13,7 +13,7 @@ AM_VALAFLAGS = --enable-experimental-non-null   \
                --metadatadir $(top_srcdir)/deps \
                --vapidir $(top_srcdir)/deps
 
-ayatana_indicator_keyboard_icon_generator_SOURCES = main.vala                     \
+ayatana_indicator_keyboard_icon_generator_SOURCES = icon-generator.vala                     \
                                                     $(top_srcdir)/lib/common.vala
 ayatana_indicator_keyboard_icon_generator_VALAFLAGS = $(AM_VALAFLAGS)         \
                                                       --pkg gee-1.0           \
@@ -68,7 +68,7 @@ indicatordir = $(INDICATOR_DIR)
 
 org.ayatana.indicator.keyboard:
 	$(AM_V_GEN) (echo '[Indicator Service]';                                              \
-	             echo 'Name=indicator-keyboard';                                          \
+	             echo 'Name=ayatana-indicator-keyboard';                                          \
 	             echo 'ObjectPath=/org/ayatana/indicator/keyboard';                     \
 	             echo 'Position=80';                                                      \
 	             echo '';                                                                 \
@@ -101,6 +101,6 @@ gschemas.compiled: $(gsettings_SCHEMAS)
 EXTRA_DIST = $(dist_service_DATA)   \
 	     $(dist_indicator_DATA) \
 	     $(gsettings_SCHEMAS) \
-	     indicator-keyboard.conf.in \
-	     indicator-keyboard.desktop.in
+	     ayatana-indicator-keyboard.conf.in \
+	     ayatana-indicator-keyboard.desktop.in
 
