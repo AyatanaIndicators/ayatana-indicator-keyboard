@@ -8,15 +8,17 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-12 08:02+0200\n"
-"PO-Revision-Date: 2014-10-27 12:26+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Armenian <hy@li.org>\n"
+"PO-Revision-Date: 2018-03-01 01:34+0000\n"
+"Last-Translator: Мира Странная <miraityan2004@gmail.com>\n"
+"Language-Team: Armenian <https://hosted.weblate.org/projects/ayatana-"
+"indicators/keyboard-applet/hy/>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2.20-dev\n"
 "X-Launchpad-Export-Date: 2015-11-12 05:36+0000\n"
-"X-Generator: Launchpad (build 17843)\n"
 
 #: ../lib/main.vala:814
 #, c-format
@@ -33,4 +35,4 @@ msgstr "Ստեղնաշարի դասավորության կառուցվածքը"
 
 #: ../lib/indicator-menu.vala:56
 msgid "Text Entry Settings..."
-msgstr "Տեքստի մուտքագրման պարամետրերը"
+msgstr "Տեքստի մուտքագրման պարամետրերը..."
