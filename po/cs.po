@@ -8,15 +8,17 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-12 08:02+0200\n"
-"PO-Revision-Date: 2013-10-08 06:34+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2018-04-04 14:35+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
+"Language-Team: Czech <https://hosted.weblate.org/projects/ayatana-indicators/"
+"keyboard-applet/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 2.20-dev\n"
 "X-Launchpad-Export-Date: 2015-11-12 05:36+0000\n"
-"X-Generator: Launchpad (build 17843)\n"
 
 #: ../lib/main.vala:814
 #, c-format
@@ -33,4 +35,4 @@ msgstr "Mapa rozložení klávesnice"
 
 #: ../lib/indicator-menu.vala:56
 msgid "Text Entry Settings..."
-msgstr "Nastavení zadávání textu..."
+msgstr "Nastavení zadávání textu…"
