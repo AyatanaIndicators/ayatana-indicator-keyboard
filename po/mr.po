@@ -8,15 +8,17 @@ msgstr ""
 "Project-Id-Version: indicator-keyboard\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-12 08:02+0200\n"
-"PO-Revision-Date: 2014-01-07 01:54+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Marathi <mr@li.org>\n"
+"PO-Revision-Date: 2020-03-18 17:36+0000\n"
+"Last-Translator: Prachi Joshi <josprachi@yahoo.com>\n"
+"Language-Team: Marathi <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/mr/>\n"
 "Language: mr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.0-dev\n"
 "X-Launchpad-Export-Date: 2015-11-12 05:36+0000\n"
-"X-Generator: Launchpad (build 17843)\n"
 
 #: ../lib/main.vala:814
 #, c-format
@@ -33,4 +35,4 @@ msgstr "कळफलकाचा तक्ता"
 
 #: ../lib/indicator-menu.vala:56
 msgid "Text Entry Settings..."
-msgstr "मजकूर प्रवेशाचे नेपथ्य"
+msgstr "मजकूर प्रवेश सेटिंग्ज ..."
