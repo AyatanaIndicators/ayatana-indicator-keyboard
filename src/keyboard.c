@@ -82,15 +82,28 @@ static gboolean onCheckSource(GSource *pSource)
 
         if (!xkl_config_rec_equals(pKeyboard->pPrivate->pConfigRec, pConfigRec))
         {
+            gboolean bBadSignal = FALSE;
+
             if (g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts) > g_strv_length(pConfigRec->layouts))
             {
-                xkl_engine_lock_group(pKeyboard->pPrivate->pEngine, 0);
-                pKeyboard->pPrivate->nLayout = 0;
-                bLayoutChanged = TRUE;
+                // Pairing a Bluetooth device does this sometimes
+                if (pConfigRec->variants[0] == NULL)
+                {
+                    bBadSignal = TRUE;
+                }
+                else
+                {
+                    xkl_engine_lock_group(pKeyboard->pPrivate->pEngine, 0);
+                    pKeyboard->pPrivate->nLayout = 0;
+                    bLayoutChanged = TRUE;
+                }
             }
 
-            xkl_config_rec_get_from_server(pKeyboard->pPrivate->pConfigRec, pKeyboard->pPrivate->pEngine);
-            bConfigChanged = TRUE;
+            if (!bBadSignal)
+            {
+                xkl_config_rec_get_from_server(pKeyboard->pPrivate->pConfigRec, pKeyboard->pPrivate->pEngine);
+                bConfigChanged = TRUE;
+            }
         }
 
         g_object_unref(pConfigRec);
