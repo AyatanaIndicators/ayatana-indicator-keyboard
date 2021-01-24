@@ -67,7 +67,7 @@ static gboolean onCheckEvent(Display *pDisplay, XEvent *pEvent, XPointer pData)
     return FALSE;
 }
 
-static gboolean onCheck(GSource *pSource)
+static gboolean onCheckSource(GSource *pSource)
 {
     Keyboard *pKeyboard = ((Source*)pSource)->pKeyboard;
     XEvent cEvent;
@@ -168,7 +168,7 @@ void keyboard_AddSource(Keyboard *pKeyboard)
     pKeyboard->pPrivate->cPollFD.events = G_IO_IN | G_IO_HUP | G_IO_ERR;
     pKeyboard->pPrivate->cPollFD.revents = 0;
     pKeyboard->pPrivate->cSourceFuncs.prepare = NULL;
-    pKeyboard->pPrivate->cSourceFuncs.check = onCheck;
+    pKeyboard->pPrivate->cSourceFuncs.check = onCheckSource;
     pKeyboard->pPrivate->cSourceFuncs.dispatch = NULL;
     pKeyboard->pPrivate->cSourceFuncs.finalize = NULL;
 
@@ -222,6 +222,8 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
 void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 {
     xkl_engine_lock_group(pKeyboard->pPrivate->pEngine, nLayout);
+    pKeyboard->pPrivate->nLayout = nLayout;
+    g_signal_emit(pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
 }
 
 static void onDispose(GObject *pObject)
