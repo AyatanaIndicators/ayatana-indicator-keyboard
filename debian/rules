@@ -4,19 +4,22 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
+
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
 
-export DPKG_GENSYMBOLS_CHECK_LEVEL=4
-
 %:
-	dh $@
-
-override_dh_autoreconf:
-	NOCONFIGURE=1 ./autogen.sh
+	dh $@ --with systemd
 
 override_dh_install:
-	find debian/ayatana-indicator-keyboard/usr/lib -name *.la -delete
-	find debian/ayatana-indicator-keyboard/usr/lib -name *.a -delete
+	find debian/ayatana-indicator-keyboard -name \*.la -delete
+	find debian/ayatana-indicator-keyboard -name \*.a -delete
 	dh_install --fail-missing
+
+override_dh_installchangelogs:
+	dh_installchangelogs NEWS
+
+get-orig-source:
+	uscan --noconf --force-download --rename --download-current-version --destdir=..

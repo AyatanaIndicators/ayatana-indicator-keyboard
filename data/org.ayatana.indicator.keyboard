@@ -1,0 +1,14 @@
+[Indicator Service]
+Name=ayatana-indicator-keyboard
+ObjectPath=/org/ayatana/indicator/keyboard
+Position=-10
+
+[phone]
+ObjectPath=/org/ayatana/indicator/keyboard/phone
+Position=25
+
+[desktop]
+ObjectPath=/org/ayatana/indicator/keyboard/desktop
+
+[desktop_greeter]
+ObjectPath=/org/ayatana/indicator/keyboard/desktop_greeter

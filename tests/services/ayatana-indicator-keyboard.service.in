@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.ayatana.indicator.keyboard
-Exec=@abs_top_builddir@/lib/indicator-keyboard-service

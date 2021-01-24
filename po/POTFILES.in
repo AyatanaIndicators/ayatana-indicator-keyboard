@@ -1,3 +1,5 @@
-data/org.ayatana.indicator.keyboard.gschema.xml
-lib/main.vala
-lib/indicator-menu.vala
+src/main.c
+src/keyboard.c
+src/keyboard.h
+src/service.c
+src/service.h

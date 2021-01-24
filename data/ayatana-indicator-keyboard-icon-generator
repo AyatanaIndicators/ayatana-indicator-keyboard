@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import gi
+
+gi.require_version('Xkl', '1.0')
+gi.require_version('PangoFT2', '1.0')
+
+from gi.repository import Xkl, GdkX11, PangoFT2, Pango
+from pathlib import Path
+#from Xlib.display import Display
+import sys
+import getopt
+
+def printHelp():
+
+    print('')
+    print('Usage:')
+    print('')
+    print('ayatana-indicator-keyboard-icon-generator -p <padding> -c <colour> -f <font> -o <outdir>')
+    print('')
+    print('<padding> The padding between the fill and the edges of the image')
+    print('          Defaults to 0 pixels')
+    print('<colour>  The colour of the fill')
+    print('          Defaults to "#ffffff"')
+    print('<font>    The font family')
+    print('          Defaults to "Sans Regular"')
+    print('<outdir>  The output directory')
+    print('          Defaults to the current directory')
+    print('')
+
+def onLanguage(pRegistry, pConfigItem, lParams):
+
+    bCheckVariant = lParams[0]
+    lLanguages = lParams[1]
+    sLanguage = pConfigItem.get_short_description()[0:2]
+
+    if sLanguage and sLanguage not in lLanguages:
+
+        lLanguages.append(sLanguage)
+
+    if bCheckVariant:
+
+        pRegistry.foreach_layout_variant(pConfigItem.get_name(), onLanguage, [False, lLanguages])
+
+if __name__ == '__main__':
+
+    nPadding = 0
+    sColour = '#ffffff'
+    sFont = "Sans Regular"
+    pOutDir = Path.cwd()
+    nFont = 15
+    lOpts = []
+
+    try:
+
+        lOpts = getopt.getopt(sys.argv[1:], 'hp:c:f:o:')[0]
+
+    except getopt.GetoptError:
+
+        printHelp()
+        sys.exit(1)
+
+    for sOpt, sArg in lOpts:
+
+        if sOpt == '-h':
+
+            printHelp()
+            sys.exit(0)
+
+        elif sOpt == '-p':
+
+            nPadding = int(sArg)
+
+        elif sOpt == '-c':
+
+            sColour = sArg
+
+        elif sOpt == '-f':
+
+            sFont = sArg
+
+        elif sOpt == '-o':
+
+            pOutDir = Path(sArg)
+
+    pOutDir.mkdir(parents=True, exist_ok=True)
+    lLanguages = []
+    #pDisplay = Display()
+    pDisplay = GdkX11.x11_get_default_xdisplay()
+    pEngine = Xkl.Engine.get_instance(pDisplay)
+    pRegistry = Xkl.ConfigRegistry.get_instance(pEngine)
+    pRegistry.load(True)
+    pRegistry.foreach_layout(onLanguage, [True, lLanguages])
+
+    nSize = 24 - (2 * nPadding)
+    fIconX = (24 - nSize) / 2
+    fIconY = (24 - nSize) / 2
+    pFontMap = PangoFT2.FontMap.new()
+    pContext = Pango.FontMap.create_context(pFontMap)
+    pFontDescription = Pango.FontDescription.new()
+    pFontDescription.set_family(sFont)
+    pFontDescription.set_weight(500)
+    pFontDescription.set_size(nFont * Pango.SCALE)
+    pLayout = Pango.Layout.new(pContext)
+    pLayout.set_font_description(pFontDescription)
+
+    for sLanguage in lLanguages:
+
+        sOutPath = pOutDir.joinpath('ayatana-indicator-keyboard-' + sLanguage + '.svg')
+
+        with open(sOutPath, 'w') as pFile:
+
+            sLayout = sLanguage[0].upper() + sLanguage[1]
+            pLayout.set_text(sLayout, -1)
+            nLayoutWidth, nLayoutHeight = pLayout.get_size()
+            nBaseline = pLayout.get_baseline()
+            fLayoutX = (24.0 - (nLayoutWidth / Pango.SCALE)) / 2
+            fLayoutY = (24.0 - (nLayoutHeight / Pango.SCALE)) / 2 + (nBaseline / Pango.SCALE)
+            pFile.write('<?xml version="1.0" encoding="UTF-8"?><svg version="1.1" width="24" height="24"><defs><mask id="m"><rect x="0" y="0" width="24" height="24" style="fill:white"/><text x="' + str(fLayoutX) + '" y="' + str(fLayoutY) + '" style="font-family:' + sFont + ';font-weight:500;font-size:' + str(nFont) + ';fill:black">' + sLayout + '</text></mask></defs><rect x="' + str(fIconX) + '" y="' + str(fIconY) + '" width="' + str(nSize) + '" height="' + str(nSize) + '" rx="3" mask="url(#m)" style="fill:' + sColour + '"/></svg>')
+
+    sys.exit(0)
