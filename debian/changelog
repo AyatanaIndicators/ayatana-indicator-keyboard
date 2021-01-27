@@ -1,6 +1,6 @@
-ayatana-indicator-keyboard (0.1.1-0) UNRELEASED; urgency=medium
+ayatana-indicator-keyboard (0.7.900-0) UNRELEASED; urgency=medium
 
-  * Fork from Ubuntu's indicator-keyboard.
+  * Rewrite Ubuntu's indicator-keyboard from scratch in plain C.
 
   * Upstream-provided Debian package for ayatana-indicator-keyboard.
     See upstream ChangeLog for recent changes.
