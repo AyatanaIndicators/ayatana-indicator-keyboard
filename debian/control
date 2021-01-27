@@ -24,3 +24,8 @@ Depends: ${shlibs:Depends},
          ${misc:Depends},
          ayatana-indicator-common,
 Description: Ayatana Indicator Keyboard Applet
+ This package contains the keyboard indicator, which should show as an
+ icon in the top panel of indicator aware destkop environments.
+ .
+ It can be used to switch key layouts or languages, and helps the user
+ identifying which layouts are currently in use.
