@@ -3,6 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: cmake,
+               cmake-extras (>= 0.10),
                libglib2.0-dev (>= 2.36),
                libx11-dev (>=1.7.0),
                libxklavier-dev (>=5.4),
