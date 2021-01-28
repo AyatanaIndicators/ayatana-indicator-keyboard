@@ -1,0 +1,4 @@
+Overview of changes in ayatana-indicator-keyboard 0.7.900
+
+  - Rewrite of Ubuntu's original keyboard indicator in plan C. Dropping
+    various features that need to be ported over.
