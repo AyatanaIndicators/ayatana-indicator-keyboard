@@ -17,7 +17,7 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}" -DLOCALEDIR="${CMAKE_INS
 find_package (PkgConfig REQUIRED)
 include (CheckIncludeFile)
 include (FindPkgConfig)
-pkg_check_modules(SERVICE_DEPS REQUIRED glib-2.0>=2.36 gio-2.0>=2.36 x11>=1.7.0 libxklavier>=5.4)
+pkg_check_modules(SERVICE_DEPS REQUIRED glib-2.0>=2.36 gio-2.0>=2.36 x11>=1.6.7 libxklavier>=5.4)
 include_directories (SYSTEM ${SERVICE_DEPS_INCLUDE_DIRS})
 
 # custom targets
