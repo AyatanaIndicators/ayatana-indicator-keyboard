@@ -1,6 +1,6 @@
 2021-01-28 17:27:11 +0100 Mike Gabriel
 
-	* release 0.7.900 (HEAD -> master)
+	* release 0.7.901 (HEAD -> master)
 
 2021-01-28 16:36:56 +0100 Mike Gabriel (eb17f239)
 
@@ -18,7 +18,7 @@
 
 2021-01-27 16:49:35 +0100 Mike Gabriel (8cd20d8a)
 
-	* Downgrade upstream version (to 0.7.900).
+	* Downgrade upstream version (to 0.7.901).
 
 2021-01-27 16:48:31 +0100 Mike Gabriel (51a85740)
 

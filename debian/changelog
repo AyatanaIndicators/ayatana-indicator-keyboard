@@ -1,4 +1,11 @@
-ayatana-indicator-keyboard (0.7.900-0) UNRELEASED; urgency=medium
+ayatana-indicator-keyboard (0.7.901-0) unstable; urgency=medium
+
+  * Upstream-provided Debian package for ayatana-indicator-keyboard.
+    See upstream ChangeLog for recent changes.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Mon, 12 Apr 2021 16:23:18 +0200
+
+ayatana-indicator-keyboard (0.7.900-0) unstable; urgency=medium
 
   * Rewrite Ubuntu's indicator-keyboard from scratch in plain C.
 

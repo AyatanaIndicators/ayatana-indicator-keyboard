@@ -1,7 +1,7 @@
 project(ayatana-indicator-keyboard C CXX)
 cmake_minimum_required(VERSION 2.8.12)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-set(PROJECT_VERSION "0.7.900")
+set(PROJECT_VERSION "0.7.901")
 set(PACKAGE ${CMAKE_PROJECT_NAME})
 
 # GNU standard installation directories
