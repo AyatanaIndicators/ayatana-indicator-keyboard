@@ -223,7 +223,7 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
     gchar *sVariant = pKeyboard->pPrivate->pConfigRec->variants[nLayout];
     gchar *sId;
 
-    if (strlen(sVariant))
+    if (sVariant && strlen(sVariant))
     {
         sId = g_strconcat(sLayout, "+", sVariant, NULL);
     }
