@@ -145,7 +145,7 @@ static GMenuModel* createDesktopLayoutSection(IndicatorKeyboardService *self, in
 static GMenuModel* createDesktopSettingsSection(IndicatorKeyboardService *self)
 {
     GMenu * pMenu = g_menu_new();
-    g_menu_append(pMenu, _("Keyboard Settings..."), "indicator.settings");
+    g_menu_append(pMenu, _("Keyboard Settings…"), "indicator.settings");
 
     return G_MENU_MODEL(pMenu);
 }
