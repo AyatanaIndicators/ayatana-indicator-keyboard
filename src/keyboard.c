@@ -16,6 +16,7 @@
 
 #include <X11/XKBlib.h>
 #include <libxklavier/xklavier.h>
+#include "languages.h"
 #include "keyboard.h"
 
 enum
@@ -165,13 +166,13 @@ static void onParseLayouts(XklConfigRegistry *pRegistry, const XklConfigItem * p
     if (pLayoutParser->sLayout)
     {
         pLayout->sId = g_strjoin("+", pLayoutParser->sLayout, pItem->name, NULL);
-        pLayout->sLanguage = g_strdup(pLayoutParser->sLanguage);
+        pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
         pLayout->sDescription = g_strdup(pItem->description);
     }
     else
     {
         pLayout->sId = g_strdup(pItem->name);
-        pLayout->sLanguage = g_strdup(pItem->short_description);
+        pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
         pLayout->sDescription = g_strdup(pItem->description);
     }
 
@@ -182,7 +183,7 @@ static void onParseLayouts(XklConfigRegistry *pRegistry, const XklConfigItem * p
         LayoutParser cLayoutParser;
         cLayoutParser.sLayout = pItem->name;
         cLayoutParser.pKeyboard = pLayoutParser->pKeyboard;
-        cLayoutParser.sLanguage = pItem->short_description;
+        cLayoutParser.sLanguage = lookupLanguage(cLayoutParser.sLayout);
 
         xkl_config_registry_foreach_layout_variant(pRegistry, pItem->name, onParseLayouts, &cLayoutParser);
     }
@@ -237,7 +238,7 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
 
     if (pLanguage != NULL)
     {
-        *pLanguage = g_strndup(pLayout->sLanguage, 2);
+        *pLanguage = g_strdup(pLayout->sLanguage);
     }
 
     if (pDescription != NULL)
