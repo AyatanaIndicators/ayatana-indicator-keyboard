@@ -8,7 +8,7 @@ Build-Depends: cmake,
                libx11-dev (>=1.7.0),
                libxklavier-dev (>=5.4),
 # for packaging
-               debhelper (>= 9),
+               debhelper (>= 10),
                dh-systemd | hello,
                dpkg-dev (>= 1.16.1.1),
                intltool,
