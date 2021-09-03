@@ -1,4 +1,4 @@
-# Ayatana System Indicator &mdash; Keyboard [![Build Status](https://travis-ci.com/AyatanaIndicators/ayatana-indicator-keyboard.svg)](https://travis-ci.com/AyatanaIndicators/ayatana-indicator-keyboard)
+# Ayatana System Indicator &mdash; Keyboard [![Build Status](https://api.travis-ci.com/AyatanaIndicators/ayatana-indicator-keyboard.svg)](https://travis-ci.com/github/AyatanaIndicators/ayatana-indicator-keyboard)
 
 ## About Ayatana Indicators
 
