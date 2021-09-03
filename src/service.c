@@ -16,8 +16,8 @@
 
 #include <glib/gi18n.h>
 #include <gio/gio.h>
+#include <ayatana/common/utils.h>
 #include "service.h"
-#include "utils.h"
 
 #define BUS_NAME "org.ayatana.indicator.keyboard"
 #define BUS_PATH "/org/ayatana/indicator/keyboard"
@@ -256,9 +256,9 @@ static void onLayoutSelected(GSimpleAction *pAction, GVariant *pVariant, gpointe
 
 static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pUserData)
 {
-    if (is_mate())
+    if (ayatana_common_utils_is_mate())
     {
-        execute_command("mate-keyboard-properties");
+        ayatana_common_utils_execute_command("mate-keyboard-properties");
     }
 }
 
