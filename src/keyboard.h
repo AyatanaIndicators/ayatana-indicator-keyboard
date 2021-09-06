@@ -17,6 +17,8 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 #define KEYBOARD_LAYOUT_CHANGED "layout-changed"
