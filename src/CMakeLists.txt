@@ -5,7 +5,7 @@ set (SERVICE_EXEC "ayatana-indicator-keyboard-service")
 add_definitions(-DG_LOG_DOMAIN="ayatana-indicator-keyboard")
 
 # handwritten sources
-set(SERVICE_MANUAL_SOURCES keyboard.c service.c utils.c)
+set(SERVICE_MANUAL_SOURCES keyboard.c service.c)
 
 # generated sources
 set(SERVICE_GENERATED_SOURCES)
