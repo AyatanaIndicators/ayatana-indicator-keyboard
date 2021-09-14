@@ -5,7 +5,7 @@ Position=-10
 
 [phone]
 ObjectPath=/org/ayatana/indicator/keyboard/phone
-Position=25
+Position=1000
 
 [desktop]
 ObjectPath=/org/ayatana/indicator/keyboard/desktop
