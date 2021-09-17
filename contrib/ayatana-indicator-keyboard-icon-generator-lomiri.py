@@ -170,7 +170,8 @@ m_lLanguages = [
 'Ya', #Yakut
 'Yo', #Yoruba
 'emoji', #Emoji
-'00'  #Unknown
+'custom', #Custom
+'00' #Unknown
 ]
 
 def printHelp():
@@ -257,6 +258,10 @@ if __name__ == '__main__':
         elif sLanguage == 'emoji':
 
             sLanguageText = '😐'
+
+        elif sLanguage == 'custom':
+
+            sLanguageText = '#'
 
         with open(sOutPath, 'w') as pFile:
 
