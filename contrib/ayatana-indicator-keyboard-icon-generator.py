@@ -168,7 +168,9 @@ m_lLanguages = [
 'Wo', #Wolof
 'Ya', #Yakut
 'Yo', #Yoruba
-'00'  #Unknown
+'emoji', #Emoji
+'custom', #Custom
+'00' #Unknown
 ]
 
 def printHelp():
@@ -252,6 +254,14 @@ if __name__ == '__main__':
             if sLanguage == '00':
 
                 sLanguage = '?'
+
+            elif sLanguage == 'emoji':
+
+                sLanguage = '😐'
+
+            elif sLanguage == 'custom':
+
+                sLanguage = '#'
 
             pLayout.set_text(sLanguage, -1)
             nLayoutWidth, nLayoutHeight = pLayout.get_size()

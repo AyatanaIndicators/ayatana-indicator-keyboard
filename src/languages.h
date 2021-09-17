@@ -142,6 +142,7 @@ gchar *LANGUAGES[] =
     "Cs", //Czech (typographic)
     "Cs", //Czech (with <\\|> key)
     "Cs", //Czech Slovak and German (US)
+    "Cs", //Czech, Slovak, Polish, Spanish, Finnish, Swedish and German (US)
     "Da", //Danish
     "Da", //Danish (Dvorak)
     "Da", //Danish (Macintosh)
@@ -154,6 +155,7 @@ gchar *LANGUAGES[] =
     "Nl", //Dutch (Macintosh)
     "Nl", //Dutch (Sun Type 6/7)
     "Nl", //Dutch (standard)
+    "Nl", //Dutch (US)
     "Dz", //Dzongkha
     "Ed", //Elfdalian (Swedish, with combining ogonek)
     "En", //English (3l)
@@ -173,6 +175,7 @@ gchar *LANGUAGES[] =
     "En", //English (Carpalx, intl., with dead keys)
     "En", //English (Colemak)
     "En", //English (Colemak-DH)
+    "En", //English (Colemak-DH ISO)
     "En", //English (Drix)
     "En", //English (Dvorak)
     "En", //English (Dvorak, alt. intl.)
@@ -458,6 +461,7 @@ gchar *LANGUAGES[] =
     "Lv", //Latvian (programmer Dvorak, with Y)
     "Lv", //Latvian (programmer Dvorak, with minus)
     "Lv", //Latvian (tilde)
+    "Lv", //Latvian (apostrophe, dead quotes)
     "Lt", //Lithuanian
     "Lt", //Lithuanian (Dvorak)
     "Lt", //Lithuanian (IBM LST 1205-92)
@@ -528,6 +532,8 @@ gchar *LANGUAGES[] =
     "Hu", //Old Hungarian (for ligatures)
     "Tr", //Old Turkic
     "Or", //Oriya
+    "Or", //Oriya (Bolnagri)
+    "Or", //Oriya (Wx)
     "Os", //Ossetian (Georgia)
     "Os", //Ossetian (Windows)
     "Os", //Ossetian (legacy)
@@ -690,6 +696,8 @@ gchar *LANGUAGES[] =
     "Tr", //Turkish (Germany)
     "Tr", //Turkish (Sun Type 6/7)
     "Tr", //Turkish (intl., with dead keys)
+    "Tr", //Ottoman
+    "Tr", //Ottoman (F)
     "Tk", //Turkmen
     "Tk", //Turkmen (Alt-Q)
     "Ud", //Udmurt
@@ -705,9 +713,11 @@ gchar *LANGUAGES[] =
     "Ur", //Urdu (Pakistan)
     "Ur", //Urdu (Pakistan, CRULP)
     "Ur", //Urdu (Pakistan, NLA)
+    "Ur", //Urdu (Navees, Pakistan)
     "Ur", //Urdu (Windows)
     "Ur", //Urdu (alt. phonetic)
     "Ur", //Urdu (phonetic)
+    "Ur", //Urdu (Navees)
     "Ug", //Uyghur
     "Uz", //Uzbek
     "Uz", //Uzbek (Afghanistan)
@@ -721,6 +731,8 @@ gchar *LANGUAGES[] =
     "Wo", //Wolof
     "Ya", //Yakut
     "Yo", //Yoruba
+    "emoji", //Emoji
+    "custom", //Custom
     NULL
 };
 
@@ -850,6 +862,7 @@ gchar *IDS[] =
     "cz+typo", //Czech (typographic)
     "cz+bksl", //Czech (with <\\|> key)
     "us+cz_sk_de", //Czech Slovak and German (US)
+    "us+cz_sk_pl_de_es_fi_sv", //Czech, Slovak, Polish, Spanish, Finnish, Swedish and German (US)
     "dk", //Danish
     "dk+dvorak", //Danish (Dvorak)
     "dk+mac", //Danish (Macintosh)
@@ -862,6 +875,7 @@ gchar *IDS[] =
     "nl+mac", //Dutch (Macintosh)
     "nl+sun_type6", //Dutch (Sun Type 6/7)
     "nl+std", //Dutch (standard)
+    "nl+us", //Dutch (US)
     "bt", //Dzongkha
     "se+ovd", //Elfdalian (Swedish, with combining ogonek)
     "us+3l", //English (3l)
@@ -881,6 +895,7 @@ gchar *IDS[] =
     "us+carpalx-intl", //English (Carpalx, intl., with dead keys)
     "us+colemak", //English (Colemak)
     "us+colemak_dh", //English (Colemak-DH)
+    "us+colemak_dh_iso", //English (Colemak-DH ISO)
     "us+drix", //English (Drix)
     "us+dvorak", //English (Dvorak)
     "us+dvorak-alt-intl", //English (Dvorak, alt. intl.)
@@ -1166,6 +1181,7 @@ gchar *IDS[] =
     "lv+ykeydvorakprogr", //Latvian (programmer Dvorak, with Y)
     "lv+minuskeydvorakprogr", //Latvian (programmer Dvorak, with minus)
     "lv+tilde", //Latvian (tilde)
+    "lv+apostrophe-deadquotes", //Latvian (apostrophe, dead quotes)
     "lt", //Lithuanian
     "lt+us_dvorak", //Lithuanian (Dvorak)
     "lt+ibm", //Lithuanian (IBM LST 1205-92)
@@ -1236,6 +1252,8 @@ gchar *IDS[] =
     "hu+oldhunlig", //Old Hungarian (for ligatures)
     "tr+otk", //Old Turkic
     "in+ori", //Oriya
+    "in+ori-bolnagri", //Oriya (Bolnagri)
+    "in+ori-wx", //Oriya (Wx)
     "ge+os", //Ossetian (Georgia)
     "ru+os_winkeys", //Ossetian (Windows)
     "ru+os_legacy", //Ossetian (legacy)
@@ -1398,6 +1416,8 @@ gchar *IDS[] =
     "de+tr", //Turkish (Germany)
     "tr+sun_type6", //Turkish (Sun Type 6/7)
     "tr+intl", //Turkish (intl., with dead keys)
+    "tr+ot", //Ottoman
+    "tr+otf", //Ottoman (F)
     "tm", //Turkmen
     "tm+alt", //Turkmen (Alt-Q)
     "ru+udm", //Udmurt
@@ -1413,9 +1433,11 @@ gchar *IDS[] =
     "pk", //Urdu (Pakistan)
     "pk+urd-crulp", //Urdu (Pakistan, CRULP)
     "pk+urd-nla", //Urdu (Pakistan, NLA)
+    "pk+urd-navees", //Urdu (Navees, Pakistan)
     "in+urd-winkeys", //Urdu (Windows)
     "in+urd-phonetic3", //Urdu (alt. phonetic)
     "in+urd-phonetic", //Urdu (phonetic)
+    "in+urd-navees", //Urdu (Navees)
     "cn+ug", //Uyghur
     "uz", //Uzbek
     "af+uz", //Uzbek (Afghanistan)
@@ -1428,7 +1450,9 @@ gchar *IDS[] =
     "vn+us", //Vietnamese (US)
     "sn", //Wolof
     "ru+sah", //Yakut
-    "ng+yoruba", //Yoruba
+    "ng+yoruba", //Yorubaz
+    "emoji", //Emoji
+    "custom", //Custom
     NULL
 };
 
