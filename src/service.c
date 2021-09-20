@@ -267,6 +267,10 @@ static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pUse
     {
         ayatana_common_utils_execute_command("mate-keyboard-properties");
     }
+    else if (ayatana_common_utils_is_lomiri())
+    {
+        ayatana_common_utils_open_url("settings:///system/hw-keyboard-layouts");
+    }
 }
 
 static void initActions(IndicatorKeyboardService *self)
