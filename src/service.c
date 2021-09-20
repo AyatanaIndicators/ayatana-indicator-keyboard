@@ -406,11 +406,8 @@ static void onDispose(GObject *pObject)
 static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
 {
     gchar *sLib = "libayatana-keyboard-x11.so";
-    GFile *pFile = g_file_new_for_path("/usr/lib/maliit/plugins/liblomiri-keyboard-plugin.so");
-    gboolean bExists = g_file_query_exists(pFile, NULL);
-    g_object_unref(pFile);
 
-    if (bExists)
+    if (ayatana_common_utils_is_lomiri())
     {
         sLib = "libayatana-keyboard-lomiri.so";
     }
