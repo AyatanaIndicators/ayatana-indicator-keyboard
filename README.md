@@ -42,7 +42,7 @@ https://wiki.ayatana-indicators.org/AyatanaIndicatorKeyboard
 
 ## Themed icons
 
-To generate icons for a theme, you can use the icon generator in the data directory. Run it with the -h switch for help on usage.
+To generate icons for a theme, you can use the icon generator in the contrib directory. Run it with the -h switch for help on usage.
 
 ## License and Copyright
 
