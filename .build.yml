@@ -12,7 +12,6 @@ requires:
     - which
     - cmake
     - cmake-extras
-    - mate-common
     - intltool
     - glib2
     - libx11
@@ -21,7 +20,6 @@ requires:
 
   debian:
     # Useful URL: https://salsa.debian.org/debian-ayatana-team/ayatana-ido
-    - autopoint
     - clang
     - clang-tools
     - g++
@@ -29,7 +27,6 @@ requires:
     - git
     - cmake
     - cmake-extras
-    - mate-common
     - intltool
     - libglib2.0-dev
     - libx11-dev
@@ -38,14 +35,12 @@ requires:
 #    - libayatana-common-dev
 
   ubuntu:
-    - autopoint
     - clang
     - clang-tools
     - g++
     - git
     - cmake
     - cmake-extras
-    - mate-common
     - intltool
     - libglib2.0-dev
     - libx11-dev
@@ -87,10 +82,7 @@ build_scripts:
   -     cppcheck --enable=warning,style,performance,portability,information,missingInclude .
   - fi
   -
-  - if [ -e ./autogen.sh ]; then
-  -     NOCONFIGURE=1 ./autogen.sh
-  -     scan-build $CHECKERS ./configure --prefix=/usr --enable-gtk-doc --enable-compile-warnings=maximum
-  - elif [ -e ./CMakeLists.txt ]; then
+  - if [ -e ./CMakeLists.txt ]; then
   -     if [ ${DISTRO_NAME} == "debian" ] || [ ${DISTRO_NAME} == "ubuntu" ]; then
   -         scan-build $CHECKERS cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DENABLE_TESTS=ON
   -     else
@@ -118,9 +110,7 @@ build_scripts:
 #  - if [ ${BUILD_TYPE} == "scripts" ];then
 #  -     XVFB_RUN="$(which xvfb-run || true)"
 #  -     if [ ${DISTRO_NAME} == "debian" ] || [ ${DISTRO_NAME} == "ubuntu" ];then
-#  -         if [ -e ./autogen.sh ]; then
-#  -             ${XVFB_RUN} make check
-#  -         elif [ -e ./CMakeLists.txt ]; then
+#  -         if [ -e ./CMakeLists.txt ]; then
 #  -             ${XVFB_RUN} make test
 #  -         fi
 #  -     fi
