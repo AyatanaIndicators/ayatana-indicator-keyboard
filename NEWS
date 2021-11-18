@@ -1,3 +1,24 @@
+Overview of changes in ayatana-indicator-keyboard 0.9.0
+
+  - Add settings handler for Lomiri.
+  - Add Lomiri icon generator and move both generators to /contrib.
+  - Split X11 and Lomiri backends.
+  - Replace local code with libayatana-common.
+  - Add documentation and build instructions.
+  - Add Travis CI configuration.
+  - src/keyboard.c: Get languages via lookupLanguage().
+  - data/icons/scalable/status: Use an improved icon set.
+  - data/ayatana-indicator-keyboard-icon-generator: Use a predefined abbreviation
+    list.
+  - Translation updates.
+
+Overview of changes in ayatana-indicator-keyboard 0.7.901
+
+  - Do not update icon cache from CMake.
+  - Tripledot (...) → ellipsis (…).
+  - Translation updates.
+  - src/keyboard.c: Test if layout variant is null before checking length.
+
 Overview of changes in ayatana-indicator-keyboard 0.7.900
 
   - Rewrite of Ubuntu's original keyboard indicator in plan C. Dropping

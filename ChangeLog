@@ -1,0 +1,4385 @@
+2021-11-18 Mike Gabriel
+
+        * release 0.9.0 (HEAD -> main, tag: 0.9.0)
+
+2021-10-25 Robert Tari
+
+        * Merge branch 'sunweaver-pr/travis-cleanup' (bc77d667)
+
+2021-10-25 Mike Gabriel
+
+        * .build.yml: Remove source code of locally built dependency after it
+          has been installed. (dab97205)
+        * .build.yml: If we ever start having unit tests, run those unit
+          tests in build_scripts: target. (98412439)
+        * .build.yml: Drop autogen.sh support. (a3c1ba48)
+
+2021-10-20 Robert Tari
+
+        * .travis.yml: Temporarily disable ppc64le builds (bc2bd700)
+
+2021-10-20 Mike Gabriel
+
+        * Merge branch 'tari01-pr/correct-icon-generator-location' (1117825d)
+
+2021-10-20 Robert Tari
+
+        * README.md: Correct icon generator location (ab5b21bf)
+
+2021-10-18 Mike Gabriel
+
+        * Merge branch 'tari01-pr/lomiri-settings-handler' (7a041f29)
+
+2021-09-21 Robert Tari
+
+        * Add settings handler for Lomiri (b00f48be)
+
+2021-10-18 Mike Gabriel
+
+        * Merge branch 'tari01-pr/fix-lomiri-detection' (93b533bc)
+
+2021-09-20 Robert Tari
+
+        * src/service.c: Fix Lomiri detection (e0089c42)
+
+2021-10-18 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-new-language-variants' (bc1f16f8)
+
+2021-09-17 Robert Tari
+
+        * Add new languages/variants (392b4061)
+
+2021-09-23 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (108d1fa9)
+
+2021-09-14 Mike Gabriel
+
+        * contrib/ayatana-indicator-keyboard-icon-generator-lomiri.py: Set
+          x-bit on script. (d33d3d3d)
+        * Merge branch 'tari01-pr/add-lomiri-icon-generator' (b325d460)
+
+2021-09-09 Robert Tari
+
+        * Add Lomiri icon generator and move both generators to /contrib
+          (1483c259)
+
+2021-09-14 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-lomiri-backend' (4a0e63a4)
+
+2021-09-07 Robert Tari
+
+        * Split X11 and Lomiri backends (d2758a87)
+
+2021-09-09 Mike Gabriel
+
+        * Merge branch 'tari01-pr/use-libayatana-common' (4e27c337)
+
+2021-09-03 Robert Tari
+
+        * .build.yml: Install libayatana-common dependency from GitHub
+          (d42da412)
+        * debian/control: add libayatana-common-dev build dependency
+          (e81e7fa8)
+        * Replace local code with libayatana-common (baa08a2e)
+        * Fix Travis status image (ce72a2c9)
+
+2021-08-30 Mike Gabriel
+
+        * AUTHORS: Create file from Git history. Resolves DEB build.
+          (6d20b6af)
+
+2021-08-29 Hosted Weblate
+
+        * Update translation files (c6b2b354)
+
+2021-08-29 Mike Gabriel
+
+        * debian/{control,compat}: Bump to level 10. (6b058085)
+        * debian/: Drop stray files AUTHORS and ChangeLog. (0c01ca05)
+        * debian/: Drop stray files AUTHORS and ChangeLog. (65642167)
+        * debian/rules: Enable unit tests (if there were any). (0fbf19aa)
+
+2021-08-28 Mike Gabriel
+
+        * .travis.yml: Use Ayatana Indicators project's dev-scripts repo.
+          (453403c1)
+
+2021-08-28 Weblate
+
+        * Added translation using Weblate (Kurdish (Southern)) (2e860476)
+        * Added translation using Weblate (Kurdish (Northern)) (57a16d18)
+
+2021-08-28 Mike Gabriel
+
+        * .travis.yml: Fix branch name what is now the default branch in
+          ayatana-dev-scripts. (1f9f086b)
+
+2021-08-13 Luna Jernberg
+
+        * Translated using Weblate (Swedish) (c9378693)
+
+2021-08-10 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-enable-werror-option' (5f909177)
+
+2021-08-09 Robert Tari
+
+        * Add ENABLE_WERROR option (7a57a70b)
+
+2021-08-04 Mike Gabriel
+
+        * Merge branch 'tari01-pr/cmake-install-full' (11a61d41)
+
+2021-08-04 Robert Tari
+
+        * Use CMAKE_INSTALL_FULL_*DIR locations for installation (c37f453e)
+
+2021-08-04 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-documentation-and-build-instructions'
+          (39a3583e)
+
+2021-07-29 Robert Tari
+
+        * Add documentation and build instructions (6bf9165d)
+
+2021-08-04 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-standard-ayatana-cmake-bits' (6dc8e402)
+
+2021-07-29 Robert Tari
+
+        * Add standard Ayatana CMake bits (c59cc974)
+
+2021-07-15 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (f30807b9)
+
+2021-05-22 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (aae9e8a6)
+
+2021-05-04 Mike Gabriel
+
+        * .travis.yml: Don't try running autotools based CI build. (45110556)
+
+2021-05-01 Tomáš Marný
+
+        * Translated using Weblate (Czech) (3c173677)
+
+2021-04-28 Robert Tari
+
+        * Merge branch 'sunweaver-pr/travis-ci' (7aed265c)
+
+2021-04-26 Mike Gabriel
+
+        * .travis.yml: Ubuntu rolling (I series) is currently in
+          bootstrapping process, disabling for now. (bb73bf39)
+        * Travis-CI: Initial draft for CI builds. (b134fa0a)
+
+2021-04-16 Mike Gabriel
+
+        * Merge branch 'tari01-pr/base-on-languages' (90235f32)
+
+2021-04-16 Robert Tari
+
+        * src/keyboard.c: Get languages via lookupLanguage() (39b1efc4)
+        * src/languages.h: Use a predefined language lookup table (8f32270e)
+        * data/icons/scalable/status: Use an improved icon set (b62c1fb1)
+        * data/ayatana-indicator-keyboard-icon-generator: Use a predefined
+          abbreviation list (3ff7d74a)
+
+2021-04-12 Mike Gabriel
+
+        * release 0.7.901 (cd616fd2) (tag: 0.7.901)
+        * Merge branch 'tari01-pr/remove-gtk-update-icon-cache' (68b858e6)
+
+2021-02-12 Robert Tari
+
+        * Do not update icon cache from CMake (21264ea5)
+
+2021-04-12 Mike Gabriel
+
+        * po/ayatana-indicator-keyboard.pot: Update translation template.
+          (64f8dcc1)
+        * Merge branch 'comradekingu-patch-1' (d2843ad2)
+
+2021-02-22 Allan Nordhøy
+
+        * Tripledot (...) → ellipsis (…) (1e3e227a)
+
+2021-04-12 Mike Gabriel
+
+        * Merge branch 'tari01-pr/test-null-pointer' (0788459e)
+
+2021-03-31 Robert Tari
+
+        * src/keyboard.c: Test if layout variant is null before checking
+          length (c942c531)
+
+2021-03-30 Hosted Weblate
+
+        * Update translation files (9baaba32)
+
+2021-03-29 Weblate
+
+        * Added translation using Weblate (Chinese (Simplified)
+          (zh_LATN@pinyin)) (50a64c49)
+
+2021-03-18 Reza Almanda
+
+        * Translated using Weblate (Indonesian) (37d88aaf)
+
+2021-03-15 xiao0yy
+
+        * Translated using Weblate (Chinese (Simplified)) (3225f2c8)
+
+2021-02-22 Allan Nordhøy
+
+        * Translated using Weblate (Norwegian Bokmål) (e54ca0aa)
+
+2021-02-19 J. Lavoie
+
+        * Translated using Weblate (French (Canada)) (6e298495)
+        * Translated using Weblate (Italian) (d1921853)
+        * Translated using Weblate (French) (c1b64551)
+        * Translated using Weblate (Finnish) (9e82ba61)
+        * Translated using Weblate (German) (e7eddd44)
+
+2021-02-07 Kristjan Räts
+
+        * Translated using Weblate (Estonian) (f038b210)
+
+2021-02-07 Ács Zoltán
+
+        * Translated using Weblate (Hungarian) (f1a1b803)
+
+2021-02-04 Adolfo Jayme Barrientos
+
+        * Translated using Weblate (Catalan) (8c0d8312)
+        * Translated using Weblate (Spanish) (bd70247e)
+
+2021-01-30 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (783a56ff)
+
+2021-01-29 Moo
+
+        * Translated using Weblate (Lithuanian) (4e3264b7)
+
+2021-01-27 Oğuz Ersen
+
+        * Translated using Weblate (Turkish) (1cb486b2)
+
+2021-01-28 Milo Ivir
+
+        * Translated using Weblate (Croatian) (2262de85)
+
+2021-01-28 Mike Gabriel
+
+        * release 0.7.900 (be3cfc38) (tag: 0.7.900)
+        * CMakeLists.txt: Relax build requirement for libx11 (from 1.7.0 to
+          1.6.7). (eb17f239)
+
+2021-01-27 Mike Gabriel
+
+        * debian/control: Make B-D on dh-systemd optional (fixes FTBFS in
+          Debian bullseye). (b7c52d4e)
+        * debian/control: Add B-D: cmake-extras (>= 0.10). (8827f6e2)
+        * Downgrade upstream version (to 0.7.900). (8cd20d8a)
+        * debian/control: Move myself to Maintainer: field. (51a85740)
+        * debian/control: Add B-D dh-systemd. (0e694f89)
+        * debian/control: Bump Standards-Version: to 4.5.1. (80205f0b)
+        * debian/control: Add LONG_DESCRIPTION. (4c30de17)
+        * debian/docs: Adapt to new docu files in upstream sources.
+          (4d3f10ea)
+        * NEWS: Add (empty) file. (ad7e9f02)
+        * AUTHORS: Add file. (6f1218e9)
+        * README.md: Make .md file more readable if viewed in a text editor.
+          (eb796992)
+        * src/*: Add license headers. (8b7a2a2b)
+
+2021-01-24 Robert Tari
+
+        * Fix crash after Bluetooth pairing (1ff94fac)
+        * Send a layout-changed signal after manual selection (7186ce77)
+        * 100% re-write of the keyboard indicator in plain C. (b85daf94)
+
+2020-11-01 Hosted Weblate
+
+        * Update translation files (9b8fb049)
+
+2020-10-31 Weblate
+
+        * Added translation using Weblate (Italian) (50f5d80f)
+        * Added translation using Weblate (Tamil (Sri Lanka)) (22305b88)
+        * Added translation using Weblate (Dhivehi) (f7c99f97)
+        * Added translation using Weblate (Venetian) (800d6e83)
+        * Added translation using Weblate (Kashubian) (dc7d15d2)
+        * Added translation using Weblate (Macedonian) (e732d7b9)
+        * Added translation using Weblate (Friulian) (2a794508)
+        * Added translation using Weblate (Tatar) (df266b5a)
+
+2020-10-26 Adrià Martín
+
+        * Translated using Weblate (Sardinian) (62082950)
+
+2020-10-16 Yota321
+
+        * Translated using Weblate (Bengali) (0278e98e)
+
+2020-09-25 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (7d4ca8aa)
+
+2020-07-30 Sithu Aung
+
+        * Translated using Weblate (Burmese) (a0b01ffa)
+
+2020-04-27 Jeannette L
+
+        * Translated using Weblate (French (Canada)) (d3586d02)
+
+2020-03-17 Prachi Joshi
+
+        * Translated using Weblate (Marathi) (3f5e0db4)
+
+2020-02-15 Hosted Weblate
+
+        * Update translation files (edbca8ef)
+
+2019-12-26 Mohsin Ali
+
+        * Translated using Weblate (Assamese) (fd8c3608)
+
+2019-02-23 WWWesten
+
+        * Translated using Weblate (Kazakh) (04fbe3f1)
+
+2018-11-18 ssantos
+
+        * Translated using Weblate (Portuguese) (e0e03a24)
+
+2018-10-23 Iván Seoane
+
+        * Translated using Weblate (Galician) (f6520c3a)
+
+2018-08-23 WaldiS
+
+        * Translated using Weblate (Polish) (d926b3e8)
+
+2018-04-03 Pavel Borecki
+
+        * Translated using Weblate (Czech) (95c7ce72)
+
+2018-03-29 Anders Jonsson
+
+        * Translated using Weblate (Swedish) (754d320c)
+
+2018-02-28 Мира Странная
+
+        * Translated using Weblate (Armenian) (10629952)
+
+2018-01-02 Sveinn í Felli
+
+        * Translated using Weblate (Icelandic) (cf229836)
+
+2017-11-29 Mike Gabriel
+
+        * update-po.sh: Preserve .pot file when updating *.po files.
+          (41fc263c)
+
+2017-10-16 Michal Čihař
+
+        * Translated using Weblate (Malay) (765b17cd)
+
+2017-10-12 Viktar Vauchkevich
+
+        * Translated using Weblate (Belarusian) (3d2dd956)
+
+2017-11-29 Mike Gabriel
+
+        * update-po.sh: Fix filenames of .ini(.in) and .xml(.in) files in po
+          files. (d9b8327d)
+        * update-pot.sh: Fix filenames of .ini(.in) and .xml(.in) files in po
+          template file. (67e1ac5a)
+
+2017-10-26 Mike Gabriel
+
+        * Fork from Ubuntu's indicator-keyboard. (d5277646)
+
+2017-10-24 Mike Gabriel
+
+        * update-po*.sh: Add license header. (bca2db6d)
+
+2017-10-12 Mike Gabriel
+
+        * po/: Remove build cruft files. (34316fe5)
+        * po/: Already provide translation files for hosted Weblate.
+          (ca233ad0)
+        * update-po(|t).sh: Add gettext update scripts. (0d590092)
+
+2015-11-12 Mike Gabriel
+
+        * Fork from Ubuntu's indicator-keyboard. (e3f31de1)
+
+2015-11-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (840d9666)
+
+2015-11-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (25e66bac)
+
+2015-11-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4e89552a)
+
+2015-11-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (00b4bc07)
+
+2015-11-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (23be7955)
+
+2015-11-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (36dc1e15)
+
+2015-11-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8813b5a5)
+
+2015-11-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (654b8485)
+
+2015-11-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (eabb9d24)
+
+2015-11-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b1285ee8)
+
+2015-11-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b3e08302)
+
+2015-11-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e771b053)
+
+2015-10-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d2e1747d)
+
+2015-10-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (20cfbfa2)
+
+2015-10-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (06f9c0a6)
+
+2015-10-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a2d98174)
+
+2015-10-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ab0e65bd)
+
+2015-10-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f65dd068)
+
+2015-10-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3086c252)
+
+2015-10-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a48e1d49)
+
+2015-10-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (96f4789a)
+
+2015-10-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (480295e4)
+
+2015-10-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cf665588)
+
+2015-10-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f145738)
+
+2015-10-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (88630704)
+
+2015-10-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (18d86713)
+
+2015-10-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e086c9ac)
+
+2015-10-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dc88f8e8)
+
+2015-10-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9e4c1ce6)
+
+2015-10-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (71229ab9)
+
+2015-10-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (012e010c)
+
+2015-10-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f2e3f393)
+
+2015-10-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b5b41c67)
+
+2015-10-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e1c9eb2b)
+
+2015-10-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (07e1ecf2)
+
+2015-10-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a74c5b37)
+
+2015-10-06 CI Train Bot
+
+        * Releasing 0.0.0+15.10.20151006-0ubuntu1 (6f7d2c1d)
+
+2015-10-06 William Hua
+
+        * Manually set XDG_RUNTIME_DIR to fix the tests. (506e0e90)
+        * Manually set GDK_BACKEND=x11. (b5bb009d)
+
+2015-10-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (33ea309a)
+
+2015-10-05 William Hua
+
+        * Manually set XDG_RUNTIME_DIR. (568a977e)
+
+2015-10-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (db904de9)
+
+2015-10-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (99ca1ad4)
+
+2015-10-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (60acd858)
+
+2015-10-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (12c9b30e)
+
+2015-10-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f5adad4d)
+
+2015-09-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d446164d)
+
+2015-09-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1ad78634)
+
+2015-09-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1b5e0f50)
+
+2015-09-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a6e7d898)
+
+2015-09-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f8f75ba2)
+
+2015-09-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (917da32f)
+
+2015-09-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1fcd3fb2)
+
+2015-09-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1d138efa)
+
+2015-09-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a7603c68)
+
+2015-09-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ac9a7e82)
+
+2015-09-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (abd5570b)
+
+2015-09-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (eaa4e73d)
+
+2015-09-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dc2ce00e)
+
+2015-09-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a27f244a)
+
+2015-09-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e7af1e10)
+
+2015-09-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1014887)
+
+2015-09-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e1ac96c0)
+
+2015-09-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dc02690e)
+
+2015-09-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bbec3411)
+
+2015-09-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6ef35674)
+
+2015-09-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a4a7665a)
+
+2015-09-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1cf557f4)
+
+2015-09-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (96f617d6)
+
+2015-09-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b15bc848)
+
+2015-09-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6bb5da5b)
+
+2015-09-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (43671d4f)
+
+2015-09-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (03cc0db3)
+
+2015-09-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f8e17031)
+
+2015-09-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3b347199)
+
+2015-08-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ca5743e4)
+
+2015-08-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (da59ebeb)
+
+2015-08-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6c810e80)
+
+2015-08-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4f4a6dd8)
+
+2015-08-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (496a67c2)
+
+2015-08-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c9bd9a84)
+
+2015-08-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4eb18f53)
+
+2015-08-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f3d495de)
+
+2015-08-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0fc11a08)
+
+2015-08-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (597353e7)
+
+2015-08-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d2a21d72)
+
+2015-08-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (46c9ca02)
+
+2015-08-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d8e1b518)
+
+2015-08-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ebc1caa9)
+
+2015-08-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (df1000b0)
+
+2015-08-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (afd6354e)
+
+2015-08-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (93301bc5)
+
+2015-08-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5a9ea3bf)
+
+2015-08-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6bb18b47)
+
+2015-08-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (26333af7)
+
+2015-08-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2ecb62ea)
+
+2015-08-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4d2b5162)
+
+2015-08-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (db3f6cdc)
+
+2015-08-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (85590c67)
+
+2015-08-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (32828ee7)
+
+2015-08-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (99f1d32a)
+
+2015-08-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f52a641)
+
+2015-08-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (caf7594a)
+
+2015-08-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b24a8c6b)
+
+2015-08-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (151dba53)
+
+2015-08-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f00bfab4)
+
+2015-07-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (20eba19d)
+
+2015-07-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (77d38929)
+
+2015-07-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (695b85f8)
+
+2015-07-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c9b2f525)
+
+2015-07-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (39a43ac8)
+
+2015-07-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5ed18cbb)
+
+2015-07-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c4bd175c)
+
+2015-07-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7b226fc9)
+
+2015-07-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2e3dc8e9)
+
+2015-07-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ce1da8c6)
+
+2015-07-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d7fbb20a)
+
+2015-07-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (971832ac)
+
+2015-07-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e259052f)
+
+2015-07-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a8c3d475)
+
+2015-07-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (182768b8)
+
+2015-07-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d68383e3)
+
+2015-07-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dcb4d277)
+
+2015-07-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7555ae82)
+
+2015-07-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fca267c3)
+
+2015-07-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (08cd4a4d)
+
+2015-07-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (05fc689a)
+
+2015-07-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (648f13fa)
+
+2015-07-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3a36c891)
+
+2015-07-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (41bb2c39)
+
+2015-07-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e4c85c55)
+
+2015-07-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b7cc3580)
+
+2015-07-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (79471e02)
+
+2015-07-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (88fef9b3)
+
+2015-07-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1bde9501)
+
+2015-06-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e4658168)
+
+2015-06-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (193ecb81)
+
+2015-06-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2546239f)
+
+2015-06-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4dda5a1b)
+
+2015-06-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fc938fff)
+
+2015-06-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (201c419f)
+
+2015-06-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (23e2527f)
+
+2015-06-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e2cc970b)
+
+2015-06-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (47409a82)
+
+2015-06-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (91f0ab4f)
+
+2015-06-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4ac150aa)
+
+2015-06-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c63969d0)
+
+2015-06-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (29fe2545)
+
+2015-06-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f4aeed3)
+
+2015-06-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (30ab9ce8)
+
+2015-06-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (01efac61)
+
+2015-06-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8cbf0ea8)
+
+2015-06-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (17b22ee0)
+
+2015-06-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f6b453da)
+
+2015-06-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (75bb4907)
+
+2015-06-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9587f84f)
+
+2015-06-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (273453aa)
+
+2015-06-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6fd73c4d)
+
+2015-06-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (78863690)
+
+2015-06-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f5dbcb4f)
+
+2015-06-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7e6a4c78)
+
+2015-06-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (22b1aaf7)
+
+2015-06-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e7278088)
+
+2015-06-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cc201372)
+
+2015-06-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (21e61536)
+
+2015-05-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (16d6aef9)
+
+2015-05-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8b6bec9c)
+
+2015-05-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (deebb3aa)
+
+2015-05-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b799be1d)
+
+2015-05-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3ff7cea3)
+
+2015-05-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (62ae09c2)
+
+2015-05-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f674a3d5)
+
+2015-05-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (89b9108e)
+
+2015-05-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2868e579)
+
+2015-05-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9e5b6e91)
+
+2015-05-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (aee67e48)
+
+2015-05-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (96e0dbfb)
+
+2015-05-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (40940599)
+
+2015-05-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0b7414af)
+
+2015-05-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f2acd2ed)
+
+2015-05-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (672aa1fd)
+
+2015-05-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (60b61533)
+
+2015-05-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e10d6d42)
+
+2015-05-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c0a35625)
+
+2015-05-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (319d3641)
+
+2015-05-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (899b61c9)
+
+2015-05-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bd619c81)
+
+2015-05-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3bf79191)
+
+2015-05-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4eb142f2)
+
+2015-05-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e8cc6c30)
+
+2015-05-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8651e988)
+
+2015-05-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b357e3e8)
+
+2015-05-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (df64bb52)
+
+2015-05-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (89d3c50d)
+
+2015-05-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7ba31360)
+
+2015-04-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cc478c3b)
+
+2015-04-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3a86431d)
+
+2015-04-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c792d433)
+
+2015-04-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5e4eac7b)
+
+2015-04-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bd6e966a)
+
+2015-04-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (789cad76)
+
+2015-04-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5e8c3db1)
+
+2015-04-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1d62bbb3)
+
+2015-04-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9aa1001a)
+
+2015-04-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d6f5b749)
+
+2015-04-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ffa7b867)
+
+2015-04-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7767d777)
+
+2015-04-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dec32825)
+
+2015-04-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c37748a1)
+
+2015-04-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (61b6971a)
+
+2015-04-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (70ea3030)
+
+2015-04-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (204ddfcc)
+
+2015-04-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f57bbf0d)
+
+2015-04-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7860421d)
+
+2015-04-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (36e559b5)
+
+2015-04-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e0429d68)
+
+2015-04-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7dbfd1c8)
+
+2015-04-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1f9dd25)
+
+2015-04-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f9f838de)
+
+2015-04-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4fb613bb)
+
+2015-04-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c32b2035)
+
+2015-04-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (969bf44f)
+
+2015-04-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (aa94513e)
+
+2015-04-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (04390f3c)
+
+2015-04-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5a4dc0df)
+
+2015-03-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (47d2967c)
+
+2015-03-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6d7d2ab6)
+
+2015-03-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (20d83953)
+
+2015-03-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0dc92225)
+
+2015-03-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (62a0fccd)
+
+2015-03-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b37894c7)
+
+2015-03-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0faf6d25)
+
+2015-03-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ed12234e)
+
+2015-03-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (85bd97fe)
+
+2015-03-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (58ef82f6)
+
+2015-03-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0be0e2ad)
+
+2015-03-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (24310498)
+
+2015-03-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6af35ae3)
+
+2015-03-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e3566ae9)
+
+2015-03-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (588c0d5c)
+
+2015-03-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f44ae3eb)
+
+2015-03-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c84bc45a)
+
+2015-03-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (00fb658b)
+
+2015-03-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b5bf7541)
+
+2015-03-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e5a9fd27)
+
+2015-03-11 CI Train Bot
+
+        * Resync trunk. (d286d5e5)
+
+2015-03-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (82df47d0)
+
+2015-03-10 CI Train Bot
+
+        * Releasing 0.0.0+15.04.20150310-0ubuntu1 (bc54f95b)
+
+2015-03-10 William Hua
+
+        * Basic support for Fcitx input sources.
+          Fixes: #1363150 Approved by:
+          Ted Gould, PS Jenkins bot, Ryan Lortie, Sebastien Bacher
+          (1573d710)
+
+2015-03-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d2738506)
+
+2015-03-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6bc2acd3)
+
+2015-03-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0e2af93c)
+
+2015-03-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a681229e)
+
+2015-03-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (114945ea)
+
+2015-03-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e0c0e47d)
+
+2015-03-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0468372c)
+
+2015-03-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d3238447)
+
+2015-03-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2fd28c61)
+
+2015-02-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e47719a9)
+
+2015-02-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b38fccdd)
+
+2015-02-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (10d8fe2e)
+
+2015-02-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d9142f68)
+
+2015-02-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (91c5c6fa)
+
+2015-02-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9fac43e2)
+
+2015-02-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d96ad675)
+
+2015-02-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b5b5fdf0)
+
+2015-02-19 William Hua
+
+        * Explain input source cycling logic. (ec6c3109)
+        * Simplify input source cycling. (9cdbb03c)
+        * Don't handle activate signal when the default behaviour will do.
+          (c34cf40e)
+
+2015-02-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ceb7e749)
+
+2015-02-18 William Hua
+
+        * Build depend on gir1.2-fcitx-1.0. (8b470a48)
+        * Remove unnecessary flag. (c9a8ec00)
+        * Remove vapi. (775f8b26)
+        * Use foreach when possible. (d63326c3)
+        * Remove (!) when possible. (a8721bcb)
+
+2015-02-17 William Hua
+
+        * Only try initializing Fcitx once. (603fdf81)
+        * Check flags better. (c38ced78)
+        * Use shift operator. (b3c420d1)
+        * Remove unnecessary AC_SUBST. (18a15d14)
+
+2015-02-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e10fb6a8)
+
+2015-02-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5293157d)
+
+2015-02-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (29aef96c)
+
+2015-02-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e2619981)
+
+2015-02-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a34c9afa)
+
+2015-02-12 William Hua
+
+        * Fix type signature of GLib.MenuModel.get_item_links (). (548bcac9)
+        * Merge trunk. (f865cabb)
+
+2015-02-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6f2ba22f)
+
+2015-02-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (17d02551)
+
+2015-02-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2a048e41)
+
+2015-02-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0029c0c9)
+
+2015-02-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4dde70c9)
+
+2015-02-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f573b994)
+
+2015-02-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c4ca3f6d)
+
+2015-02-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bce57d14)
+
+2015-02-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (43d037d8)
+
+2015-02-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d6c57e28)
+
+2015-02-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (94b0472b)
+
+2015-01-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (78b14d7f)
+
+2015-01-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b6d62858)
+
+2015-01-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1ac9ef92)
+
+2015-01-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fa43f706)
+
+2015-01-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (530b22ba)
+
+2015-01-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (481be148)
+
+2015-01-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cd126192)
+
+2015-01-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c6ed130d)
+
+2015-01-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bab67793)
+
+2015-01-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cfc6af4f)
+
+2015-01-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f7ef3392)
+
+2015-01-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (541c6afa)
+
+2015-01-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (76231ae5)
+
+2015-01-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b84ac857)
+
+2015-01-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (798f5140)
+
+2015-01-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (013a3759)
+
+2015-01-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1edc5c6f)
+
+2015-01-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (63ee1937)
+
+2015-01-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0766cca8)
+
+2015-01-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0b180630)
+
+2015-01-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0f056514)
+
+2015-01-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (246a5eed)
+
+2015-01-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (27f2b016)
+
+2015-01-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f6f77727)
+
+2015-01-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e12a25ea)
+
+2015-01-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (231f9b81)
+
+2015-01-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1294975a)
+
+2015-01-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9cafacd9)
+
+2015-01-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (77417043)
+
+2015-01-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c3f12b56)
+
+2015-01-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3419d095)
+
+2014-12-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (65297732)
+
+2014-12-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb6d2957)
+
+2014-12-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8fd0cfcd)
+
+2014-12-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9c8faef1)
+
+2014-12-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (69d66ab5)
+
+2014-12-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c3b8b388)
+
+2014-12-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (37867f84)
+
+2014-12-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (97ff50df)
+
+2014-12-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a9498507)
+
+2014-12-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7aa1d33f)
+
+2014-12-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (88062e77)
+
+2014-12-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9f8f1296)
+
+2014-12-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a3bf5841)
+
+2014-12-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (df4c5e5d)
+
+2014-12-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2df0463a)
+
+2014-12-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4bc815a8)
+
+2014-12-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bca97bfa)
+
+2014-12-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cc6b8d95)
+
+2014-12-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9412aca4)
+
+2014-12-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9ca611e3)
+
+2014-12-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (50b0348a)
+
+2014-12-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a45ac56b)
+
+2014-12-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3d80afa6)
+
+2014-12-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (214e7521)
+
+2014-12-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7a102526)
+
+2014-12-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cd624068)
+
+2014-12-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f7d92c69)
+
+2014-12-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6ca4d82e)
+
+2014-12-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f63441c)
+
+2014-12-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f7c795c8)
+
+2014-12-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1ddf4da)
+
+2014-11-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (47892c1c)
+
+2014-11-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0e683dc8)
+
+2014-11-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c4896342)
+
+2014-11-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (67895dd1)
+
+2014-11-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ab9cd103)
+
+2014-11-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (af131b72)
+
+2014-11-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (92593b59)
+
+2014-11-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2d347865)
+
+2014-11-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (171c02af)
+
+2014-11-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b8537b97)
+
+2014-11-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a7f51f76)
+
+2014-11-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (03adbd94)
+
+2014-11-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ad273ca0)
+
+2014-11-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a83810c3)
+
+2014-11-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (86f11d6c)
+
+2014-11-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (65837a70)
+
+2014-11-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c4852ab5)
+
+2014-11-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (12ed3367)
+
+2014-11-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (438d720c)
+
+2014-11-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (467cdc44)
+
+2014-11-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f67a57a7)
+
+2014-11-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (398c9ced)
+
+2014-11-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6d4f9e18)
+
+2014-11-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b3e2e5e4)
+
+2014-11-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e8b60599)
+
+2014-11-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7860f276)
+
+2014-11-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0b29b387)
+
+2014-11-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (33454121)
+
+2014-11-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e7e72597)
+
+2014-11-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f9d644c)
+
+2014-10-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (17e22172)
+
+2014-10-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (61a6460f)
+
+2014-10-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d76703dd)
+
+2014-10-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d83b36e1)
+
+2014-10-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (18580990)
+
+2014-10-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4fad1300)
+
+2014-10-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3fd32fca)
+
+2014-10-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (159a1228)
+
+2014-10-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6ad6b819)
+
+2014-10-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (71a752d6)
+
+2014-10-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4060ff61)
+
+2014-10-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (16d8acca)
+
+2014-10-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (28f7d721)
+
+2014-10-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fe52633b)
+
+2014-10-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (349536f5)
+
+2014-10-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f143a0dd)
+
+2014-10-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0d6d2b4e)
+
+2014-10-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ceaef511)
+
+2014-10-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6506ecc3)
+
+2014-10-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1ee34685)
+
+2014-10-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ecc07f48)
+
+2014-10-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9c44b4e0)
+
+2014-10-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b94eb2f4)
+
+2014-10-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (66ceb02b)
+
+2014-10-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (371a6a49)
+
+2014-10-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (adbb58c8)
+
+2014-10-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1b689d01)
+
+2014-10-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5186d48a)
+
+2014-10-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6a808e06)
+
+2014-10-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b06b9de6)
+
+2014-10-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b5209937)
+
+2014-09-30 Iain Lane
+
+        * Merge lp:~darkxst/indicator-keyboard/lp1372346 - no change rebuild
+          (e3810047)
+
+2014-09-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2120ec19)
+
+2014-09-29 Tim Lunn
+
+        * No change rebuild for gnome-desktop 3.12 (76d985b9)
+
+2014-09-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b64878d4)
+
+2014-09-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6332919c)
+
+2014-09-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1187ee82)
+
+2014-09-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fba86bdf)
+
+2014-09-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9a196d70)
+
+2014-09-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b94b8c2c)
+
+2014-09-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ad27d87f)
+
+2014-09-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a2f47ee4)
+
+2014-09-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e934a7e4)
+
+2014-09-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7e83fd7c)
+
+2014-09-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (32aa3818)
+
+2014-09-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e9e23cfa)
+
+2014-09-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a735a584)
+
+2014-09-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c61dbe1e)
+
+2014-09-15 William Hua
+
+        * Hide indicator when menu is empty. (9ec7c8f8)
+        * Hide indicator menu in desktop session when Fcitx is active.
+          (cd8ecdbc)
+        * Use Fcitx current IM when active. (4d9387c5)
+
+2014-09-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3e505119)
+
+2014-09-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0ac6838b)
+
+2014-09-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5bc8d585)
+
+2014-09-12 William Hua
+
+        * Fcitx proxy. (96eb59ce)
+        * Remove unnecessary namespace. (506ff05f)
+        * Use iterator () method. (449e1ab7)
+
+2014-09-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9bcf5430)
+
+2014-09-11 William Hua
+
+        * Update fcitx.vapi. (79042408)
+
+2014-09-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ddd816c3)
+
+2014-09-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1be16aeb)
+
+2014-09-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (72d6f8fe)
+
+2014-09-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d3d2b9c0)
+
+2014-09-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (00742048)
+
+2014-09-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (adc9d62a)
+
+2014-09-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cfe790af)
+
+2014-09-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (172c7170)
+
+2014-09-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0159bda8)
+
+2014-09-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ee6e9cd4)
+
+2014-09-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2c9ab3ef)
+
+2014-08-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c92a2578)
+
+2014-08-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (27ef67f7)
+
+2014-08-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f0157306)
+
+2014-08-27 William Hua
+
+        * Forget window source when destroyed. (c698f447)
+
+2014-08-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1938e46)
+
+2014-08-26 William Hua
+
+        * Carefully ignore IBus sources when Fcitx is active and vice versa.
+          (3b90f374)
+
+2014-08-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2f0817ee)
+
+2014-08-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1f6d403c)
+
+2014-08-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0a245099)
+
+2014-08-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ca6c7846)
+
+2014-08-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0257cd24)
+
+2014-08-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb45c22b)
+
+2014-08-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c6e7797d)
+
+2014-08-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d376193c)
+
+2014-08-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (54aa64bf)
+
+2014-08-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (51e04b22)
+
+2014-08-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4f950e9c)
+
+2014-08-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1793311)
+
+2014-08-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (99e01f7c)
+
+2014-08-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bde857cc)
+
+2014-08-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (06b55420)
+
+2014-08-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2ea4a44a)
+
+2014-08-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7a908d2c)
+
+2014-08-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e98ccab2)
+
+2014-08-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (eb3c66cc)
+
+2014-08-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ec52a978)
+
+2014-08-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5b75a037)
+
+2014-08-06 William Hua
+
+        * Update .bzrignore. (3cd01879)
+        * Re-enable experimental non-null. (98e2925f)
+        * Merge trunk. (a45ebee1)
+
+2014-08-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3eb683b8)
+
+2014-08-04 William Hua
+
+        * Merge trunk. (09b491d4)
+
+2014-08-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (25b7063a)
+
+2014-08-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (44bd6edb)
+
+2014-08-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1e51fe4f)
+
+2014-08-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8558ae3f)
+
+2014-07-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6021092d)
+
+2014-07-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8ed0567b)
+
+2014-07-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (abf963fb)
+
+2014-07-28 William Hua
+
+        * Merge trunk. (204761f0)
+
+2014-07-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5821cf88)
+
+2014-07-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d8b3a707)
+
+2014-07-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5603bfcd)
+
+2014-07-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3e2ad0d8)
+
+2014-07-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a9e9018e)
+
+2014-07-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2576c51e)
+
+2014-07-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2c2c328c)
+
+2014-07-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e00b825c)
+
+2014-07-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5801391a)
+
+2014-07-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (61a3a756)
+
+2014-07-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3b98fa16)
+
+2014-07-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f15bff6b)
+
+2014-07-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5c951316)
+
+2014-07-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8ee52b7a)
+
+2014-07-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (07412e63)
+
+2014-07-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8b3f3350)
+
+2014-07-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (319e4734)
+
+2014-07-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (81597e49)
+
+2014-07-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (86a3f1e0)
+
+2014-07-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a5b2ce69)
+
+2014-07-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (83dc2ebf)
+
+2014-07-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e1af7d10)
+
+2014-07-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (648ab078)
+
+2014-07-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (13bc7af5)
+
+2014-07-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cb045736)
+
+2014-07-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f70ad991)
+
+2014-07-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a9ed7cec)
+
+2014-07-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ee32845a)
+
+2014-06-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2d5e1129)
+
+2014-06-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c286c39e)
+
+2014-06-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a5a76183)
+
+2014-06-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2ce800c7)
+
+2014-06-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4654a7a4)
+
+2014-06-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4541865e)
+
+2014-06-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b9f03913)
+
+2014-06-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e76ba54e)
+
+2014-06-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (adc97ce9)
+
+2014-06-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (959ca95f)
+
+2014-06-20 CI bot
+
+        * Releasing 0.0.0+14.10.20140620.1-0ubuntu1 (87766bec)
+
+2014-06-20 William Hua
+
+        * Use get_state () on GLib.Action instead of the state member. Fixes
+          FTBFS. (422aa823)
+
+2014-06-20 Ted Gould
+
+        * Synchronize process management across indicators (867013a6)
+
+2014-06-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (910a4108)
+
+2014-06-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a6e96920)
+
+2014-06-18 William Hua
+
+        * Use get_state () instead of state. Fixes FTBFS. (be3e3e38)
+
+2014-06-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1ad69804)
+
+2014-06-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fced12d5)
+
+2014-06-17 William Hua
+
+        * Disable experimental non-null. (66693b52)
+        * Merge trunk. (d6026b45)
+
+2014-06-16 William Hua
+
+        * Fix tests. (bbd52577)
+
+2014-06-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (84956ac5)
+
+2014-06-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb360c3e)
+
+2014-06-13 William Hua
+
+        * Pick IBus or Fcitx. (8800a05d)
+        * Basic Fcitx support. (e12eb4be)
+
+2014-06-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b59ba844)
+
+2014-06-12 William Hua
+
+        * deps/README. (2114459e)
+
+2014-06-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ad7b8500)
+
+2014-06-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (35278a2d)
+
+2014-06-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fe304686)
+
+2014-06-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d29b56b8)
+
+2014-06-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0eeb1d8c)
+
+2014-06-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c5e20a3e)
+
+2014-06-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f5041653)
+
+2014-06-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (88f072d2)
+
+2014-06-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e3286fdc)
+
+2014-06-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9349eaf1)
+
+2014-06-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cae340a7)
+
+2014-06-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cedc559e)
+
+2014-05-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ce9be362)
+
+2014-05-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dfc461c7)
+
+2014-05-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (45e172cb)
+
+2014-05-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cee6fe2c)
+
+2014-05-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b6a199e4)
+
+2014-05-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7a7d00f4)
+
+2014-05-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e0fe83b5)
+
+2014-05-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (27e2c45a)
+
+2014-05-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8b6809ad)
+
+2014-05-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (44a4a60a)
+
+2014-05-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d18206b5)
+
+2014-05-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d3d71680)
+
+2014-05-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7346d67c)
+
+2014-05-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7afb0bd8)
+
+2014-05-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (845fc508)
+
+2014-05-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (18f6ea77)
+
+2014-05-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (df54b043)
+
+2014-05-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (89d62b66)
+
+2014-05-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5eed80e1)
+
+2014-05-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (eb6d463c)
+
+2014-05-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (672f66b2)
+
+2014-05-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (53aaaf0c)
+
+2014-05-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1b5a6abe)
+
+2014-05-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (14a6fc74)
+
+2014-05-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (932dedb2)
+
+2014-05-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d87cde1e)
+
+2014-05-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (95d6f851)
+
+2014-05-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dda3feeb)
+
+2014-04-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e32e5953)
+
+2014-04-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1b52e5fb)
+
+2014-04-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (56b4dbd9)
+
+2014-04-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (219f5d8c)
+
+2014-04-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1acdbabb)
+
+2014-04-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a930118f)
+
+2014-04-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6fab7f6a)
+
+2014-04-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a507db28)
+
+2014-04-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (692eec07)
+
+2014-04-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e63561b8)
+
+2014-04-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e1b18f9f)
+
+2014-04-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f46b8860)
+
+2014-04-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (86c7eeae)
+
+2014-04-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (90265311)
+
+2014-04-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (588feb16)
+
+2014-04-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a73496de)
+
+2014-04-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c47a9c4b)
+
+2014-04-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4a276864)
+
+2014-04-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4c89fd41)
+
+2014-04-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7d9e9ecc)
+
+2014-04-10 CI bot
+
+        * Releasing 0.0.0+14.04.20140410.1-0ubuntu1 (15f595ff)
+
+2014-04-10 William Hua
+
+        * If an IBus input source is active when the session is locked,
+          switch to another non-IBus one instead.
+          Fixes: 1301860
+          (eda58d24)
+
+2014-04-10 CI bot
+
+        * Releasing 0.0.0+14.04.20140410-0ubuntu1 (17a525f6)
+
+2014-04-10 William Hua
+
+        * Export separate menus for desktop and greeter.
+          Fixes: 1291962
+          (e5bfff5b)
+
+2014-04-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0bb44b32)
+
+2014-04-10 William Hua
+
+        * Use different mouse actions when locked. (d4868dde)
+
+2014-04-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ee25b52f)
+
+2014-04-09 William Hua
+
+        * Merge 1291962-2 and resolve conflicts. (f442bede)
+        * Merge trunk fixing conflicts. (0e4cbba1)
+
+2014-04-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e8c1f8e8)
+
+2014-04-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (93aa868a)
+
+2014-04-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4dbc38ad)
+
+2014-04-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (69dfdc92)
+
+2014-04-05 William Hua
+
+        * Update pot file. (3aae8264)
+        * Merge trunk. (5db32b0e)
+        * Remember to reset the indicator icon on unlock too. (969e5b55)
+        * Remember to update indicator action with active input source.
+          (ef122381)
+
+2014-04-04 William Hua
+
+        * Don't change input source setting on lock/unlock. (3b4b8a34)
+
+2014-04-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a42d079c)
+
+2014-04-04 William Hua
+
+        * Add 'active' action that allows setting the current input source
+          without persisting it on disk. (32a98fda)
+        * Separate lock screen menu. (dc64a538)
+        * Add u-s-d keyboard plugin private interface. (202d1631)
+        * Merge 1291962-2. (ddb87c4d)
+        * Revert '...' to '…'. (26afec3a)
+
+2014-04-03 CI bot
+
+        * Releasing 0.0.0+14.04.20140403.1-0ubuntu1 (79321e95)
+
+2014-04-03 William Hua
+
+        * Refresh the menu and indicator when IBus is connected.
+          Fixes:
+          1246537 (d23c82e0)
+        * Document how to refresh indicator-keyboard's icons for the
+          ubuntu-mono themes. (d64234b6)
+
+2014-04-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c9bb37e5)
+
+2014-04-03 William Hua
+
+        * Change '...' to '…'. (96de8733)
+
+2014-04-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (91e8b226)
+
+2014-04-02 William Hua
+
+        * Document the icon generator. (501dea35)
+        * Update sources and indicator when IBus is ready. (93ed04c2)
+        * Switch to non-IBus input source when screen is locked. (414d5d9f)
+
+2014-04-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8c6fd2e9)
+
+2014-03-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3f79fd94)
+
+2014-03-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (45d2fad0)
+
+2014-03-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb291b6c)
+
+2014-03-29 William Hua
+
+        * Export separate menus for desktop and greeter. (b014d570)
+
+2014-03-28 CI bot
+
+        * Releasing 0.0.0+14.04.20140328.1-0ubuntu1 (5ece9050)
+
+2014-03-28 William Hua
+
+        * Use Ubuntu-specific IBus D-Bus API so that we don't have to replace
+          the old IBus panel service in order to inspect and
+          activate IBus engine properties.
+          Fixes: 1290881 (a452e71a)
+
+2014-03-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cc698d1e)
+
+2014-03-27 William Hua
+
+        * Merge 1290881. (f49c94ed)
+
+2014-03-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7219a58e)
+
+2014-03-27 William Hua
+
+        * Update pot file. (c6cd63ba)
+        * Filter out IBus IMs if we don't specify Options.IBUS. (6bef373a)
+        * Export separate menus for desktop and greeter. (809760cd)
+
+2014-03-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1c2c5479)
+
+2014-03-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3eb5c712)
+
+2014-03-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2ce183b6)
+
+2014-03-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c1cb9744)
+
+2014-03-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4643b214)
+
+2014-03-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4479c8a7)
+
+2014-03-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7e4a24be)
+
+2014-03-20 William Hua
+
+        * IBus panel is only available while IBus is running. (a08ab0c4)
+
+2014-03-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e2a4db27)
+
+2014-03-19 William Hua
+
+        * Check if IBus is connected before checking engine properties.
+          (be945fee)
+        * Breaks IBus << 1.5.5-1ubuntu3. (e5772b00)
+        * Use private IBus implementation. (1cb9d1cc)
+
+2014-03-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a8356a78)
+
+2014-03-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (28bcbe9e)
+
+2014-03-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2eb3e698)
+
+2014-03-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2ad7295b)
+
+2014-03-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (927ab5bf)
+
+2014-03-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cd8e79a2)
+
+2014-03-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (35714f10)
+
+2014-03-11 CI bot
+
+        * Releasing 0.0.0+14.04.20140311-0ubuntu1 (406929f8)
+
+2014-03-11 Lars Uebernickel
+
+        * Add desktop_lockscreen profile (30ce6a13)
+        * Add desktop_lockscreen profile (028bb578)
+
+2014-03-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (95fd4ae8)
+
+2014-03-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (502fc51e)
+
+2014-03-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cdb58ecf)
+
+2014-03-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5f2631c0)
+
+2014-03-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f52de240)
+
+2014-03-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c7eb7fe4)
+
+2014-03-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (871d133a)
+
+2014-03-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dcf6278d)
+
+2014-03-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b1f34046)
+
+2014-03-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (136511c4)
+
+2014-03-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e55f7fa6)
+
+2014-02-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7de85a4a)
+
+2014-02-27 CI bot
+
+        * Releasing 0.0.0+14.04.20140227.3-0ubuntu1 (9f894431)
+
+2014-02-27 Sebastien Bacher
+
+        * Drop unity8 test description, that indicator is used on desktop
+          only (25594f3c)
+
+2014-02-27 William Hua
+
+        * Update icons when icon theme changes.
+          Fixes: 1237749 (89d447d2)
+        * Do not set org.gnome.desktop.input-sources.current when unchanged
+          (LP: #1256559).
+          Fixes: 1256559 (7b3c032f)
+
+2014-02-27 Sebastien Bacher
+
+        * Drop unity8 test description, that indicator is used on desktop
+          only (11e7a940)
+
+2014-02-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (61c218ff)
+
+2014-02-26 William Hua
+
+        * Update icons when icon theme changes. (c68445a2)
+
+2014-02-26 Ted Gould
+
+        * Update for gnome-fallback (e17991a2)
+
+2014-02-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d65d9294)
+
+2014-02-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3588891e)
+
+2014-02-24 Oleg O Andreev
+
+        * Do not set org.gnome.desktop.input-sources.current when unchanged
+          (LP: #1256559). (46580029)
+
+2014-02-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a4dcdb10)
+
+2014-02-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (204079e3)
+
+2014-02-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8a6024e7)
+
+2014-02-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dfd77420)
+
+2014-02-20 CI bot
+
+        * Releasing 0.0.0+14.04.20140220-0ubuntu1 (ba586858)
+
+2014-02-20 William Hua
+
+        * Implement the IBus panel within the indicator. (bbd49ff9)
+
+2014-02-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (42303ce5)
+
+2014-02-19 Ted Gould
+
+        * Forgot one (dfcdd975)
+        * Switch to pkglibexecdir (76ab6be0)
+        * Grab the makefile config too (8741f59a)
+        * Add in the upstart xdg override (20ef67d7)
+        * Adding an Upstart job configuration (c9d231df)
+        * Dropping the registration as a DBus service (b6b73be5)
+
+2014-02-19 William Hua
+
+        * Break reference cycle which caused some inconsistent action
+          handling. (b17eaf69)
+
+2014-02-19 CI bot
+
+        * Releasing 0.0.0+14.04.20140219.1-0ubuntu1 (2de946de)
+
+2014-02-19 Sebastien Bacher
+
+        * use unity-control-center instead of gnome-control-center (88be23f0)
+
+2014-02-19 William Hua
+
+        * Implement IBus panel. (0daf660f)
+
+2014-02-19 Sebastien Bacher
+
+        * use unity-control-center instead of gnome-control-center (a53bb57f)
+
+2014-02-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f4bfd876)
+
+2014-02-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cc872e9f)
+
+2014-02-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (43df1682)
+
+2014-02-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (033e2cb1)
+
+2014-02-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0fc71c5e)
+
+2014-02-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1135139c)
+
+2014-02-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1986348f)
+
+2014-02-12 CI bot
+
+        * Resync trunk (5e18e1f9)
+
+2014-02-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4815b4c6)
+
+2014-02-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e8541761)
+
+2014-02-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7b53c483)
+
+2014-02-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c3273527)
+
+2014-02-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d6ecc010)
+
+2014-02-07 CI bot
+
+        * Releasing 0.0.0+14.04.20140207-0ubuntu1 (6e590ab4)
+        * Adding acceptance tests and merge review policies (c52f10b8)
+
+2014-02-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (18946570)
+
+2014-02-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4c74c145)
+
+2014-02-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (37c072de)
+
+2014-02-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (efa63424)
+
+2014-02-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e92560ca)
+
+2014-02-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (de5e4449)
+
+2014-01-31 Ted Gould
+
+        * Adding acceptance tests and merge review policies. (2ce1ecaf)
+        * Adding merge review policy (2d34dda2)
+        * Adding basic acceptance tests (7d44ce45)
+
+2014-01-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e2b4b257)
+
+2014-01-30 William Hua
+
+        * Replace BAMF with Unity window stack API calls. (30cc82bc)
+
+2014-01-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (51e6bbed)
+
+2014-01-29 William Hua
+
+        * Merge trunk. (36b1e9f9)
+        * Fix tests by restoring DISPLAY's value. (0828bc2d)
+        * Use fixture class. (393bc450)
+
+2014-01-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d1d2cc4c)
+
+2014-01-28 William Hua
+
+        * Add fixture class from libunity. (f402be78)
+
+2014-01-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b0c0a825)
+
+2014-01-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bf39fa7a)
+
+2014-01-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (52075d6b)
+
+2014-01-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d7e6a587)
+
+2014-01-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c340fc6b)
+
+2014-01-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3a8a1ad0)
+
+2014-01-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d9989b32)
+
+2014-01-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5c31a1cc)
+
+2014-01-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (dd971c49)
+
+2014-01-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ebbf0449)
+
+2014-01-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5d64f232)
+
+2014-01-17 William Hua
+
+        * Save and restore DISPLAY. (335ff379)
+
+2014-01-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d76bcb7a)
+
+2014-01-16 William Hua
+
+        * Prevent double removal of timeout sources. (f7128240)
+
+2014-01-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (03897a50)
+
+2014-01-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (98e6f992)
+
+2014-01-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ce371ff8)
+
+2014-01-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e33dac3d)
+
+2014-01-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (579e0422)
+
+2014-01-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (17f59f0e)
+
+2014-01-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (adc375a3)
+
+2014-01-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1295207e)
+
+2014-01-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (09774b2a)
+
+2014-01-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ba82a022)
+
+2014-01-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (15763d30)
+
+2014-01-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a415a5c2)
+
+2014-01-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b878a588)
+
+2014-01-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5ab51b13)
+
+2014-01-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (57b81fce)
+
+2014-01-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (72ca532b)
+
+2013-12-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6d458b26)
+
+2013-12-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (af972b99)
+
+2013-12-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (81857997)
+
+2013-12-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (12c22d1e)
+
+2013-12-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cf518780)
+
+2013-12-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8b597c5d)
+
+2013-12-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (227fa3e8)
+
+2013-12-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (74bbef4c)
+
+2013-12-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2861ffeb)
+
+2013-12-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (9f6522bd)
+
+2013-12-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0b212589)
+
+2013-12-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (990c46da)
+
+2013-12-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb0fb8dc)
+
+2013-12-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (03ec8f8b)
+
+2013-12-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7f1c938b)
+
+2013-12-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (2e0a862d)
+
+2013-12-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (a7421285)
+
+2013-12-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6846921c)
+
+2013-12-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (763873ac)
+
+2013-12-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (582588d8)
+
+2013-12-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8b0497f5)
+
+2013-12-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1a814fa2)
+
+2013-12-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7a304c29)
+
+2013-12-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (50b5e561)
+
+2013-12-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bb6e0ab7)
+
+2013-12-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0c33d929)
+
+2013-12-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (84b8c22e)
+
+2013-12-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (80236de3)
+
+2013-12-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bc879f39)
+
+2013-11-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c36e8a7b)
+
+2013-11-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c05c5b1c)
+
+2013-11-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5de231f6)
+
+2013-11-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (34456e3b)
+
+2013-11-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4e967fa4)
+
+2013-11-25 Automatic PS uploader
+
+        * Releasing 0.0.0+14.04.20131125-0ubuntu1 (revision 185 from
+          lp:indicator-keyboard). (9d665fe4)
+
+2013-11-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (90ae2c10)
+
+2013-11-25 Automatic PS uploader
+
+        * Releasing 0.0.0+14.04.20131125-0ubuntu1, based on r185 (c6aad610)
+
+2013-11-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cccd65d8)
+
+2013-11-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7980b7dd)
+
+2013-11-22 William Hua
+
+        * Update window sources when window stack is available. (cca1f055)
+        * Replace BAMF with Unity window stack API calls. (74050490)
+        * Move greeter.vala to unity-greeter.vala. (2fe7f0a9)
+
+2013-11-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b6ec0422)
+
+2013-11-21 Allan LeSage
+
+        * Add gcov coverage tooling; use ./autogen.sh --enable-gcov and then
+          make coverage-html to see a report of what's covered.  You
+          can read about the rationale in this old blog post:
+          http://qualityhour.wordpress.com/2012/01/29/test-coverage-tutorial-for-cc-autotools-projects/
+          . (875ee4d7)
+        * Merge trunk, resolving Makefile conflict. (bf2aab36)
+
+2013-11-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f90c7c21)
+
+2013-11-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (697b56a6)
+
+2013-11-19 William Hua
+
+        * Add accountsservice.vapi (accountsservice no long ships it).
+          (088743d6)
+        * Add deps/accountsservice.vapi. (0a0b6bff)
+
+2013-11-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (241912d3)
+
+2013-11-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (09c396e5)
+
+2013-11-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ae0f076a)
+
+2013-11-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3fd1f2ac)
+
+2013-11-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f0378ca0)
+
+2013-11-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (fac0255e)
+
+2013-11-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (8e43dc9d)
+
+2013-11-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (eee33735)
+
+2013-11-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d765798d)
+
+2013-11-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (98d89e99)
+
+2013-11-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (624ce307)
+
+2013-11-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3e0a08f7)
+
+2013-11-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (82cce286)
+
+2013-11-05 William Hua
+
+        * Enable middle click and mouse wheel scrolling.
+          Fixes:
+          https://bugs.launchpad.net/bugs/887139. (b50ff233)
+
+2013-11-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7bba3d50)
+
+2013-11-04 William Hua
+
+        * Be careful around large scrolling offsets. (c01d6f3f)
+
+2013-11-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cf8eccd1)
+
+2013-11-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ed6f73df)
+
+2013-11-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (c2a3c54d)
+
+2013-11-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4e2eee88)
+
+2013-10-31 Lars Uebernickel
+
+        * Set the indicator's position according to
+          http://wiki.ubuntu.com/SystemComponents. (3269a7e3)
+
+2013-10-31 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (32b4a3a0)
+
+2013-10-30 William Hua
+
+        * Enable middle click and mouse wheel scrolling. (84fafd7a)
+
+2013-10-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (f8e234c7)
+
+2013-10-29 Automatic PS uploader
+
+        * Releasing 0.0.0+14.04.20131029.1-0ubuntu1 (revision 155 from
+          lp:indicator-keyboard). (bb3466b3)
+        * Releasing 0.0.0+14.04.20131029.1-0ubuntu1, based on r155 (d3b18692)
+
+2013-10-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (4bd754e4)
+
+2013-10-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (39bf9bbb)
+
+2013-10-27 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (374b821e)
+
+2013-10-26 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (b46382ae)
+
+2013-10-25 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (21c06f6a)
+
+2013-10-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (78e36eb9)
+
+2013-10-23 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e9c1ab79)
+
+2013-10-22 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (79748d0a)
+
+2013-10-21 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (af440d5d)
+
+2013-10-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (29eaa0e8)
+
+2013-10-19 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0a3979e5)
+
+2013-10-18 Dmitrijs Ledkovs
+
+        * Define "ubiquity" indicator profile, reusing the greeter object.
+          (LP: #1241539).
+          Fixes:
+          https://bugs.launchpad.net/bugs/1241539. (07f0db79)
+        * Fixup (3e640cc9)
+        * Define "ubiquity" indicator profile, reusing the greeter object.
+          (LP: #1241539) (7a1286d4)
+
+2013-10-18 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (6d52f559)
+
+2013-10-17 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (94224e64)
+
+2013-10-16 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cbd8ef1a)
+
+2013-10-15 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bdf25277)
+
+2013-10-14 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bdd47de4)
+
+2013-10-13 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (cf69e369)
+
+2013-10-12 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (5a58666c)
+
+2013-10-11 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0812dee1)
+
+2013-10-10 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20131010.1-0ubuntu1 (revision 134 from
+          lp:indicator-keyboard). (7fedfc74)
+        * Releasing 0.0.0+13.10.20131010.1-0ubuntu1, based on r134 (a036a81d)
+
+2013-10-10 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (d41d0306)
+
+2013-10-09 William Hua
+
+        * Don't set LightDM's layout if we're in a session. (LP: 1226962).
+
+          Fixes: https://bugs.launchpad.net/bugs/1226962. (1c82c8c2)
+        * Don't set LightDM's layout if we're in a session. (LP: 1226962)
+          (96ba3bfe)
+
+2013-10-09 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (45f0066c)
+
+2013-10-08 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (44c5f2b5)
+
+2013-10-07 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (71cf4e86)
+
+2013-10-06 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (296319f2)
+
+2013-10-05 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (7dedd72b)
+
+2013-10-04 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20131004-0ubuntu1 (revision 125 from
+          lp:indicator-keyboard). (83bdc93b)
+
+2013-10-04 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (bfd39294)
+
+2013-10-04 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20131004-0ubuntu1, based on r125 (5b2dff04)
+
+2013-10-03 William Hua
+
+        * Set the selected user's first keyboard layout whenever it changes
+          under unity-greeter. (LP #1233945).
+          Fixes:
+          https://bugs.launchpad.net/bugs/1233945. (dbc0fe12)
+
+2013-10-03 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (3aa725b9)
+
+2013-10-02 William Hua
+
+        * Switch to default layout for non-users in unity-greeter. (62e536eb)
+        * Get greeter unique bus name from environment. (d5dab6b8)
+
+2013-10-02 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (0c711f04)
+
+2013-10-01 William Hua
+
+        * ocd (673d3cc0)
+        * Connect properly and handle edge cases. (3e10c675)
+
+2013-10-01 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (1959bd03)
+
+2013-09-30 William Hua
+
+        * Set initial layout whenever user is switched in unity-greeter.
+          (292ca060)
+
+2013-09-30 Sebastien Bacher
+
+        * There was a manual upload for translation, get it back in trunk .
+          (9dfed0f3)
+
+2013-09-30 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (33ccbca6)
+
+2013-09-29 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e081bed5)
+
+2013-09-28 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (143fd7ee)
+
+2013-09-27 Sebastien Bacher
+
+        * There was a manual upload for translation, get it back in trunk
+          (164677a6)
+
+2013-09-24 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130924.2-0ubuntu1 (revision 116 from
+          lp:indicator-keyboard). (4ee93cb1)
+        * Releasing 0.0.0+13.10.20130924.2-0ubuntu1, based on r116 (9afbb4af)
+
+2013-09-24 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (e325240f)
+
+2013-09-23 Lars Uebernickel
+
+        * Add missing semicolon (916788fa)
+        * Set position of the indicator (5e9c82fa)
+
+2013-09-23 William Hua
+
+        * Fall-back on old unity-greeter keyboard layouts in case migration
+          hasn't occurred.
+          Fixes:
+          https://bugs.launchpad.net/bugs/1228489. (2748d18f)
+
+2013-09-21 William Hua
+
+        * Prevent index out of bounds. (4c4d3fe6)
+        * Always add the default layout. (caa8187d)
+        * Don't waste space. (04f6c6c8)
+
+2013-09-20 William Hua
+
+        * Use old user layouts if they haven't migrated yet. (b4546f5c)
+        * Fallback to LightDM default. (f485f874)
+        * Only use XKeyboardLayouts if InputSources is empty. (474217ef)
+        * Infer variable type. (8031d683)
+
+2013-09-20 Launchpad Translations on behalf of indicator-applet-developers
+
+        * Launchpad automatic translations update. (ea0b2801)
+
+2013-08-29 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130829.1-0ubuntu1 (revision 112 from
+          lp:indicator-keyboard). (ae40f671)
+        * Releasing 0.0.0+13.10.20130829.1-0ubuntu1, based on r112 (aa26dff8)
+
+2013-08-29 William Hua
+
+        * Append input source suffix to accessible-desc as described in
+          design spec. (b0f10378)
+
+2013-08-29 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130829-0ubuntu1 (revision 110 from
+          lp:indicator-keyboard). (ee3f00b7)
+
+2013-08-29 William Hua
+
+        * Use printf-style format string instead. (807c6d87)
+
+2013-08-29 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130829-0ubuntu1, based on r110 (c768673d)
+
+2013-08-28 William Hua
+
+        * Append input source suffix to accessible-desc. (f1416ee3)
+
+2013-08-28 Matthieu Baerts
+
+        * Added an 'accessible description' (e3220580)
+        * Added an 'accessible description' (09910321)
+
+2013-08-22 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130822.4-0ubuntu1 (revision 108 from
+          lp:indicator-keyboard). (5324c504)
+        * Releasing 0.0.0+13.10.20130822.4-0ubuntu1, based on r108 (f55e94c6)
+
+2013-08-22 Jeremy Bicha
+
+        * Don't build-depend on quilt and drop debian/README.source, thanks
+          Michael Terry!. (0004f984)
+        * Drop debian/README.source and build-depends on quilt (85051b72)
+
+2013-08-22 William Hua
+
+        * Proper shutdown on SIGTERM. (05cd692f)
+        * Use accountsservice and make work under unity-greeter. (e974f427)
+        * Merge trunk. (3d0529fa)
+        * Kill running gvfs instance after tests finish. (39fd9bd8)
+        * Kill running gvfs instance after tests finish. (30ca305b)
+        * Proper shutdown on SIGTERM. (201e48e1)
+
+2013-08-21 Automatic PS uploader
+
+        * Releasing 0.0.0+13.10.20130821-0ubuntu1 (revision 103 from
+          lp:indicator-keyboard). (e7ef3f36)
+        * Releasing 0.0.0+13.10.20130821-0ubuntu1, based on r103 (95387da2)
+
+2013-08-21 Mathieu Trudel-Lapierre
+
+        * Bootstrap commit. (746e8d2d)
+        * Automatic snapshot from revision 102 (bootstrap) (06194a66)
+        * Packaging review. (cda79750)
+
+2013-08-21 William Hua
+
+        * Use long delays in places when they may be killed prematurely.
+          (c7f79452)
+        * Use long delays in places when they may be killed prematurely.
+          (100ba684)
+
+2013-08-20 William Hua
+
+        * Change XDG_RUNTIME_DIR to point in-tree. The tests don't run
+          properly because the default XDG_RUNTIME_DIR doesn't exist
+          in a schroot. (df3cf3ed)
+        * Change XDG_RUNTIME_DIR to point in-tree. (fb33dc66)
+
+2013-08-13 Mathieu Trudel-Lapierre
+
+        * Remove dh_auto_test override. (e89fa16b)
+        * Merge packaging (81097693)
+
+2013-08-12 William Hua
+
+        * Resolve flaky test by always forcing the delay. (b95b1793)
+        * Fix out-of-bounds error. (5c12e10b)
+
+2013-08-09 Mathieu Trudel-Lapierre
+
+        * debian/control:   - Packaging review, add comment to developers.
+           - Fix Vcs-Bzr, Vcs-Browser.   - Sort Build-Depends, use
+          trailing commas.   - Improve long description.
+          debian/rules:   - Add DPKG_GENSYMBOLS_CHECK_LEVEL = 4.   -
+          Override dh_autoreconf to run ./autogen.sh.   - Override
+          dh_install to remove .la and .a files.   - Run dh_install
+          with --fail-missing.;  debian/compat: bump to compat level
+          9.;  debian/source/format: make sure we're using format
+          1.0. (624b1149)
+
+2013-08-08 Allan LeSage
+
+        * Add gcov.m4, adjust .bzrignore for m4 files, add coverage Makefile.
+          (f10353bc)
+        * Add gcov coverage tooling. (28c5156a)
+
+2013-08-08 William Hua
+
+        * Split useful code into separate Source object. (61af9c29)
+        * Switch to serial test harness. (4f411bb4)
+        * Fix a couple more potential races. (170596ad)
+
+2013-08-07 William Hua
+
+        * Work under lightdm/unity-greeter. (4451d840)
+        * Split useful code into separate Source object. (0e3bb465)
+
+2013-08-07 Mathieu Trudel-Lapierre
+
+        * Re-add the missing comments (9d2aacb9)
+
+2013-08-07 William Hua
+
+        * Resolve flaky test by forcing a delay. (49783d70)
+
+2013-08-06 William Hua
+
+        * Add debugging information for tests. (6d780dde)
+
+2013-08-05 Mathieu Trudel-Lapierre
+
+        * Fix identation for (Build-)Depends (2b586790)
+        * Add another missing comma (6fd14a94)
+        * debian/control:   - Packaging review, add comment to developers.
+           - Fix Vcs-Bzr, Vcs-Browser.   - Sort Build-Depends, use
+          trailing commas.   - Improve long description.
+          debian/rules:   - Add DPKG_GENSYMBOLS_CHECK_LEVEL = 4.   -
+          Override dh_autoreconf to run ./autogen.sh.   - Override
+          dh_install to remove .la and .a files.   - Run dh_install
+          with --fail-missing.;  debian/compat: bump to compat level
+          9.;  debian/source/format: make sure we're using format
+          1.0. (a8d98f5d)
+
+2013-07-31 William Hua
+
+        * Remove a lot of unnecessary files in the deps directory. (1677a55c)
+        * Update license headers. (2be6aabc)
+
+2013-07-30 William Hua
+
+        * Remove unneeded README. (ed143368)
+        * Remove libbamf3.vapi, libgnomekbd.vapi, and libxklavier.vapi.
+          (6c62ed4e)
+        * Remove unneeded valadocs. (f4a3c189)
+        * Delete the valadocs that are not needed for build. (c1d2bb9c)
+        * Add COPYING.LESSER back. (c9898682)
+        * Update license headers. (4e97f9df)
+
+2013-07-30 Jeremy Bicha
+
+        * drop .pc/ and debian/patches/ directories (fa9b85fc)
+
+2013-07-30 William Hua
+
+        * Quilt clean up. (a3be6f0f)
+
+2013-07-23 William Hua
+
+        * Initial autopilot work. (6958eda8)
+
+2013-07-18 William Hua
+
+        * Fix tests in pbuilder. (7b0816b6)
+
+2013-07-18 Jeremy Bicha
+
+        * debian/control:   - Don't build-depend on vala-0.20-vapi   -
+          Build-depend on dbus for tests (c87bcc61)
+
+2013-07-17 William Hua
+
+        * Relax test that fails when IBus runs headless. (53777140)
+        * Use Xvfb for headless tests. (08943a80)
+        * Add test script. (97501805)
+        * Add --use-bamf option. (c33096c8)
+        * Fallback to ThemedIcon without --use-gtk. (60e32811)
+        * Add --use-gtk flag. (4d097b8e)
+
+2013-07-15 Jeremy Bicha
+
+        * debian/control:   - Don't build-depend on valac-0.20-vapi   -
+          Build-depend on dbus for tests (5f3664cc)
+
+2013-07-04 William Hua
+
+        * Disable experimental non-null for tests. (6061e1de)
+        * Wrap up tests. (7507be3c)
+
+2013-07-03 William Hua
+
+        * Update source test. (e33f980e)
+        * Fix broken tests. (ad1aa443)
+
+2013-07-02 William Hua
+
+        * Set input source test. (573bb692)
+        * Repair test fixtures. (607a5dee)
+
+2013-07-01 William Hua
+
+        * Add indicator schema. (db0ebaa3)
+
+2013-06-28 William Hua
+
+        * Fix quilt patching. (40fb7635)
+        * Remove local install option. (1d9713e6)
+
+2013-06-27 William Hua
+
+        * Minor fixes. (af2cd91d)
+        * Continued tests work-in-progress. (ae6ef44d)
+
+2013-06-26 William Hua
+
+        * Rename directory. (b68e1b1c)
+
+2013-06-25 William Hua
+
+        * Tests work-in-progress. (a8b6bb97)
+
+2013-06-24 William Hua
+
+        * Remove autopilot support. (900fadf5)
+        * Check if at least one IBus engine. (0a4f042f)
+
+2013-06-22 William Hua
+
+        * Fix lintian warnings. (8212d680)
+        * Experimental non-null support. (932273ca)
+        * Change return type of get_icon_string (). (f0a27935)
+        * Fix segfault due to
+          https://bugzilla.gnome.org/show_bug.cgi?id=702846.
+          (904a7a40)
+        * Don't initialize out variables. (f786b1fc)
+        * Don't set menu item if null. (3dd243d0)
+
+2013-06-21 William Hua
+
+        * Keyboard indicator experimental non-null. (b4660d9b)
+        * Icon generator enable experimental non-null. (bba9546d)
+        * Simplify abbreviations. (b7c785a8)
+
+2013-06-20 William Hua
+
+        * Update debian/copyright. (9d174c31)
+        * Update maintainer. (da087f3b)
+        * Update indicator service manifest. (07d1ec2d)
+        * Minor fixes to migration. (ebce729f)
+        * Fix lintian error. (18bd275b)
+        * Migrate old keyboard layouts and IM engines. (06e0f0bc)
+
+2013-06-19 William Hua
+
+        * Remove indicator-keyboard-schema. (d7406e9b)
+        * Per-window fixes. (682d07f5)
+
+2013-06-17 William Hua
+
+        * Bare setup autopilot testing. (92787839)
+
+2013-06-14 William Hua
+
+        * Build depend on dh-translations. (a11146af)
+
+2013-06-13 William Hua
+
+        * dh --with translations. (8709e3db)
+
+2013-06-10 William Hua
+
+        * Build depend on libgee-dev. (24911f70)
+        * Update debian/changelog. (ecf63106)
+        * Fix i18n in packaging. (a16bbbbe)
+
+2013-06-07 William Hua
+
+        * Prefix icon names with indicator-keyboard. (3c4988ba)
+        * Lookup icon in theme first. (d02c2794)
+
+2013-06-05 William Hua
+
+        * Optimize svg size. (5bdd35af)
+        * Align text within icons properly. (91ddc799)
+        * Add subscript to icon-1.svg.in. (97e94283)
+
+2013-06-04 William Hua
+
+        * Icon generator. (97c38e4e)
+        * Factor out common code. (7f9e0c6f)
+        * Update gnome-desktop-3.0.vapi. (aabf5155)
+
+2013-05-31 William Hua
+
+        * Add portable object template. (7ad8e2e1)
+        * i18n for indicator. (10b47cca)
+
+2013-05-30 William Hua
+
+        * Use intltoolize instead. (3392de27)
+        * GLib gettext support. (5871583b)
+
+2013-05-15 William Hua
+
+        * Require vala 0.20. (ebcc1f94)
+
+2013-05-08 William Hua
+
+        * Fix icon rendering. (cf460ebb)
+
+2013-05-07 William Hua
+
+        * Fix keyboard layout display names. (c121830a)
+        * Packaging changes. (aa4b1300)
+
+2013-04-29 William Hua
+
+        * Indicator visible setting. (0d409ee7)
+
+2013-04-26 William Hua
+
+        * Use dictionary action state. (2351bfaa)
+
+2013-04-16 William Hua
+
+        * GBytesIcon support. (b22f1719)
+        * Remove extra menu item. (aabb3c2e)
+
+2013-04-15 William Hua
+
+        * Fix segfault. (b01af54b)
+        * Set icon on menu item. (84d7f8a8)
+
+2013-04-09 William Hua
+
+        * Depend on IBus 1.5. (a5caf702)
+        * Update build dependencies. (11011758)
+
+2013-04-08 William Hua
+
+        * Watch changes to input sources. (0011efc6)
+        * Watch for changes to current source. (25336a06)
+
+2013-04-05 William Hua
+
+        * Rounded corners. (c651a970)
+        * Generate icons. (125fbd0a)
+
+2013-04-03 William Hua
+
+        * Don't check for null settings. (0aa2d2eb)
+        * Update .bzrignore. (7c1581a1)
+        * Autogen indicator-keyboard.{indicator,service}. (9b460b32)
+        * Add debian. (bf9cd00d)
+        * Add missing. (1fe18683)
+
+2013-04-02 William Hua
+
+        * Fix display name of IBus engines. (0817b1fa)
+        * Use long name of engine in menu. (9d04807f)
+        * Guess correct keyboard layout. (961446ae)
+
+2013-04-01 William Hua
+
+        * Character map, layout chart, input settings. (17b5871e)
+
+2013-03-25 William Hua
+
+        * Fiddle with GSettings. (500d2d52)
+
+2013-03-22 William Hua
+
+        * Add libxklavier.vapi and docs. (c81a7085)
+        * Proper linking. (9499e5aa)
+        * Fix header file names in deps/libgnomekbd.vapi. (bd8935d6)
+        * Use .metadata files instead. (db995f3e)
+
+2013-03-21 William Hua
+
+        * Integrate IBus and libgnomekbd. (bb5d7364)
+
+2013-03-18 William Hua
+
+        * Add .bzrignore. (1eba4ec7)
+
+2013-03-15 William Hua
+
+        * Initial commit. (3846f9eb)
