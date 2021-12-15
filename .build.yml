@@ -33,6 +33,8 @@ requires:
     - libxklavier-dev
     - systemd
 #    - libayatana-common-dev
+# For building libayatana-common:
+    - liblomiri-url-dispatcher-dev
 
   ubuntu:
     - clang
@@ -72,7 +74,11 @@ before_scripts:
   -     git clone --depth 1  https://github.com/AyatanaIndicators/libayatana-common.git libayatana-common-build
   - fi
   - cd libayatana-common-build
-  - cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  - if [ ${DISTRO_NAME} == "debian" ]; then
+  -     cmake . -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_LOMIRI_FEATURES=ON
+  - else
+  -     cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  - fi
   - make
   - make install
   - cd -
