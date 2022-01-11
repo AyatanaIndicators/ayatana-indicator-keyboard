@@ -17,7 +17,6 @@ install(TARGETS "ayatana-keyboard-lomiri" DESTINATION ${CMAKE_INSTALL_FULL_LIBDI
 # libayatanaindicatorkeyboardservice.a
 
 add_definitions(-DG_LOG_DOMAIN="ayatana-indicator-keyboard")
-set_source_files_properties(service.c PROPERTIES COMPILE_FLAGS "-std=c99")
 add_library("ayatanaindicatorkeyboardservice" STATIC service.c)
 include_directories(${CMAKE_SOURCE_DIR})
 link_directories(${SERVICE_DEPS_LIBRARY_DIRS})
@@ -25,6 +24,5 @@ link_directories(${SERVICE_DEPS_LIBRARY_DIRS})
 # ayatana-indicator-keyboard-service
 
 add_executable("ayatana-indicator-keyboard-service" main.c)
-set_source_files_properties(service.c main.c PROPERTIES COMPILE_FLAGS "-std=c99")
 target_link_libraries("ayatana-indicator-keyboard-service" "ayatanaindicatorkeyboardservice" "${SERVICE_DEPS_LIBRARIES} -ldl")
 install(TARGETS "ayatana-indicator-keyboard-service" RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}")
