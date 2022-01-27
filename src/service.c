@@ -409,11 +409,11 @@ static void onDispose(GObject *pObject)
 
 static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
 {
-    gchar *sLib = "libayatana-keyboard-x11.so";
+    gchar *sLib = "libayatana-keyboard-x11.so.0";
 
     if (ayatana_common_utils_is_lomiri())
     {
-        sLib = "libayatana-keyboard-lomiri.so";
+        sLib = "libayatana-keyboard-lomiri.so.0";
     }
 
     m_pLibHandle = dlopen(sLib, RTLD_NOW);
