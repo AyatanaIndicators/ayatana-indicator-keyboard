@@ -22,8 +22,13 @@ else()
 endif()
 
 if(ENABLE_WERROR)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+    add_definitions("-Werror")
+endif()
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_definitions("-Weverything")
+else()
+    add_definitions("-Wall")
 endif()
 
 # GNU standard installation directories
@@ -49,21 +54,8 @@ add_custom_target (dist COMMAND bzr export --root=${ARCHIVE_NAME} ${CMAKE_BINARY
 add_custom_target (cppcheck COMMAND cppcheck --enable=all -q --error-exitcode=2 --inline-suppr ${CMAKE_SOURCE_DIR}/src)
 
 # Actual building
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-  set(C_WARNING_ARGS "${C_WARNING_ARGS} -Weverything")
-  set(C_WARNING_ARGS "${C_WARNING_ARGS} -Wno-c++98-compat -Wno-padded")
-  set(C_WARNING_ARGS "${C_WARNING_ARGS} -Wno-documentation")
-
-else()
-
-  set(C_WARNING_ARGS "${C_WARNING_ARGS} -Wall")
-
-endif()
-
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/include)
-
 add_subdirectory(src)
 add_subdirectory(data)
 add_subdirectory(po)
