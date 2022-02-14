@@ -33,8 +33,6 @@ endif()
 
 # GNU standard installation directories
 include (GNUInstallDirs)
-set (CMAKE_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")
-set (CMAKE_INSTALL_FULL_PKGLIBEXECDIR "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")
 
 # Gettext
 set(GETTEXT_PACKAGE "ayatana-indicator-keyboard")

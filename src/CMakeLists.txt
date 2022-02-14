@@ -25,4 +25,4 @@ link_directories(${SERVICE_DEPS_LIBRARY_DIRS})
 
 add_executable("ayatana-indicator-keyboard-service" main.c)
 target_link_libraries("ayatana-indicator-keyboard-service" "ayatanaindicatorkeyboardservice" "${SERVICE_DEPS_LIBRARIES} -ldl")
-install(TARGETS "ayatana-indicator-keyboard-service" RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}")
+install(TARGETS "ayatana-indicator-keyboard-service" RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")
