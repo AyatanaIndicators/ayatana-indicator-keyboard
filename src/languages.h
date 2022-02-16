@@ -47,6 +47,7 @@ gchar *LANGUAGES[] =
     "Ar", //Arabic (QWERTY, Eastern Arabic numerals)
     "Ar", //Arabic (Sun Type 6/7)
     "Ar", //Arabic (Syria)
+    "Ar", //Arabic (ErgoArabic)
     "Hy", //Armenian
     "Hy", //Armenian (OLPC, phonetic)
     "Hy", //Armenian (alt. eastern)
@@ -85,6 +86,7 @@ gchar *LANGUAGES[] =
     "Bb", //Berber (Algeria, Tifinagh)
     "Bb", //Berber (Morocco, Tifinagh alt.)
     "Bb", //Berber (Morocco, Tifinagh extended phonetic)
+    "Bb", //Tarifit
     "Bb", //Berber (Morocco, Tifinagh extended)
     "Bb", //Berber (Morocco, Tifinagh phonetic)
     "Bb", //Berber (Morocco, Tifinagh phonetic, alt.)
@@ -105,6 +107,10 @@ gchar *LANGUAGES[] =
     "Bg", //Bulgarian (traditional phonetic)
     "My", //Burmese
     "Zg", //Burmese Zawgyi
+    "My", //Shan
+    "My", //Shan (Zawgyi Tai)
+    "My", //Mon
+    "My", //Mon (A1)
     "Cm", //Cameroon (AZERTY, intl.)
     "Cm", //Cameroon (Dvorak, intl.)
     "Cm", //Cameroon Multilingual (QWERTY, intl.)
@@ -122,7 +128,10 @@ gchar *LANGUAGES[] =
     "Cp", //Coptic
     "Tt", //Crimean Tatar (Dobruja Q)
     "Tt", //Crimean Tatar (Turkish Alt-Q)
+    "Tt", //Crimean Tatar (Turkish Alt-Q)
     "Tt", //Crimean Tatar (Turkish F)
+    "Tt", //Crimean Tatar (Turkish F)
+    "Tt", //Crimean Tatar (Turkish Q)
     "Tt", //Crimean Tatar (Turkish Q)
     "Hr", //Croatian
     "Hr", //Croatian (US)
@@ -231,6 +240,7 @@ gchar *LANGUAGES[] =
     "En", //English (classic Dvorak)
     "En", //English (intl., with AltGr dead keys)
     "En", //English (programmer Dvorak)
+    "En", //English (Dvorak, Macintosh)
     "En", //English (the divide/multiply toggle the layout)
     "Eo", //Esperanto
     "Eo", //Esperanto (Brazil, Nativo)
@@ -383,8 +393,10 @@ gchar *LANGUAGES[] =
     "Ip", //Indic IPA
     "Id", //Indonesian (Arab Melayu, extended phonetic)
     "Id", //Indonesian (Arab Melayu, phonetic)
+    "Id", //Indonesian (Arab Pegon, phonetic)
     "Id", //Indonesian (Javanese)
     "Ix", //International Phonetic Alphabet
+    "Ix", //International Phonetic Alphabet (QWERTY)
     "Iu", //Inuktitut
     "Iq", //Iraqi
     "Ga", //Irish
@@ -531,6 +543,7 @@ gchar *LANGUAGES[] =
     "Hu", //Old Hungarian
     "Hu", //Old Hungarian (for ligatures)
     "Tr", //Old Turkic
+    "Tr", //Old Turkic (F)
     "Or", //Oriya
     "Or", //Oriya (Bolnagri)
     "Or", //Oriya (Wx)
@@ -539,6 +552,7 @@ gchar *LANGUAGES[] =
     "Os", //Ossetian (legacy)
     "Rs", //Pannonian Rusyn
     "Ps", //Pashto
+    "Ps", //Pashto (Afghanistan, OLPC)
     "Ps", //Pashto (Afghanistan, OLPC)
     "Fa", //Persian
     "Fa", //Persian (Afghanistan, Dari OLPC)
@@ -552,6 +566,7 @@ gchar *LANGUAGES[] =
     "Pl", //Polish (Dvorak, with Polish quotes on quotemark key)
     "Pl", //Polish (Germany, no dead keys)
     "Pl", //Polish (Glagolica)
+    "Pl", //Polish (lefty)
     "Pl", //Polish (QWERTZ)
     "Pl", //Polish (Sun Type 6/7)
     "Pl", //Polish (intl., with dead keys)
@@ -610,6 +625,8 @@ gchar *LANGUAGES[] =
     "Ru", //Russian (typewriter)
     "Ru", //Russian (typewriter, legacy)
     "Ru", //Russian (with US punctuation)
+    "Ru", //Russian (GOST 6431-75)
+    "Ru", //Russian (GOST 14289-88)
     "Ru", //Russian (with Ukrainian-Belorussian layout)
     "Sy", //Saisiyat (Taiwan)
     "Sf", //Samogitian
@@ -629,6 +646,7 @@ gchar *LANGUAGES[] =
     "Hs", //Serbo-Croatian (US)
     "Sj", //Sicilian
     "Sj", //Sicilian (US keyboard)
+    "En", //English (Western European AltGr dead keys)
     "Sj", //Silesian
     "Sd", //Sindhi
     "Si", //Sinhala (US)
@@ -696,6 +714,7 @@ gchar *LANGUAGES[] =
     "Tr", //Turkish (Germany)
     "Tr", //Turkish (Sun Type 6/7)
     "Tr", //Turkish (intl., with dead keys)
+    "Tr", //Turkish (Turkey, Latin Q, Swap i and ı)
     "Tr", //Ottoman
     "Tr", //Ottoman (F)
     "Tk", //Turkmen
@@ -705,6 +724,7 @@ gchar *LANGUAGES[] =
     "Uk", //Ukrainian
     "Uk", //Ukrainian (Sun Type 6/7)
     "Uk", //Ukrainian (Windows)
+    "Uk", //Ukrainian (macOS)
     "Uk", //Ukrainian (homophonic)
     "Uk", //Ukrainian (legacy)
     "Uk", //Ukrainian (phonetic)
@@ -731,6 +751,7 @@ gchar *LANGUAGES[] =
     "Wo", //Wolof
     "Ya", //Yakut
     "Yo", //Yoruba
+    "Gd", //Scottish Gaelic
     "emoji", //Emoji
     "custom", //Custom
     NULL
@@ -767,6 +788,7 @@ gchar *IDS[] =
     "ara+qwerty_digits", //Arabic (QWERTY, Eastern Arabic numerals)
     "ara+sun_type6", //Arabic (Sun Type 6/7)
     "sy", //Arabic (Syria)
+    "ara+ergoarabic", //Arabic (ErgoArabic)
     "am", //Armenian
     "am+olpc-phonetic", //Armenian (OLPC, phonetic)
     "am+eastern-alt", //Armenian (alt. eastern)
@@ -805,6 +827,7 @@ gchar *IDS[] =
     "dz+ber", //Berber (Algeria, Tifinagh)
     "ma+tifinagh-alt", //Berber (Morocco, Tifinagh alt.)
     "ma+tifinagh-extended-phonetic", //Berber (Morocco, Tifinagh extended phonetic)
+    "ma+rif", //Tarifit
     "ma+tifinagh-extended", //Berber (Morocco, Tifinagh extended)
     "ma+tifinagh-phonetic", //Berber (Morocco, Tifinagh phonetic)
     "ma+tifinagh-alt-phonetic", //Berber (Morocco, Tifinagh phonetic, alt.)
@@ -825,6 +848,10 @@ gchar *IDS[] =
     "bg+phonetic", //Bulgarian (traditional phonetic)
     "mm", //Burmese
     "mm+zawgyi", //Burmese Zawgyi
+    "mm+shn", //Shan
+    "mm+zgt", //Shan (Zawgyi Tai)
+    "mm+mnw", //Mon
+    "mm+mnw-a1", //Mon (A1)
     "cm+azerty", //Cameroon (AZERTY, intl.)
     "cm+dvorak", //Cameroon (Dvorak, intl.)
     "cm+qwerty", //Cameroon Multilingual (QWERTY, intl.)
@@ -842,8 +869,11 @@ gchar *IDS[] =
     "eg", //Coptic
     "ro+crh_dobruja", //Crimean Tatar (Dobruja Q)
     "tr+crh_alt", //Crimean Tatar (Turkish Alt-Q)
+    "ua+crh_alt", //Crimean Tatar (Turkish Alt-Q)
     "tr+crh_f", //Crimean Tatar (Turkish F)
+    "ua+crh_f", //Crimean Tatar (Turkish F)
     "tr+crh", //Crimean Tatar (Turkish Q)
+    "ua+crh", //Crimean Tatar (Turkish Q)
     "hr", //Croatian
     "hr+us", //Croatian (US)
     "hr+unicodeus", //Croatian (US, with Croatian digraphs)
@@ -951,6 +981,7 @@ gchar *IDS[] =
     "us+dvorak-classic", //English (classic Dvorak)
     "us+altgr-intl", //English (intl., with AltGr dead keys)
     "us+dvp", //English (programmer Dvorak)
+    "us+dvorak-mac", //English (Dvorak, Macintosh)
     "us+olpc2", //English (the divide/multiply toggle the layout)
     "epo", //Esperanto
     "br+nativo-epo", //Esperanto (Brazil, Nativo)
@@ -1103,8 +1134,10 @@ gchar *IDS[] =
     "in+iipa", //Indic IPA
     "id+phoneticx", //Indonesian (Arab Melayu, extended phonetic)
     "id", //Indonesian (Arab Melayu, phonetic)
+    "id+phonetic", //Indonesian (Arab Pegon, phonetic)
     "jv", //Indonesian (Javanese)
     "trans", //International Phonetic Alphabet
+    "trans+qwerty", //International Phonetic Alphabet (QWERTY)
     "ca+ike", //Inuktitut
     "iq", //Iraqi
     "ie", //Irish
@@ -1251,6 +1284,7 @@ gchar *IDS[] =
     "hu+oldhun", //Old Hungarian
     "hu+oldhunlig", //Old Hungarian (for ligatures)
     "tr+otk", //Old Turkic
+    "tr+otkf", //Old Turkic (F)
     "in+ori", //Oriya
     "in+ori-bolnagri", //Oriya (Bolnagri)
     "in+ori-wx", //Oriya (Wx)
@@ -1260,6 +1294,7 @@ gchar *IDS[] =
     "rs+rue", //Pannonian Rusyn
     "af+ps", //Pashto
     "af+olpc-ps", //Pashto (Afghanistan, OLPC)
+    "af+ps-olpc", //Pashto (Afghanistan, OLPC)
     "ir", //Persian
     "af+fa-olpc", //Persian (Afghanistan, Dari OLPC)
     "ir+pes_keypad", //Persian (with Persian keypad)
@@ -1272,6 +1307,7 @@ gchar *IDS[] =
     "pl+dvorak_quotes", //Polish (Dvorak, with Polish quotes on quotemark key)
     "de+pl", //Polish (Germany, no dead keys)
     "pl+glagolica", //Polish (Glagolica)
+    "pl+lefty", //Polish (lefty)
     "pl+qwertz", //Polish (QWERTZ)
     "pl+sun_type6", //Polish (Sun Type 6/7)
     "pl+intl", //Polish (intl., with dead keys)
@@ -1330,6 +1366,8 @@ gchar *IDS[] =
     "ru+typewriter", //Russian (typewriter)
     "ru+typewriter-legacy", //Russian (typewriter, legacy)
     "ru+unipunct", //Russian (with US punctuation)
+    "ru+gost-6431-75-48", //Russian (GOST 6431-75)
+    "ru+gost-14289-88", //Russian (GOST 14289-88)
     "ru+ruu", //Russian (with Ukrainian-Belorussian layout)
     "tw+saisiyat", //Saisiyat (Taiwan)
     "lt+sgs", //Samogitian
@@ -1349,6 +1387,7 @@ gchar *IDS[] =
     "us+hbs", //Serbo-Croatian (US)
     "it+scn", //Sicilian
     "us+scn", //Sicilian (US keyboard)
+    "us+altgr-weur", //English (Western European AltGr dead keys)
     "pl+szl", //Silesian
     "pk+snd", //Sindhi
     "lk+us", //Sinhala (US)
@@ -1416,6 +1455,7 @@ gchar *IDS[] =
     "de+tr", //Turkish (Germany)
     "tr+sun_type6", //Turkish (Sun Type 6/7)
     "tr+intl", //Turkish (intl., with dead keys)
+    "tr+us", //Turkish (Turkey, Latin Q, Swap i and ı)
     "tr+ot", //Ottoman
     "tr+otf", //Ottoman (F)
     "tm", //Turkmen
@@ -1425,6 +1465,7 @@ gchar *IDS[] =
     "ua", //Ukrainian
     "ua+sun_type6", //Ukrainian (Sun Type 6/7)
     "ua+winkeys", //Ukrainian (Windows)
+    "ua+macOS", //Ukrainian (macOS)
     "ua+homophonic", //Ukrainian (homophonic)
     "ua+legacy", //Ukrainian (legacy)
     "ua+phonetic", //Ukrainian (phonetic)
@@ -1451,6 +1492,7 @@ gchar *IDS[] =
     "sn", //Wolof
     "ru+sah", //Yakut
     "ng+yoruba", //Yorubaz
+    "gb+gla", //Scottish Gaelic
     "emoji", //Emoji
     "custom", //Custom
     NULL
