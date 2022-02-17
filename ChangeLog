@@ -1,6 +1,75 @@
+2022-02-17 Mike Gabriel
+
+        * release 22.2.0 (HEAD -> main, tag: 22.2.0)
+        * Merge branch 'tari01-pr/add-new-layouts' (3c62b070)
+
+2022-02-16 Robert Tari
+
+        * src/languages.h: Add additional layouts (2d1eefa6)
+
+2022-02-16 Mike Gabriel
+
+        * Merge branch 'tari01-pr/drop-cmake-install-full-pkglibexecdir'
+          (d813ce96)
+
+2022-02-14 Robert Tari
+
+        * Drop pkglibexecdir and use native CMake file configuration
+          (53da9925)
+
+2022-02-08 Robert Tari
+
+        * .travis.yml: Run CI builds on Travis CI's Ubuntu focal base system
+          (c92041d7)
+
+2022-01-27 Mike Gabriel
+
+        * Merge branch 'tari01-pr/merge-icon-generators' (6d1a75ee)
+
+2022-01-26 Robert Tari
+
+        * Merge icon generators + add some tweakability (2f4a12a0)
+
+2022-01-27 Mike Gabriel
+
+        * Merge branch 'tari01-pr/cleanup-compile-flags' (cba5f9cb)
+
+2022-01-11 Robert Tari
+
+        * .build.yml: Drop extra compilation flags and build with -Werror
+          (57a14957)
+        * Clean up compilation flags (a9b2be7a)
+
+2022-01-27 Mike Gabriel
+
+        * Merge branch 'z3ntu-dlopen-soname' (c4846f09)
+
+2022-01-09 Luca Weiss
+
+        * Try to dlopen .so.0 instead of .so (191d5aea)
+
+2022-01-02 ssantos
+
+        * Translated using Weblate (Portuguese) (fb9defb0)
+
+2021-12-15 Mike Gabriel
+
+        * Merge branch
+          'tari01-pr/build-libayatana-common-with-enable-lomiri-features'
+          (e4f88bd5)
+
+2021-12-06 Robert Tari
+
+        * .build.yml: Build libayatana-common with ENABLE_LOMIRI_FEATURES
+          (c62643a7)
+
+2021-11-18 phlostically
+
+        * Translated using Weblate (Esperanto) (dc72c3c2)
+
 2021-11-18 Mike Gabriel
 
-        * release 0.9.0 (HEAD -> main, tag: 0.9.0)
+        * release 0.9.0 (9c9a9d80) (tag: 0.9.0)
 
 2021-10-25 Robert Tari
 
