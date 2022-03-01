@@ -16,6 +16,7 @@ requires:
     - glib2
     - libx11
     - libxklavier
+    - libxkbcommon
 #    - libayatana-common
 
   debian:
@@ -31,6 +32,8 @@ requires:
     - libglib2.0-dev
     - libx11-dev
     - libxklavier-dev
+    - libxkbcommon-dev
+    - libxkbregistry-dev
     - systemd
 #    - libayatana-common-dev
 # For building libayatana-common:
@@ -49,6 +52,21 @@ requires:
     - libxklavier-dev
     - systemd
 #    - libayatana-common-dev
+#    - libxkbcommon-dev
+#    - libxkbregistry-dev
+# For building libxkbcommon:
+    - meson
+    - pkg-config
+    - bison
+    - libxcb-xkb-dev
+    - libxml2-dev
+    - wayland-protocols
+    - libwayland-dev
+    - doxygen
+    - x11proto-dev
+    - xvfb
+    - flex
+    - graphviz
 
 variables:
   - 'CHECKERS="
@@ -83,6 +101,19 @@ before_scripts:
   - make install
   - cd -
   - rm -Rf libayatana-common-build/
+  -
+  - if [ ${DISTRO_NAME} == "ubuntu" ]; then
+  -     cd ${START_DIR}
+  -     if [ ! -d libxkbcommon-build ]; then
+  -         git clone --depth 1  https://github.com/xkbcommon/libxkbcommon.git libxkbcommon-build
+  -     fi
+  -     cd libxkbcommon-build
+  -     meson setup build -Dprefix=/usr -Dlibdir=/usr/lib/x86_64-linux-gnu
+  -     ninja -C build
+  -     ninja -C build install
+  -     cd -
+  -     rm -Rf libxkbcommon-build/
+  - fi
 
 build_scripts:
   - if [ ${DISTRO_NAME} == "debian" ];then
