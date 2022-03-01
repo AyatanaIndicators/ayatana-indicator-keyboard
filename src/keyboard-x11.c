@@ -14,6 +14,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <act/act.h>
 #include <X11/XKBlib.h>
 #include <xkbcommon/xkbregistry.h>
 #include <libxklavier/xklavier.h>
@@ -40,6 +41,7 @@ struct _KeyboardPrivate
     gint nXkbEventType;
     XklConfigRec *pConfigRec;
     GSList *lLayoutRec;
+    GSList *lUsers;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -60,6 +62,144 @@ typedef struct _Source
     Keyboard *pKeyboard;
 
 } Source;
+
+static int emitDelayedSignal(Keyboard *pKeyboard)
+{
+    g_signal_emit(pKeyboard, m_lSignals[CONFIG_CHANGED], 0);
+
+    return G_SOURCE_REMOVE;
+}
+
+static gboolean isGreeter()
+{
+    const char *sUser = g_get_user_name();
+
+    return g_str_equal(sUser, "lightdm");
+}
+
+static void setAccountsService(Keyboard *pKeyboard)
+{
+    gint nUid = geteuid();
+    gchar *sPath = g_strdup_printf("/org/freedesktop/Accounts/User%i", nUid);
+    GDBusConnection *pConnection = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL);
+    GDBusProxy *pProxy = g_dbus_proxy_new_sync(pConnection, G_DBUS_PROXY_FLAGS_NONE, NULL, "org.freedesktop.Accounts", sPath, "org.freedesktop.DBus.Properties", NULL, NULL);
+    GVariantBuilder *pBuilder = g_variant_builder_new(G_VARIANT_TYPE("as"));
+    guint nLayouts = g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts);
+
+    for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+    {
+        gchar *sId = NULL;
+        gchar *sLayout = pKeyboard->pPrivate->pConfigRec->layouts[nLayout];
+        gchar *sVariant = pKeyboard->pPrivate->pConfigRec->variants[nLayout];
+
+        if (sVariant && strlen(sVariant))
+        {
+            sId = g_strconcat(sLayout, "+", sVariant, NULL);
+        }
+        else
+        {
+            sId = g_strdup(sLayout);
+        }
+
+        g_variant_builder_add(pBuilder, "s", sId);
+        g_free(sId);
+    }
+
+    GVariant *pValue = g_variant_new("as", pBuilder);
+    GVariant *pRet = g_dbus_proxy_call_sync(pProxy, "Set", g_variant_new("(ssv)", "org.ayatana.indicator.keyboard.AccountsService", "Layouts", pValue), G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL);
+
+    g_variant_builder_unref(pBuilder);
+    g_variant_unref(pRet);
+    g_object_unref(pConnection);
+    g_free(sPath);
+}
+
+static void getAccountsService(Keyboard *pKeyboard)
+{
+    gboolean bChanged = FALSE;
+
+    for (GSList *lUser = pKeyboard->pPrivate->lUsers; lUser; lUser = lUser->next)
+    {
+        ActUser *pUser = lUser->data;
+        gboolean bIsUserLoaded = act_user_is_loaded(pUser);
+
+        if (bIsUserLoaded)
+        {
+            gint nUid = act_user_get_uid(pUser);
+            gchar *sPath = g_strdup_printf("/org/freedesktop/Accounts/User%i", nUid);
+            GDBusConnection *pConnection = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL);
+            GDBusProxy *pProxy = g_dbus_proxy_new_sync(pConnection, G_DBUS_PROXY_FLAGS_NONE, NULL, "org.freedesktop.Accounts", sPath, "org.freedesktop.DBus.Properties", NULL, NULL);
+            GVariant *pValue = g_dbus_proxy_call_sync(pProxy, "Get", g_variant_new("(ss)", "org.ayatana.indicator.keyboard.AccountsService", "Layouts"), G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL);
+            GVariant *pChild0 = g_variant_get_child_value(pValue, 0);
+            GVariant *pChild1 = g_variant_get_child_value(pChild0, 0);
+
+            GVariantIter *pIter;
+
+            g_variant_get(pChild1, "as", &pIter);
+
+            gchar *sLayout;
+
+            while (g_variant_iter_loop(pIter, "s", &sLayout))
+            {
+                if (g_slist_find_custom(pKeyboard->pPrivate->lLayoutRec, sLayout, (GCompareFunc)g_strcmp0) == NULL)
+                {
+                    pKeyboard->pPrivate->lLayoutRec = g_slist_append(pKeyboard->pPrivate->lLayoutRec, g_strdup(sLayout));
+                    bChanged = TRUE;
+                }
+            }
+
+            g_variant_iter_free(pIter);
+            g_variant_unref(pChild1);
+            g_variant_unref(pChild0);
+            g_variant_unref(pValue);
+            g_object_unref(pConnection);
+            g_free(sPath);
+        }
+    }
+
+    if (bChanged == TRUE)
+    {
+        g_timeout_add(500, (GSourceFunc)emitDelayedSignal, pKeyboard);
+    }
+}
+
+static void onUserLoaded(Keyboard *pKeyboard, ActUser *pUser)
+{
+    gboolean bIsUserLoaded = act_user_is_loaded(pUser);
+
+    if (bIsUserLoaded)
+    {
+        getAccountsService(pKeyboard);
+        g_signal_handlers_disconnect_by_func(G_OBJECT(pUser), G_CALLBACK(onUserLoaded), pKeyboard);
+    }
+}
+
+static void onManagerLoaded(Keyboard *pKeyboard)
+{
+    ActUserManager *pManager = act_user_manager_get_default();
+    gboolean bIsLoaded;
+    g_object_get(pManager, "is-loaded", &bIsLoaded, NULL);
+
+    if (bIsLoaded)
+    {
+        pKeyboard->pPrivate->lUsers = act_user_manager_list_users(pManager);
+
+        for (GSList *lUser = pKeyboard->pPrivate->lUsers; lUser; lUser = lUser->next)
+        {
+            ActUser *pUser = lUser->data;
+            gboolean bIsUserLoaded = act_user_is_loaded(pUser);
+
+            if (bIsUserLoaded)
+            {
+                getAccountsService(pKeyboard);
+            }
+            else
+            {
+                g_signal_connect_swapped(pUser, "notify::is-loaded", G_CALLBACK(onUserLoaded), pKeyboard);
+            }
+        }
+    }
+}
 
 static gboolean onCheckEvent(Display *pDisplay, XEvent *pEvent, XPointer pData)
 {
@@ -133,6 +273,7 @@ static gboolean onCheckSource(GSource *pSource)
 
         if (bConfigChanged)
         {
+            setAccountsService(pKeyboard);
             g_signal_emit(pKeyboard, m_lSignals[CONFIG_CHANGED], 0);
         }
     }
@@ -154,26 +295,36 @@ static void freeLayout(gpointer pData)
 
 void keyboard_AddSource(Keyboard *pKeyboard)
 {
-    XkbQueryExtension(pKeyboard->pPrivate->pDisplay, 0, &pKeyboard->pPrivate->nXkbEventType, 0, 0, 0);
-    XkbSelectEventDetails(pKeyboard->pPrivate->pDisplay, XkbUseCoreKbd, XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
+    if (isGreeter() == FALSE)
+    {
+        XkbQueryExtension(pKeyboard->pPrivate->pDisplay, 0, &pKeyboard->pPrivate->nXkbEventType, 0, 0, 0);
+        XkbSelectEventDetails(pKeyboard->pPrivate->pDisplay, XkbUseCoreKbd, XkbStateNotify, XkbAllStateComponentsMask, XkbGroupStateMask);
 
-    pKeyboard->pPrivate->cPollFD.fd = ConnectionNumber(pKeyboard->pPrivate->pDisplay);
-    pKeyboard->pPrivate->cPollFD.events = G_IO_IN | G_IO_HUP | G_IO_ERR;
-    pKeyboard->pPrivate->cPollFD.revents = 0;
-    pKeyboard->pPrivate->cSourceFuncs.prepare = NULL;
-    pKeyboard->pPrivate->cSourceFuncs.check = onCheckSource;
-    pKeyboard->pPrivate->cSourceFuncs.dispatch = NULL;
-    pKeyboard->pPrivate->cSourceFuncs.finalize = NULL;
+        pKeyboard->pPrivate->cPollFD.fd = ConnectionNumber(pKeyboard->pPrivate->pDisplay);
+        pKeyboard->pPrivate->cPollFD.events = G_IO_IN | G_IO_HUP | G_IO_ERR;
+        pKeyboard->pPrivate->cPollFD.revents = 0;
+        pKeyboard->pPrivate->cSourceFuncs.prepare = NULL;
+        pKeyboard->pPrivate->cSourceFuncs.check = onCheckSource;
+        pKeyboard->pPrivate->cSourceFuncs.dispatch = NULL;
+        pKeyboard->pPrivate->cSourceFuncs.finalize = NULL;
 
-    GSource *pSource = g_source_new(&pKeyboard->pPrivate->cSourceFuncs, sizeof(Source));
-    ((Source*)pSource)->pKeyboard = pKeyboard;
-    g_source_add_poll(pSource, &pKeyboard->pPrivate->cPollFD);
-    g_source_attach(pSource, NULL);
+        GSource *pSource = g_source_new(&pKeyboard->pPrivate->cSourceFuncs, sizeof(Source));
+        ((Source*)pSource)->pKeyboard = pKeyboard;
+        g_source_add_poll(pSource, &pKeyboard->pPrivate->cPollFD);
+        g_source_attach(pSource, NULL);
+    }
 }
 
 guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
 {
-    return g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts);
+    if (isGreeter())
+    {
+        return g_slist_length(pKeyboard->pPrivate->lLayoutRec);
+    }
+    else
+    {
+        return g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts);
+    }
 }
 
 void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription)
@@ -183,17 +334,26 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
         nLayout = pKeyboard->pPrivate->nLayout;
     }
 
-    gchar *sLayout = pKeyboard->pPrivate->pConfigRec->layouts[nLayout];
-    gchar *sVariant = pKeyboard->pPrivate->pConfigRec->variants[nLayout];
-    gchar *sId;
+    gchar *sId = NULL;
 
-    if (sVariant && strlen(sVariant))
+    if (isGreeter() == TRUE)
     {
-        sId = g_strconcat(sLayout, "+", sVariant, NULL);
+        gchar *sLayout = g_slist_nth_data(pKeyboard->pPrivate->lLayoutRec, nLayout);
+        sId = g_strdup(sLayout);
     }
     else
     {
-        sId = g_strdup(sLayout);
+        gchar *sLayout = pKeyboard->pPrivate->pConfigRec->layouts[nLayout];
+        gchar *sVariant = pKeyboard->pPrivate->pConfigRec->variants[nLayout];
+
+        if (sVariant && strlen(sVariant))
+        {
+            sId = g_strconcat(sLayout, "+", sVariant, NULL);
+        }
+        else
+        {
+            sId = g_strdup(sLayout);
+        }
     }
 
     const Layout *pLayout;
@@ -214,7 +374,42 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
 
 void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 {
-    xkl_engine_lock_group(pKeyboard->pPrivate->pEngine, nLayout);
+    if (isGreeter() == FALSE)
+    {
+        xkl_engine_lock_group(pKeyboard->pPrivate->pEngine, nLayout);
+    }
+    else
+    {
+        // TODO
+        gchar *sCommand;
+        gchar *sId = g_slist_nth_data(pKeyboard->pPrivate->lLayoutRec, nLayout);
+        gchar **lParamas = g_strsplit(sId, "+", -1);
+        guint nParams = g_strv_length(lParamas);
+
+        if (nParams == 1)
+        {
+            sCommand = g_strdup_printf("setxkbmap -layout %s", lParamas[0]);
+        }
+        else
+        {
+            sCommand = g_strdup_printf("setxkbmap -layout %s -variant %s", lParamas[0], lParamas[1]);
+        }
+
+        g_strfreev(lParamas);
+
+        gchar *sOutput = NULL;
+        GError *pError = NULL;
+        gboolean bResult = g_spawn_command_line_sync(sCommand, &sOutput, NULL, NULL, &pError);
+        g_free(sCommand);
+
+        if (bResult == FALSE)
+        {
+            g_message("COMMAND 01 %s: %s", sOutput, pError->message);
+
+            return;
+        }
+    }
+
     pKeyboard->pPrivate->nLayout = nLayout;
     g_signal_emit(pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
 }
@@ -231,7 +426,16 @@ static void onDispose(GObject *pObject)
     if (self->pPrivate->pConfigRec)
     {
         g_object_unref(self->pPrivate->pConfigRec);
-        self->pPrivate->pConfigRec = NULL;
+    }
+
+    if (self->pPrivate->lLayoutRec)
+    {
+        g_slist_free_full(self->pPrivate->lLayoutRec, g_free);
+    }
+
+    if (self->pPrivate->lUsers)
+    {
+        g_slist_free(self->pPrivate->lUsers);
     }
 
     G_OBJECT_CLASS(keyboard_parent_class)->dispose(pObject);
@@ -301,17 +505,155 @@ static void keyboard_init(Keyboard *self)
 
     rxkb_context_unref(pContext);
 
-    self->pPrivate->pDisplay = XOpenDisplay(NULL);
+    if (isGreeter() == FALSE)
+    {
+        self->pPrivate->pDisplay = XOpenDisplay(NULL);
 
-    g_assert(self->pPrivate->pDisplay);
+        g_assert(self->pPrivate->pDisplay);
 
-    self->pPrivate->pEngine = xkl_engine_get_instance(self->pPrivate->pDisplay);
+        self->pPrivate->pEngine = xkl_engine_get_instance(self->pPrivate->pDisplay);
 
-    g_assert(self->pPrivate->pEngine);
+        g_assert(self->pPrivate->pEngine);
 
-    xkl_engine_start_listen(self->pPrivate->pEngine, XKLL_TRACK_KEYBOARD_STATE);
-    self->pPrivate->pConfigRec = xkl_config_rec_new();
-    xkl_config_rec_get_from_server(self->pPrivate->pConfigRec, self->pPrivate->pEngine);
-    XklState *pState = xkl_engine_get_current_state(self->pPrivate->pEngine);
-    self->pPrivate->nLayout = pState->group;
+        xkl_engine_start_listen(self->pPrivate->pEngine, XKLL_TRACK_KEYBOARD_STATE);
+        self->pPrivate->pConfigRec = xkl_config_rec_new();
+        xkl_config_rec_get_from_server(self->pPrivate->pConfigRec, self->pPrivate->pEngine);
+        XklState *pState = xkl_engine_get_current_state(self->pPrivate->pEngine);
+
+        self->pPrivate->nLayout = pState->group;
+
+        setAccountsService(self);
+    }
+    else
+    {
+        // Get layouts from /etc/default/keyboard
+        gchar *sFile;
+        g_file_get_contents ("/etc/default/keyboard", &sFile, NULL, NULL);
+        gchar **lLines = g_strsplit(sFile, "\n", -1);
+        guint nLines = g_strv_length(lLines);
+        gchar **lLayouts = NULL;
+        gchar **lVariants = NULL;
+
+        for (guint nLine = 0; nLine < nLines; nLine++)
+        {
+            gboolean bIsLayout = g_str_has_prefix(lLines[nLine], "XKBLAYOUT");
+
+            if (bIsLayout == TRUE)
+            {
+                gboolean bQuoted = g_strrstr(lLines[nLine], "\"") != NULL;
+                gchar *sLayout = NULL;
+
+                if (bQuoted == TRUE)
+                {
+                    sLayout = (lLines[nLine] + 11);
+                    guint nLength = strlen(sLayout);
+                    sLayout[nLength - 1] = '\0';
+                }
+                else
+                {
+                    sLayout = (lLines[nLine] + 10);
+                }
+
+                lLayouts = g_strsplit(sLayout, ",", -1);
+
+                continue;
+            }
+
+            gboolean bIsVariant = g_str_has_prefix(lLines[nLine], "XKBVARIANT");
+
+            if (bIsVariant == TRUE)
+            {
+                gboolean bQuoted = g_strrstr(lLines[nLine], "\"") != NULL;
+                gchar *sVariant = NULL;
+
+                if (bQuoted == TRUE)
+                {
+                    sVariant = (lLines[nLine] + 12);
+                    guint nLength = strlen(sVariant);
+                    sVariant[nLength - 1] = '\0';
+                }
+                else
+                {
+                    sVariant = (lLines[nLine] + 11);
+                }
+
+                lVariants = g_strsplit(sVariant, ",", -1);
+
+                continue;
+            }
+        }
+
+        guint nLayouts = g_strv_length(lLayouts);
+        guint nVariants = 0;
+
+        if (lVariants != NULL)
+        {
+            g_strv_length(lVariants);
+        }
+
+        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+        {
+            gchar *sId = NULL;
+
+            if (nVariants > nLayout)
+            {
+                guint nVariant = strlen(lVariants[nLayout]);
+
+                if (nVariants == nLayouts && nVariant > 0)
+                {
+                    sId = g_strconcat(lLayouts[nLayout], "+", lVariants[nLayout], NULL);
+                }
+                else
+                {
+                    sId = g_strdup(lLayouts[nLayout]);
+                }
+            }
+            else
+            {
+                sId = g_strdup(lLayouts[nLayout]);
+            }
+
+            self->pPrivate->lLayoutRec = g_slist_append(self->pPrivate->lLayoutRec, sId);
+        }
+
+        self->pPrivate->nLayout = 0;
+
+        g_strfreev(lLayouts);
+
+        if (lVariants != NULL)
+        {
+            g_strfreev(lVariants);
+        }
+
+        g_strfreev(lLines);
+        g_free(sFile);
+
+        ActUserManager *pManager = act_user_manager_get_default();
+        gboolean bIsLoaded;
+        g_object_get(pManager, "is-loaded", &bIsLoaded, NULL);
+
+        if (bIsLoaded)
+        {
+            self->pPrivate->lUsers = act_user_manager_list_users(pManager);
+
+            for (GSList *lUser = self->pPrivate->lUsers; lUser; lUser = lUser->next)
+            {
+                ActUser *pUser = lUser->data;
+                gboolean bIsUserLoaded = act_user_is_loaded(pUser);
+
+                if (bIsUserLoaded)
+                {
+                    getAccountsService(self);
+                }
+                else
+                {
+                    g_signal_connect_swapped(pUser, "notify::is-loaded", G_CALLBACK(onUserLoaded), self);
+                }
+            }
+        }
+        else
+        {
+            g_signal_connect_object(pManager, "notify::is-loaded", G_CALLBACK(onManagerLoaded), self, G_CONNECT_SWAPPED);
+        }
+    }
 }
