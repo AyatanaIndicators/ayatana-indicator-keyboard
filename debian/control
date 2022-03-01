@@ -8,6 +8,8 @@ Build-Depends: cmake,
                libx11-dev (>=1.7.0),
                libxklavier-dev (>=5.4),
                libayatana-common-dev (>= 0.9.3),
+               libxkbcommon-dev (>=1.0.3),
+               libxkbregistry-dev (>=1.0.3),
 # for packaging
                debhelper (>= 10),
                dh-systemd | hello,
