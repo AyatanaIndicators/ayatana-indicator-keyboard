@@ -10,6 +10,7 @@ Build-Depends: cmake,
                libayatana-common-dev (>= 0.9.3),
                libxkbcommon-dev (>=1.0.3),
                libxkbregistry-dev (>=1.0.3),
+               libaccountsservice-dev,
 # for packaging
                debhelper (>= 10),
                dh-systemd | hello,
