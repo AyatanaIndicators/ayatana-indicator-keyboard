@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Robert Tari <robert@tari.in>
+ * Copyright 2021-2022 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -15,6 +15,7 @@
  */
 
 #include <X11/XKBlib.h>
+#include <xkbcommon/xkbregistry.h>
 #include <libxklavier/xklavier.h>
 #include "languages.h"
 #include "keyboard.h"
@@ -38,6 +39,7 @@ struct _KeyboardPrivate
     guint nLayout;
     gint nXkbEventType;
     XklConfigRec *pConfigRec;
+    GSList *lLayoutRec;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -51,14 +53,6 @@ typedef struct _Layout
     gchar *sDescription;
 
 } Layout;
-
-typedef struct _LayoutParser
-{
-    const gchar *sLayout;
-    const gchar *sLanguage;
-    Keyboard *pKeyboard;
-
-} LayoutParser;
 
 typedef struct _Source
 {
@@ -156,37 +150,6 @@ static void freeLayout(gpointer pData)
     g_free(pLayout->sLanguage);
     g_free(pLayout->sDescription);
     g_slice_free(Layout, pLayout);
-}
-
-static void onParseLayouts(XklConfigRegistry *pRegistry, const XklConfigItem * pItem, gpointer pData)
-{
-    LayoutParser *pLayoutParser = (LayoutParser*)pData;
-    Layout *pLayout = g_slice_new0(Layout);
-
-    if (pLayoutParser->sLayout)
-    {
-        pLayout->sId = g_strjoin("+", pLayoutParser->sLayout, pItem->name, NULL);
-        pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
-        pLayout->sDescription = g_strdup(pItem->description);
-    }
-    else
-    {
-        pLayout->sId = g_strdup(pItem->name);
-        pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
-        pLayout->sDescription = g_strdup(pItem->description);
-    }
-
-    g_hash_table_replace(pLayoutParser->pKeyboard->pPrivate->lLayouts, pLayout->sId, pLayout);
-
-    if (pLayoutParser->sLayout == NULL)
-    {
-        LayoutParser cLayoutParser;
-        cLayoutParser.sLayout = pItem->name;
-        cLayoutParser.pKeyboard = pLayoutParser->pKeyboard;
-        cLayoutParser.sLanguage = lookupLanguage(cLayoutParser.sLayout);
-
-        xkl_config_registry_foreach_layout_variant(pRegistry, pItem->name, onParseLayouts, &cLayoutParser);
-    }
 }
 
 void keyboard_AddSource(Keyboard *pKeyboard)
@@ -292,6 +255,52 @@ Keyboard* keyboard_new()
 static void keyboard_init(Keyboard *self)
 {
     self->pPrivate = keyboard_get_instance_private(self);
+    self->pPrivate->lLayouts = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeLayout);
+
+    // Read all available layouts
+    struct rxkb_context *pContext = rxkb_context_new(RXKB_CONTEXT_LOAD_EXOTIC_RULES);
+    g_assert(pContext);
+
+    if (!rxkb_context_include_path_append_default(pContext))
+    {
+        g_warning("Failed to include default paths");
+    }
+
+    if (!rxkb_context_parse(pContext, "evdev"))
+    {
+        g_warning("Failed to parse XKB descriptions");
+    }
+
+    struct rxkb_layout *pRxkbLayout = rxkb_layout_first(pContext);
+
+    while (pRxkbLayout != NULL)
+    {
+        const gchar *sLayout = rxkb_layout_get_name(pRxkbLayout);
+        const gchar *sVariant = rxkb_layout_get_variant(pRxkbLayout);
+        const gchar *sDescription = rxkb_layout_get_description(pRxkbLayout);
+
+        Layout *pLayout = g_slice_new0(Layout);
+
+        if (sVariant != NULL && strlen(sVariant) > 0)
+        {
+            pLayout->sId = g_strjoin("+", sLayout, sVariant, NULL);
+            pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
+            pLayout->sDescription = g_strdup(sDescription);
+        }
+        else
+        {
+            pLayout->sId = g_strdup(sLayout);
+            pLayout->sLanguage = g_strdup(lookupLanguage(pLayout->sId));
+            pLayout->sDescription = g_strdup(sDescription);
+        }
+
+        g_hash_table_replace(self->pPrivate->lLayouts, pLayout->sId, pLayout);
+
+        pRxkbLayout = rxkb_layout_next(pRxkbLayout);
+    }
+
+    rxkb_context_unref(pContext);
+
     self->pPrivate->pDisplay = XOpenDisplay(NULL);
 
     g_assert(self->pPrivate->pDisplay);
@@ -300,18 +309,7 @@ static void keyboard_init(Keyboard *self)
 
     g_assert(self->pPrivate->pEngine);
 
-    self->pPrivate->lLayouts = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeLayout);
-    XklConfigRegistry *pRegistry = xkl_config_registry_get_instance(self->pPrivate->pEngine);
-    xkl_config_registry_load(pRegistry, TRUE);
-
-    LayoutParser cLayoutParser;
-    cLayoutParser.sLayout = NULL;
-    cLayoutParser.pKeyboard = self;
-    cLayoutParser.sLanguage = NULL;
-    xkl_config_registry_foreach_layout(pRegistry, onParseLayouts, &cLayoutParser);
-
     xkl_engine_start_listen(self->pPrivate->pEngine, XKLL_TRACK_KEYBOARD_STATE);
-
     self->pPrivate->pConfigRec = xkl_config_rec_new();
     xkl_config_rec_get_from_server(self->pPrivate->pConfigRec, self->pPrivate->pEngine);
     XklState *pState = xkl_engine_get_current_state(self->pPrivate->pEngine);
