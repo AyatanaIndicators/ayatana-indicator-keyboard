@@ -38,3 +38,17 @@ install (FILES "${AYATANA_INDICATOR_FILE}" DESTINATION "${AYATANA_INDICATOR_DIR}
 set (ICON_DIR "${CMAKE_INSTALL_FULL_DATADIR}/icons/hicolor")
 message (STATUS "${ICON_DIR} is the Icon install dir")
 install (DIRECTORY icons/scalable DESTINATION "${ICON_DIR}" FILES_MATCHING PATTERN "*.svg")
+
+# org.ayatana.indicator.keyboard.AccountsService.xml
+
+install(FILES org.ayatana.indicator.keyboard.AccountsService.xml DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/dbus-1/interfaces")
+install(CODE "message(STATUS \"Symlinking: \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_DATADIR}/accountsservice/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml\")")
+install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ../../dbus-1/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_DATADIR}/accountsservice/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml)")
+
+# org.ayatana.indicator.keyboard.AccountsService.policy
+
+install(FILES org.ayatana.indicator.keyboard.AccountsService.policy DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/actions")
+
+# 50-org.ayatana.indicator.keyboard.AccountsService.pkla
+
+install(FILES 50-org.ayatana.indicator.keyboard.AccountsService.pkla DESTINATION "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/polkit-1/localauthority/10-vendor.d")
