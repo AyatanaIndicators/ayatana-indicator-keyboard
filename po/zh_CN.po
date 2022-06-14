@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-15 00:34+0200\n"
-"PO-Revision-Date: 2021-03-16 14:03+0000\n"
-"Last-Translator: xiao0yy <xiao0yy@gmail.com>\n"
+"PO-Revision-Date: 2022-06-17 06:20+0000\n"
+"Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "ayatana-indicators/keyboard-applet/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: ../src/service.c:87
 msgid "Keyboard"
@@ -28,6 +28,5 @@ msgid "Current keyboard layout"
 msgstr "当前键盘布局"
 
 #: ../src/service.c:155
-#, fuzzy
 msgid "Keyboard Settings…"
-msgstr "键盘设置..."
+msgstr "键盘设置…"
