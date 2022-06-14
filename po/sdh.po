@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-12 15:57+0200\n"
+"POT-Creation-Date: 2022-06-15 00:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/service.c:80
+#: ../src/service.c:87
 msgid "Keyboard"
 msgstr ""
 
-#: ../src/service.c:91
+#: ../src/service.c:98
 msgid "Current keyboard layout"
 msgstr ""
 
-#: ../src/service.c:148
+#: ../src/service.c:155
 msgid "Keyboard Settings…"
 msgstr ""
