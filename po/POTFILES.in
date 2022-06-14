@@ -1,5 +1,6 @@
 src/main.c
-src/keyboard.c
+src/keyboard-lomiri.c
+src/keyboard-x11.c
 src/keyboard.h
 src/service.c
 src/service.h
