@@ -1,3 +1,13 @@
+Overview of changes in ayatana-indicator-keyboard 22.2.1
+
+  - Add AccountsService support.
+  - src/keyboard-lomiri.c: Add as much functionality to Lomiri as
+    currently possible.
+  - Read layout information using libxkbcommon.
+  - Relax build-requirements of libX11 to 1.6.5 and
+    libxklavier to 5.3.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 22.2.0
 
   - Upstream version bump to new release versioning scheme:

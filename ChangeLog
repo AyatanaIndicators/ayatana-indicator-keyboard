@@ -1,6 +1,92 @@
+2022-06-21 Mike Gabriel
+
+        * release 22.2.1 (HEAD -> main, tag: 22.2.1)
+
+2022-06-14 Eric
+
+        * Translated using Weblate (Chinese (Simplified)) (81c2d27f)
+
+2022-06-15 Oğuz Ersen
+
+        * Translated using Weblate (Turkish) (ea5fe293)
+
+2022-06-16 Kristoffer Grundström
+
+        * Translated using Weblate (Swedish) (225c0198)
+
+2022-06-15 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (48bc243d)
+
+2022-06-15 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (1e7de82d)
+
+2022-06-14 Mike Gabriel
+
+        * Translated using Weblate (German) (ab24438a)
+
+2022-06-15 Mike Gabriel
+
+        * Update translation files. (94787243)
+        * po/POTFILES.in: Update list of files to check for translation
+          strings. (7456be7c)
+
+2022-06-12 Robert Tari
+
+        * Merge branch 'sunweaver-pr/relax-x11-build-requirements' (cca8a803)
+
+2022-06-11 Mike Gabriel
+
+        * CMakeLists.txt: Relax build-requirements of libX11 to 1.6.5 and
+          libxklavier to 5.3. (6d89352b)
+
+2022-04-23 Sergii Horichenko
+
+        * Translated using Weblate (Ukrainian) (fb2f014e)
+        * Translated using Weblate (Russian) (37988396)
+        * Translated using Weblate (Ukrainian) (0ebf9cb8)
+
+2022-03-26 ButterflyOfFire
+
+        * Translated using Weblate (Arabic) (0a482a3b)
+
+2022-03-02 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-features-to-lomiri' (7455bfd3)
+
+2022-03-01 Robert Tari
+
+        * src/keyboard-lomiri.c: Add as much functionality to Lomiri as
+          currently possible (94e368f5)
+
+2022-03-02 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-accoutsservice' (85d85d46)
+
+2022-03-01 Robert Tari
+
+        * .buil.yml: Add AccountsService build dependency (f4c6f017)
+        * debian/control: Add AccountsService build dependency (d93c53d0)
+        * Add AccountsService support (52d9983d)
+
+2022-03-01 Mike Gabriel
+
+        * Merge branch 'tari01-pr/use-libxkbcommon' (4a74e3ef)
+
+2022-03-01 Robert Tari
+
+        * .build.yml: Add libxkbcommon build dependency (801486c2)
+        * debian/control: Add libxkbcommon build dependency (aed21256)
+        * Read layout information using libxkbcommon (eb957b75)
+
+2022-02-27 이정희
+
+        * Translated using Weblate (Korean) (9a730357)
+
 2022-02-17 Mike Gabriel
 
-        * release 22.2.0 (HEAD -> main, tag: 22.2.0)
+        * release 22.2.0 (167b6299) (tag: 22.2.0)
         * Merge branch 'tari01-pr/add-new-layouts' (3c62b070)
 
 2022-02-16 Robert Tari
