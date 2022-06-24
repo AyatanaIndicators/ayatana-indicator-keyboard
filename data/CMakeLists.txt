@@ -42,6 +42,7 @@ install (DIRECTORY icons/scalable DESTINATION "${ICON_DIR}" FILES_MATCHING PATTE
 # org.ayatana.indicator.keyboard.AccountsService.xml
 
 install(FILES org.ayatana.indicator.keyboard.AccountsService.xml DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/dbus-1/interfaces")
+install(DIRECTORY DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/accountsservice/interfaces/")
 install(CODE "message(STATUS \"Symlinking: \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_DATADIR}/accountsservice/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml\")")
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ../../dbus-1/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml \$ENV{DESTDIR}${CMAKE_INSTALL_FULL_DATADIR}/accountsservice/interfaces/org.ayatana.indicator.keyboard.AccountsService.xml)")
 
