@@ -1,3 +1,10 @@
+ayatana-indicator-keyboard (22.2.2-0) UNRELEASED; urgency=medium
+
+  * Upstream-provided Debian package for ayatana-indicator-keyboard.
+    See upstream ChangeLog for recent changes.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Sat, 25 Jun 2022 06:43:57 +0200
+
 ayatana-indicator-keyboard (22.2.1-0) unstable; urgency=medium
 
   * Upstream-provided Debian package for ayatana-indicator-keyboard.

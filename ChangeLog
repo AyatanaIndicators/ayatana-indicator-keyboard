@@ -1,6 +1,23 @@
+2022-06-25 Mike Gabriel
+
+        * release 22.2.2 (HEAD -> main, tag: 22.2.2)
+
+2022-06-24 Mike Gabriel
+
+        * Merge branch 'Ionic-bugfix/create-dir-before-symlink' (b8d388fe)
+
+2022-06-22 Mihai Moldovan
+
+        * data/CMakeLists.txt: create dbus-1/interfaces datadir subdirectory
+          before trying to create a symlink into it. (c307d59e)
+
+2022-06-22 Milo Ivir
+
+        * Translated using Weblate (Croatian) (e66631bf)
+
 2022-06-21 Mike Gabriel
 
-        * release 22.2.1 (HEAD -> main, tag: 22.2.1)
+        * release 22.2.1 (523b881d) (tag: 22.2.1)
 
 2022-06-14 Eric
 

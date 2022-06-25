@@ -1,3 +1,9 @@
+Overview of changes in ayatana-indicator-keyboard 22.2.2
+
+  - data/CMakeLists.txt: create accountsservice/interfaces datadir subdirectory
+    before trying to create a symlink into it.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 22.2.1
 
   - Add AccountsService support.
