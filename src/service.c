@@ -23,6 +23,8 @@
 #define BUS_NAME "org.ayatana.indicator.keyboard"
 #define BUS_PATH "/org/ayatana/indicator/keyboard"
 
+#define ICON_DEFAULT "input-keyboard"
+
 static guint m_nSignal = 0;
 static void *m_pLibHandle = NULL;
 static Keyboard* (*m_fnKeyboardNew)();
@@ -87,14 +89,22 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self)
     g_variant_builder_add(&cBuilder, "{sv}", "title", g_variant_new_string(_("Keyboard")));
     g_variant_builder_add(&cBuilder, "{sv}", "visible", g_variant_new_boolean(TRUE));
 
-    gchar *sLanguage;
-    m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, -1, &sLanguage, NULL);
+    GIcon *pIcon = NULL;
+    if (ayatana_common_utils_is_lomiri()) {
+        pIcon = g_themed_icon_new_with_default_fallbacks(ICON_DEFAULT);
+    }
+    else
+    {
+        gchar *sLanguage;
+        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, -1, &sLanguage, NULL);
 
-    gchar *sIcon = g_strconcat("ayatana-indicator-keyboard-", sLanguage, NULL);
-    g_free(sLanguage);
+        gchar *sIcon = g_strconcat("ayatana-indicator-keyboard-", sLanguage, NULL);
+        g_free(sLanguage);
 
-    GIcon *pIcon = g_themed_icon_new_with_default_fallbacks(sIcon);
-    g_free(sIcon);
+        pIcon = g_themed_icon_new_with_default_fallbacks(sIcon);
+        g_free(sIcon);
+    }
+
     g_variant_builder_add(&cBuilder, "{sv}", "accessible-desc", g_variant_new_string(_("Current keyboard layout")));
 
     if (pIcon)
