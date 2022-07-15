@@ -1,6 +1,31 @@
+2022-07-15 Mike Gabriel
+
+        * release 22.2.3 (HEAD -> main, tag: 22.2.3)
+
+2022-07-14 Teitei
+
+        * Translated using Weblate (Burmese) (24e02977)
+
+2022-07-06 Robert Tari
+
+        * Merge branch 'sunweaver-pr/input-keyboard-icon' (9873f1f7)
+
+2022-06-25 Kristjan Räts
+
+        * Translated using Weblate (Estonian) (1221d55f)
+
+2022-07-05 Mike Gabriel
+
+        * src/service.c: Use 'input-keyboard' (symbolic) icon as indicator
+          icon on Lomiri. (54be1fe4)
+
+2022-06-25 Kristjan Räts
+
+        * Translated using Weblate (Estonian) (97fb737a)
+
 2022-06-25 Mike Gabriel
 
-        * release 22.2.2 (HEAD -> main, tag: 22.2.2)
+        * release 22.2.2 (99562d29) (tag: 22.2.2)
 
 2022-06-24 Mike Gabriel
 
