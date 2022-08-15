@@ -336,7 +336,8 @@ static void keyboard_init(Keyboard *self)
         const gchar *sLayout = rxkb_layout_get_name(pRxkbLayout);
         const gchar *sVariant = rxkb_layout_get_variant(pRxkbLayout);
         const gchar *sDescription = rxkb_layout_get_description(pRxkbLayout);
-
+        const gchar *sTranslated = g_dgettext("xkeyboard-config", sDescription);
+        sDescription = sTranslated;
         Layout *pLayout = g_slice_new0(Layout);
 
         if (sVariant != NULL && strlen(sVariant) > 0)
