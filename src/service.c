@@ -87,6 +87,7 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self)
     GVariantBuilder cBuilder;
     g_variant_builder_init(&cBuilder, G_VARIANT_TYPE("a{sv}"));
     g_variant_builder_add(&cBuilder, "{sv}", "title", g_variant_new_string(_("Keyboard")));
+    g_variant_builder_add(&cBuilder, "{sv}", "tooltip", g_variant_new_string(_("Keyboard layout switcher and settings")));
     g_variant_builder_add(&cBuilder, "{sv}", "visible", g_variant_new_boolean(TRUE));
 
     GIcon *pIcon = NULL;
