@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-15 00:34+0200\n"
+"POT-Creation-Date: 2022-09-05 13:18+0200\n"
 "PO-Revision-Date: 2022-07-20 18:14+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
-"Language-Team: Portuguese <https://hosted.weblate.org/projects/"
-"ayatana-indicators/keyboard-applet/pt/>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/ayatana-"
+"indicators/keyboard-applet/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,14 +19,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.14-dev\n"
 
-#: ../src/service.c:87
+#: ../src/service.c:89
 msgid "Keyboard"
 msgstr "Teclado"
 
-#: ../src/service.c:98
+#: ../src/service.c:90
+msgid "Keyboard layout switcher and settings"
+msgstr ""
+
+#: ../src/service.c:109
 msgid "Current keyboard layout"
 msgstr "Disposição atual do teclado"
 
-#: ../src/service.c:155
+#: ../src/service.c:166
 msgid "Keyboard Settings…"
 msgstr "Configurações do teclado…"

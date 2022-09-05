@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-15 00:34+0200\n"
+"POT-Creation-Date: 2022-09-05 13:18+0200\n"
 "PO-Revision-Date: 2021-02-08 21:50+0000\n"
 "Last-Translator: Ács Zoltán <acszoltan111@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/ayatana-"
@@ -19,15 +19,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5-dev\n"
 
-#: ../src/service.c:87
+#: ../src/service.c:89
 msgid "Keyboard"
 msgstr "Billentyűzet"
 
-#: ../src/service.c:98
+#: ../src/service.c:90
+msgid "Keyboard layout switcher and settings"
+msgstr ""
+
+#: ../src/service.c:109
 msgid "Current keyboard layout"
 msgstr "Jelenlegi billentyűzetkiosztás"
 
-#: ../src/service.c:155
+#: ../src/service.c:166
 #, fuzzy
 msgid "Keyboard Settings…"
 msgstr "Billentyűzetbeállítások..."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-15 00:34+0200\n"
+"POT-Creation-Date: 2022-09-05 13:18+0200\n"
 "PO-Revision-Date: 2021-05-02 11:32+0000\n"
 "Last-Translator: Tomáš Marný <tomik.marny@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/ayatana-indicators/"
@@ -19,14 +19,18 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 4.7-dev\n"
 
-#: ../src/service.c:87
+#: ../src/service.c:89
 msgid "Keyboard"
 msgstr "Klávesnice"
 
-#: ../src/service.c:98
+#: ../src/service.c:90
+msgid "Keyboard layout switcher and settings"
+msgstr ""
+
+#: ../src/service.c:109
 msgid "Current keyboard layout"
 msgstr "Aktuální rozložení klávesnice"
 
-#: ../src/service.c:155
+#: ../src/service.c:166
 msgid "Keyboard Settings…"
 msgstr ""

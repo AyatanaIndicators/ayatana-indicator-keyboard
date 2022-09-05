@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-15 00:34+0200\n"
+"POT-Creation-Date: 2022-09-05 13:18+0200\n"
 "PO-Revision-Date: 2022-06-17 06:20+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,14 +19,18 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.13-dev\n"
 
-#: ../src/service.c:87
+#: ../src/service.c:89
 msgid "Keyboard"
 msgstr "键盘"
 
-#: ../src/service.c:98
+#: ../src/service.c:90
+msgid "Keyboard layout switcher and settings"
+msgstr ""
+
+#: ../src/service.c:109
 msgid "Current keyboard layout"
 msgstr "当前键盘布局"
 
-#: ../src/service.c:155
+#: ../src/service.c:166
 msgid "Keyboard Settings…"
 msgstr "键盘设置…"
