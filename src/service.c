@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Robert Tari <robert@tari.in>
+ * Copyright 2021-2022 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -60,6 +60,7 @@ struct ProfileMenuInfo
     GMenu *pMenu;
     GMenu *pSubmenu;
     guint nExportId;
+    GSimpleAction *pHeaderAction;
 };
 
 struct _IndicatorKeyboardServicePrivate
@@ -71,7 +72,6 @@ struct _IndicatorKeyboardServicePrivate
     gboolean bMenusBuilt;
     struct ProfileMenuInfo lMenus[N_PROFILES];
     GSimpleActionGroup *pActionGroup;
-    GSimpleAction *pHeaderAction;
     GSimpleAction *pSettingsAction;
     GSimpleAction *pLayoutAction;
     GMenu *pLayoutSection;
@@ -82,7 +82,7 @@ typedef IndicatorKeyboardServicePrivate priv_t;
 
 G_DEFINE_TYPE_WITH_PRIVATE(IndicatorKeyboardService, indicator_keyboard_service, G_TYPE_OBJECT)
 
-static GVariant* createHeaderState(IndicatorKeyboardService *self)
+static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
 {
     GVariantBuilder cBuilder;
     g_variant_builder_init(&cBuilder, G_VARIANT_TYPE("a{sv}"));
@@ -124,7 +124,7 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self)
     return g_variant_builder_end(&cBuilder);
 }
 
-static GMenuModel* createDesktopLayoutSection(IndicatorKeyboardService *self, int nProfile)
+static GMenuModel* createLayoutSection(IndicatorKeyboardService *self)
 {
     self->pPrivate->pLayoutSection = g_menu_new();
 
@@ -160,7 +160,7 @@ static GMenuModel* createDesktopLayoutSection(IndicatorKeyboardService *self, in
     return G_MENU_MODEL(self->pPrivate->pLayoutSection);
 }
 
-static GMenuModel* createDesktopSettingsSection(IndicatorKeyboardService *self)
+static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
 {
     GMenu * pMenu = g_menu_new();
     g_menu_append(pMenu, _("Keyboard Settings…"), "indicator.settings");
@@ -178,11 +178,14 @@ static void rebuildSection(GMenu *pMenu, int nPos, GMenuModel *pModel)
 static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
 {
     struct ProfileMenuInfo *pInfoDesktop = &self->pPrivate->lMenus[PROFILE_DESKTOP];
+    struct ProfileMenuInfo *pInfoPhone = &self->pPrivate->lMenus[PROFILE_PHONE];
     struct ProfileMenuInfo *pInfoGreeter = &self->pPrivate->lMenus[PROFILE_GREETER];
 
     if (nSections & SECTION_HEADER)
     {
-        g_simple_action_set_state(self->pPrivate->pHeaderAction, createHeaderState(self));
+        g_simple_action_set_state(pInfoDesktop->pHeaderAction, createHeaderState(self, PROFILE_DESKTOP));
+        g_simple_action_set_state(pInfoPhone->pHeaderAction, createHeaderState(self, PROFILE_PHONE));
+        g_simple_action_set_state(pInfoGreeter->pHeaderAction, createHeaderState(self, PROFILE_GREETER));
     }
 
     if (!self->pPrivate->bMenusBuilt)
@@ -192,13 +195,15 @@ static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
 
     if (nSections & SECTION_LAYOUTS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 0, createDesktopLayoutSection(self, PROFILE_DESKTOP));
-        rebuildSection(pInfoGreeter->pSubmenu, 0, createDesktopLayoutSection(self, PROFILE_GREETER));
+        rebuildSection(pInfoDesktop->pSubmenu, 0, createLayoutSection(self));
+        rebuildSection(pInfoPhone->pSubmenu, 0, createLayoutSection(self));
+        rebuildSection(pInfoGreeter->pSubmenu, 0, createLayoutSection(self));
     }
 
     if (nSections & SECTION_SETTINGS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 1, createDesktopSettingsSection(self));
+        rebuildSection(pInfoDesktop->pSubmenu, 1, createSettingsSection(self));
+        rebuildSection(pInfoPhone->pSubmenu, 1, createSettingsSection(self));
     }
 }
 
@@ -216,17 +221,17 @@ static void createMenu(IndicatorKeyboardService *self, int nProfile)
     // Build the sections
     if (nProfile == PROFILE_PHONE)
     {
-        lSections[nSection++] = createDesktopLayoutSection(self, nProfile);
-        lSections[nSection++] = createDesktopSettingsSection(self);
+        lSections[nSection++] = createLayoutSection(self);
+        lSections[nSection++] = createSettingsSection(self);
     }
     else if (nProfile == PROFILE_DESKTOP)
     {
-        lSections[nSection++] = createDesktopLayoutSection(self, nProfile);
-        lSections[nSection++] = createDesktopSettingsSection(self);
+        lSections[nSection++] = createLayoutSection(self);
+        lSections[nSection++] = createSettingsSection(self);
     }
     else if (nProfile == PROFILE_GREETER)
     {
-        lSections[nSection++] = createDesktopLayoutSection(self, nProfile);
+        lSections[nSection++] = createLayoutSection(self);
     }
 
     // Add sections to the submenu
@@ -239,7 +244,9 @@ static void createMenu(IndicatorKeyboardService *self, int nProfile)
     }
 
     // Add submenu to the header
-    pItem = g_menu_item_new(NULL, "indicator._header");
+    gchar *sName = g_strdup_printf ("indicator._header-%s", m_lMenuNames[nProfile]);
+    pItem = g_menu_item_new(NULL, sName);
+    g_free (sName);
     g_menu_item_set_attribute(pItem, "x-ayatana-type", "s", "org.ayatana.indicator.root");
     g_menu_item_set_submenu(pItem, G_MENU_MODEL(pSubmenu));
     g_object_unref(pSubmenu);
@@ -289,9 +296,14 @@ static void initActions(IndicatorKeyboardService *self)
     GSimpleAction *pAction;
     self->pPrivate->pActionGroup = g_simple_action_group_new();
 
-    pAction = g_simple_action_new_stateful("_header", NULL, createHeaderState(self));
-    g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
-    self->pPrivate->pHeaderAction = pAction;
+    for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
+    {
+        gchar *sName = g_strdup_printf ("_header-%s", m_lMenuNames[nProfile]);
+        pAction = g_simple_action_new_stateful(sName, NULL, createHeaderState(self, nProfile));
+        g_free (sName);
+        g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
+        self->pPrivate->lMenus[nProfile].pHeaderAction = pAction;
+    }
 
     pAction = g_simple_action_new("layout", G_VARIANT_TYPE_BYTE);
     g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
@@ -405,7 +417,12 @@ static void onDispose(GObject *pObject)
 
     g_clear_object (&self->pPrivate->pSettingsAction);
     g_clear_object (&self->pPrivate->pLayoutAction);
-    g_clear_object (&self->pPrivate->pHeaderAction);
+
+    for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
+    {
+        g_clear_object (&self->pPrivate->lMenus[nProfile].pHeaderAction);
+    }
+
     g_clear_object (&self->pPrivate->pActionGroup);
     g_clear_object (&self->pPrivate->pConnection);
 
