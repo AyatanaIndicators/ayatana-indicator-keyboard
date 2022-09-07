@@ -76,6 +76,7 @@ struct _IndicatorKeyboardServicePrivate
     GSimpleAction *pLayoutAction;
     GMenu *pLayoutSection;
     Keyboard *pKeyboard;
+    GSettings *pSettings;
 };
 
 typedef IndicatorKeyboardServicePrivate priv_t;
@@ -90,8 +91,26 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
     g_variant_builder_add(&cBuilder, "{sv}", "tooltip", g_variant_new_string(_("Keyboard layout switcher and settings")));
     g_variant_builder_add(&cBuilder, "{sv}", "visible", g_variant_new_boolean(TRUE));
 
+    gchar *sKey = NULL;
+
+    if (nProfile == PROFILE_DESKTOP)
+    {
+        sKey = "language-icon-desktop";
+    }
+    else if (nProfile == PROFILE_PHONE)
+    {
+        sKey = "language-icon-phone";
+    }
+    else if (nProfile == PROFILE_GREETER)
+    {
+        sKey = "language-icon-greeter";
+    }
+
+    gboolean bLayout = g_settings_get_boolean (self->pPrivate->pSettings, sKey);
     GIcon *pIcon = NULL;
-    if (ayatana_common_utils_is_lomiri()) {
+
+    if (bLayout == FALSE)
+    {
         pIcon = g_themed_icon_new_with_default_fallbacks(ICON_DEFAULT);
     }
     else
@@ -395,6 +414,12 @@ static void onDispose(GObject *pObject)
 {
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pObject);
 
+    if (self->pPrivate->pSettings != NULL)
+    {
+        g_signal_handlers_disconnect_by_data (self->pPrivate->pSettings, self);
+        g_clear_object (&self->pPrivate->pSettings);
+    }
+
     if (self->pPrivate->pKeyboard != NULL)
     {
         g_object_unref(G_OBJECT(self->pPrivate->pKeyboard));
@@ -435,6 +460,12 @@ static void onDispose(GObject *pObject)
     G_OBJECT_CLASS(indicator_keyboard_service_parent_class)->dispose(pObject);
 }
 
+static void onSettingsChanged(GSettings *pSettings, gchar *sKey, gpointer pData)
+{
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pData);
+    rebuildNow(self, SECTION_HEADER);
+}
+
 static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
 {
     gchar *sLib = "libayatana-keyboard-x11.so.0";
@@ -464,9 +495,10 @@ static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
     m_fnKeyboardGetNumLayouts = dlsym(m_pLibHandle, "keyboard_GetNumLayouts");
     m_fnKeyboardGetLayout = dlsym(m_pLibHandle, "keyboard_GetLayout");
     m_fnKeyboardSetLayout = dlsym(m_pLibHandle, "keyboard_SetLayout");
-
     self->pPrivate = indicator_keyboard_service_get_instance_private(self);
     self->pPrivate->pCancellable = g_cancellable_new();
+    self->pPrivate->pSettings = g_settings_new ("org.ayatana.indicator.keyboard");
+    g_signal_connect(self->pPrivate->pSettings, "changed", G_CALLBACK(onSettingsChanged), self);
     self->pPrivate->pKeyboard = m_fnKeyboardNew();
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_LAYOUT_CHANGED, G_CALLBACK(onLayoutChanged), self);
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_CONFIG_CHANGED, G_CALLBACK(onConfigChanged), self);
