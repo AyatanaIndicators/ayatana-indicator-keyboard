@@ -33,6 +33,7 @@ cat LINGUAS | while read lingua; do
 	    -e 's/\.ini\.in\.h:/.ini.in:/g'		\
 	    -e 's/\.xml\.h:/.xml:/g'			\
 	    -e 's/\.ini\.h:/.ini:/g'			\
+	    -e 's@#: \.\./@#: @g'			\
 	    -i ${lingua}.po
 
 done
