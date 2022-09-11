@@ -1,3 +1,4 @@
+data/org.ayatana.indicator.keyboard.gschema.xml
 src/main.c
 src/keyboard-lomiri.c
 src/keyboard-x11.c

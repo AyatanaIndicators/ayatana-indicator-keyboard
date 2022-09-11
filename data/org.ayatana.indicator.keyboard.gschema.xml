@@ -1,0 +1,19 @@
+<schemalist>
+    <schema gettext-domain="ayatana-indicator-keyboard" id="org.ayatana.indicator.keyboard" path="/org/ayatana/indicator/keyboard/">
+        <key name="language-icon-desktop" type="b">
+            <default>true</default>
+            <summary>Show the language icon in desktop mode.</summary>
+            <description>If enabled, the indicator shows the current layout icon. Otherwise, it displays a generic keyboard icon.</description>
+        </key>
+        <key name="language-icon-phone" type="b">
+            <default>false</default>
+            <summary>Show the language icon in phone mode.</summary>
+            <description>If enabled, the indicator shows the current layout icon. Otherwise, it displays a generic keyboard icon.</description>
+        </key>
+        <key name="language-icon-greeter" type="b">
+            <default>false</default>
+            <summary>Show the language icon in the greeter.</summary>
+            <description>If enabled, the indicator shows the current layout icon. Otherwise, it displays a generic keyboard icon.</description>
+        </key>
+    </schema>
+</schemalist>
