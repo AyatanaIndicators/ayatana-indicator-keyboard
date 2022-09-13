@@ -56,8 +56,5 @@ install(FILES 50-org.ayatana.indicator.keyboard.AccountsService.pkla DESTINATION
 
 # org.ayatana.indicator.keyboard.gschema.xml
 
-find_package (Intltool REQUIRED)
-set (ENV{LC_ALL} "C")
-intltool_merge_translations ("${CMAKE_CURRENT_SOURCE_DIR}/org.ayatana.indicator.keyboard.gschema.xml.in" "${CMAKE_CURRENT_BINARY_DIR}/org.ayatana.indicator.keyboard.gschema.xml" ALL UTF8 STYLE "xml" NO_TRANSLATIONS)
 find_package (GSettings REQUIRED)
 add_schema ("org.ayatana.indicator.keyboard.gschema.xml")
