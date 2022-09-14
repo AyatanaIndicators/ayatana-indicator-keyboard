@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-14 08:44+0200\n"
-"PO-Revision-Date: 2021-05-02 11:32+0000\n"
-"Last-Translator: Tomáš Marný <tomik.marny@gmail.com>\n"
+"PO-Revision-Date: 2022-09-14 11:45+0000\n"
+"Last-Translator: Milan Korecky <milan.korecky@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/ayatana-indicators/"
 "keyboard-applet/cs/>\n"
 "Language: cs\n"
@@ -17,25 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Zobrazit ikonu jazyka v desktopovém režimu."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Pokud je povoleno, indikátor zobrazuje ikonu aktuálního rozvržení. Jinak se "
+"zobrazí obecná ikona klávesnice."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Zobrazit ikonu jazyka v režimu telefonu."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Zobrazit ikonu jazyka v uvítacím pozdravu."
 
 #: src/service.c:90
 msgid "Keyboard"
@@ -43,7 +45,7 @@ msgstr "Klávesnice"
 
 #: src/service.c:91
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Přepínač rozložení klávesnice a nastavení"
 
 #: src/service.c:128
 msgid "Current keyboard layout"
@@ -51,4 +53,4 @@ msgstr "Aktuální rozložení klávesnice"
 
 #: src/service.c:185
 msgid "Keyboard Settings…"
-msgstr ""
+msgstr "Nastavení klávesnice…"
