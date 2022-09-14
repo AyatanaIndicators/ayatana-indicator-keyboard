@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-14 08:45+0200\n"
-"PO-Revision-Date: 2022-09-10 17:20+0000\n"
+"PO-Revision-Date: 2022-09-15 21:17+0000\n"
 "Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
-"Language-Team: Occitan <https://hosted.weblate.org/projects/ayatana-"
-"indicators/keyboard-applet/oc/>\n"
+"Language-Team: Occitan <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/oc/>\n"
 "Language: oc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,21 +21,23 @@ msgstr ""
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Afichar l’icòna de la lenga dins lo mòde burèu."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Quand es activat, l’indicator mòstra l’icòna de la disposicion actuala. "
+"Autrament, mòstra una icòna generica de clavièr."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Afichar l’icòna de la lenga en mòde telefòn."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Afichar l’icòna de la lenga a l’acuelhença."
 
 #: src/service.c:90
 msgid "Keyboard"
