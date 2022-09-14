@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-05 13:18+0200\n"
+"POT-Creation-Date: 2022-09-14 08:44+0200\n"
 "PO-Revision-Date: 2021-02-08 21:50+0000\n"
 "Last-Translator: Ács Zoltán <acszoltan111@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/ayatana-"
@@ -19,19 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5-dev\n"
 
-#: ../src/service.c:89
+#: data/org.ayatana.indicator.keyboard.gschema.xml:1
+msgid "Show the language icon in desktop mode."
+msgstr ""
+
+#: data/org.ayatana.indicator.keyboard.gschema.xml:2
+msgid ""
+"If enabled, the indicator shows the current layout icon. Otherwise, it "
+"displays a generic keyboard icon."
+msgstr ""
+
+#: data/org.ayatana.indicator.keyboard.gschema.xml:3
+msgid "Show the language icon in phone mode."
+msgstr ""
+
+#: data/org.ayatana.indicator.keyboard.gschema.xml:4
+msgid "Show the language icon in the greeter."
+msgstr ""
+
+#: src/service.c:90
 msgid "Keyboard"
 msgstr "Billentyűzet"
 
-#: ../src/service.c:90
+#: src/service.c:91
 msgid "Keyboard layout switcher and settings"
 msgstr ""
 
-#: ../src/service.c:109
+#: src/service.c:128
 msgid "Current keyboard layout"
 msgstr "Jelenlegi billentyűzetkiosztás"
 
-#: ../src/service.c:166
+#: src/service.c:185
 #, fuzzy
 msgid "Keyboard Settings…"
 msgstr "Billentyűzetbeállítások..."
