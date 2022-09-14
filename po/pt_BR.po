@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-14 08:45+0200\n"
-"PO-Revision-Date: 2022-09-07 03:22+0000\n"
+"PO-Revision-Date: 2022-09-15 21:17+0000\n"
 "Last-Translator: Wellington Terumi Uemura <wellingtonuemura@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "ayatana-indicators/keyboard-applet/pt_BR/>\n"
@@ -21,21 +21,23 @@ msgstr ""
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Mostre o ícone do idioma no modo desktop."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Se ativado, o indicador mostra o ícone do layout atual. Caso contrário, ele "
+"exibe um ícone genérico do teclado."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Mostre o ícone do idioma no modo telefone."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Mostre o ícone do idioma na saudação."
 
 #: src/service.c:90
 msgid "Keyboard"
