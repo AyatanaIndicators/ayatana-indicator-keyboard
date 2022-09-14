@@ -1,3 +1,10 @@
+Overview of changes in ayatana-indicator-keyboard 22.9.0
+
+  - Add tooltip support.
+  - Make it configurable whether to show the current layout's language icon,
+    or whether to show a generic keyboard icon.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 22.2.3
 
   - src/service.c: Use 'input-keyboard' (symbolic) icon as indicator icon

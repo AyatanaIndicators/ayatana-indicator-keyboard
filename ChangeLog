@@ -1,10 +1,99 @@
+2022-09-14 Mike Gabriel
+
+        * release 22.9.0 (HEAD -> main, tag: 22.9.0)
+        * Translated using Weblate (German) (4663447e)
+
+2022-09-14 Milan Korecky
+
+        * Translated using Weblate (Czech) (062568a7)
+
+2022-09-14 Mike Gabriel
+
+        * po/*.po{,t}: Translation strings update. (0ad52347)
+        * update-po{,t}.sh: Also catch multi-file source file references.
+          (4d0bdb06)
+
+2022-09-13 Robert Tari
+
+        * Merge branch 'sunweaver-pr/fix-and-update-translation-template'
+          (5191b1fc)
+
+2022-09-11 Mike Gabriel
+
+        * po/ayatana-indicator-keyboard.pot: Update translation template
+          file. (800c3ef6)
+        * update-po{,t}.sh: Omit ../ at beginning of file names in .pot file.
+          (1768f497)
+        * update-po.sh: White-space fix. (b31f62c1)
+        * Fix translating the indicator's .gschema.xml file. (8818b2d6)
+
+2022-09-09 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (1f668a5d)
+
+2022-09-08 Mike Gabriel
+
+        * Merge branch 'tari01-pr/language-icon-gsettings' (e6f63b65)
+
+2022-09-07 Moo
+
+        * Translated using Weblate (Lithuanian) (5ad5e033)
+        * Translated using Weblate (Lithuanian) (a4fd7cb1)
+
+2022-09-07 Robert Tari
+
+        * Add GSettings options for indicator icon (c5d48625)
+        * src/service.c: Create separate header profiles (1136552d)
+
+2022-09-06 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (cf59345a)
+
+2022-09-05 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (a81d0326)
+
+2022-09-05 Mike Gabriel
+
+        * Translated using Weblate (German) (0ab29024)
+        * po/*.po{,t}: Translation strings update. (ef217bb3)
+
+2022-09-01 Mike Gabriel
+
+        * Merge branch 'sunweaver-pr/tooltip-support' (4174027f)
+
+2022-07-22 Mike Gabriel
+
+        * src/service.c: Add tooltip. (2bca91c2)
+
+2022-08-15 Mike Gabriel
+
+        * Merge branch 'tari01-pr/translate-layout-names' (dd3bb865)
+
+2022-08-03 Robert Tari
+
+        * Translate layout names (d06286ca)
+
+2022-08-06 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (8c6e2b03)
+
+2022-07-27 Sergii Horichenko
+
+        * Translated using Weblate (Ukrainian) (3ebcb219)
+        * Translated using Weblate (Russian) (3cd6a7ad)
+
+2022-07-19 ssantos
+
+        * Translated using Weblate (Portuguese) (0a24b978)
+
 2022-07-15 Mike Gabriel
 
-        * release 22.2.3 (HEAD -> main, tag: 22.2.3)
+        * release 22.2.3 (bcbfe01c) (tag: 22.2.3)
 
 2022-07-14 Teitei
 
-        * Translated using Weblate (Burmese) (24e02977)
+        * Translated using Weblate (Burmese) (d2676988)
 
 2022-07-06 Robert Tari
 
