@@ -1,6 +1,55 @@
+2022-12-15 Mike Gabriel
+
+        * release 22.9.1 (HEAD -> main, tag: 22.9.1)
+
+2022-12-03 Kevin Zhou
+
+        * Translated using Weblate (Chinese (Simplified)) (7f18b9f4)
+
+2022-11-10 Mike Gabriel
+
+        * Merge branch 'tari01-pr/update-languages' (32f76b32)
+
+2022-11-08 Robert Tari
+
+        * src/languages.h: Update the layout list + rewrite the code to use a
+          struct instead of two lists (c16bded3)
+
+2022-10-17 Gediminas Murauskas
+
+        * Translated using Weblate (Lithuanian) (e9e02ded)
+
+2022-09-29 이정희
+
+        * Translated using Weblate (Korean) (6f809923)
+
+2022-09-25 Oğuz Ersen
+
+        * Translated using Weblate (Turkish) (c25f3287)
+
+2022-09-22 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (c8d30464)
+
+2022-09-14 Sergii Horichenko
+
+        * Translated using Weblate (Ukrainian) (1ede2c04)
+
+2022-09-14 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (175c9641)
+
+2022-09-14 Sergii Horichenko
+
+        * Translated using Weblate (Russian) (42df6165)
+
+2022-09-14 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (62caace0)
+
 2022-09-14 Mike Gabriel
 
-        * release 22.9.0 (HEAD -> main, tag: 22.9.0)
+        * release 22.9.0 (48c42153) (tag: 22.9.0)
         * Translated using Weblate (German) (4663447e)
 
 2022-09-14 Milan Korecky
