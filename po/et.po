@@ -8,34 +8,36 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-14 08:44+0200\n"
-"PO-Revision-Date: 2022-06-26 19:20+0000\n"
+"PO-Revision-Date: 2023-04-26 02:47+0000\n"
 "Last-Translator: Kristjan Räts <kristjanrats@gmail.com>\n"
-"Language-Team: Estonian <https://hosted.weblate.org/projects/ayatana-"
-"indicators/keyboard-applet/et/>\n"
+"Language-Team: Estonian <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Kuva keele ikoon töölauarežiimis."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Sisselülitatult kuvatakse aktiivse klahvipaigutuse ikoon. Vastasel korral "
+"kuvatakse klaviatuuri üldine ikoon."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Kuva keele ikoon telefonirežiimis."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Kuva keele ikoon tervitajas."
 
 #: src/service.c:90
 msgid "Keyboard"
@@ -43,7 +45,7 @@ msgstr "Klaviatuur"
 
 #: src/service.c:91
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Klahvipaigutuse seaded ja vahetamine"
 
 #: src/service.c:128
 msgid "Current keyboard layout"
