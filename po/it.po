@@ -8,34 +8,36 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-14 08:44+0200\n"
-"PO-Revision-Date: 2021-02-20 01:50+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/ayatana-"
-"indicators/keyboard-applet/it/>\n"
+"PO-Revision-Date: 2023-06-27 10:56+0000\n"
+"Last-Translator: Sylke Vicious <silkevicious@tuta.io>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5\n"
+"X-Generator: Weblate 4.18.1\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Mostra l'icona della lingua in modalità desktop."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Se abilitato, l'indicatore mostra l'icona del layout corrente. Altrimenti, "
+"visualizza un'icona della tastiera generica."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Mostra l'icona della lingua in modalità telefono."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Mostra l'icona della lingua nel saluto."
 
 #: src/service.c:90
 msgid "Keyboard"
@@ -43,13 +45,12 @@ msgstr "Tastiera"
 
 #: src/service.c:91
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Selettore layout tastiera e impostazioni"
 
 #: src/service.c:128
 msgid "Current keyboard layout"
 msgstr "Mappatura di tastiera corrente"
 
 #: src/service.c:185
-#, fuzzy
 msgid "Keyboard Settings…"
-msgstr "Impostazioni tastiera…"
+msgstr "Impostazioni Tastiera…"
