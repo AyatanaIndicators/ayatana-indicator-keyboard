@@ -35,9 +35,7 @@ install (FILES "${AYATANA_INDICATOR_FILE}" DESTINATION "${AYATANA_INDICATOR_DIR}
 
 # Icons
 
-set (ICON_DIR "${CMAKE_INSTALL_FULL_DATADIR}/icons/hicolor")
-message (STATUS "${ICON_DIR} is the Icon install dir")
-install (DIRECTORY icons/scalable DESTINATION "${ICON_DIR}" FILES_MATCHING PATTERN "*.svg")
+install (DIRECTORY "icons/" DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/icons")
 
 # org.ayatana.indicator.keyboard.AccountsService.xml
 
