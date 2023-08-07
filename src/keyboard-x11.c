@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Robert Tari <robert@tari.in>
+ * Copyright 2021-2023 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -42,6 +42,10 @@ struct _KeyboardPrivate
     XklConfigRec *pConfigRec;
     GSList *lLayoutRec;
     GSList *lUsers;
+    GDBusConnection *pConnection;
+    guint nSubscription;
+    gchar *sUser;
+    gchar *sSystemLayout;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -114,22 +118,54 @@ static void setAccountsService(Keyboard *pKeyboard)
     g_free(sPath);
 }
 
-static void getAccountsService(Keyboard *pKeyboard)
+static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
 {
-    gboolean bChanged = FALSE;
-
-    for (GSList *lUser = pKeyboard->pPrivate->lUsers; lUser; lUser = lUser->next)
+    if (!pKeyboard->pPrivate->sUser)
     {
-        ActUser *pUser = lUser->data;
-        gboolean bIsUserLoaded = act_user_is_loaded(pUser);
+        GError *pError = NULL;
+        GVariant *pUser = g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, "org.ArcticaProject.ArcticaGreeter", "/org/ArcticaProject/ArcticaGreeter", "org.ArcticaProject.ArcticaGreeter", "GetUser", NULL, G_VARIANT_TYPE ("(s)"), G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
 
-        if (bIsUserLoaded)
+        if (pError)
         {
+            g_error ("Panic: Failed calling GetUser: %s", pError->message);
+            g_error_free (pError);
+
+            return;
+        }
+
+        g_variant_get (pUser, "(s)", &pKeyboard->pPrivate->sUser);
+    }
+
+    gboolean bGuest = g_str_equal (pKeyboard->pPrivate->sUser, "*guest");
+
+    if (bGuest)
+    {
+        if (pKeyboard->pPrivate->lLayoutRec)
+        {
+            g_slist_free_full (g_steal_pointer (&pKeyboard->pPrivate->lLayoutRec), g_free);
+        }
+
+        pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->sSystemLayout));
+        g_timeout_add(500, (GSourceFunc)emitDelayedSignal, pKeyboard);
+    }
+    else
+    {
+        const gchar *sUser = act_user_get_user_name (pUser);
+        gboolean bSame = g_str_equal(pKeyboard->pPrivate->sUser, sUser);
+
+        if (bSame)
+        {
+            if (pKeyboard->pPrivate->lLayoutRec)
+            {
+                g_slist_free_full (g_steal_pointer (&pKeyboard->pPrivate->lLayoutRec), g_free);
+            }
+
             gint nUid = act_user_get_uid(pUser);
             gchar *sPath = g_strdup_printf("/org/freedesktop/Accounts/User%i", nUid);
             GDBusConnection *pConnection = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, NULL);
             GDBusProxy *pProxy = g_dbus_proxy_new_sync(pConnection, G_DBUS_PROXY_FLAGS_NONE, NULL, "org.freedesktop.Accounts", sPath, "org.freedesktop.DBus.Properties", NULL, NULL);
             GVariant *pValue = g_dbus_proxy_call_sync(pProxy, "Get", g_variant_new("(ss)", "org.ayatana.indicator.keyboard.AccountsService", "Layouts"), G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL);
+
             GVariant *pChild0 = g_variant_get_child_value(pValue, 0);
             GVariant *pChild1 = g_variant_get_child_value(pChild0, 0);
 
@@ -141,11 +177,14 @@ static void getAccountsService(Keyboard *pKeyboard)
 
             while (g_variant_iter_loop(pIter, "s", &sLayout))
             {
-                if (g_slist_find_custom(pKeyboard->pPrivate->lLayoutRec, sLayout, (GCompareFunc)g_strcmp0) == NULL)
-                {
-                    pKeyboard->pPrivate->lLayoutRec = g_slist_append(pKeyboard->pPrivate->lLayoutRec, g_strdup(sLayout));
-                    bChanged = TRUE;
-                }
+                pKeyboard->pPrivate->lLayoutRec = g_slist_append(pKeyboard->pPrivate->lLayoutRec, g_strdup(sLayout));
+            }
+
+            guint nLayouts = g_slist_length(pKeyboard->pPrivate->lLayoutRec);
+
+            if (!nLayouts)
+            {
+                pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->sSystemLayout));
             }
 
             g_variant_iter_free(pIter);
@@ -154,12 +193,9 @@ static void getAccountsService(Keyboard *pKeyboard)
             g_variant_unref(pValue);
             g_object_unref(pConnection);
             g_free(sPath);
-        }
-    }
 
-    if (bChanged == TRUE)
-    {
-        g_timeout_add(500, (GSourceFunc)emitDelayedSignal, pKeyboard);
+            g_timeout_add(500, (GSourceFunc)emitDelayedSignal, pKeyboard);
+        }
     }
 }
 
@@ -169,7 +205,7 @@ static void onUserLoaded(Keyboard *pKeyboard, ActUser *pUser)
 
     if (bIsUserLoaded)
     {
-        getAccountsService(pKeyboard);
+        getAccountsService(pKeyboard, pUser);
         g_signal_handlers_disconnect_by_func(G_OBJECT(pUser), G_CALLBACK(onUserLoaded), pKeyboard);
     }
 }
@@ -182,7 +218,10 @@ static void onManagerLoaded(Keyboard *pKeyboard)
 
     if (bIsLoaded)
     {
-        pKeyboard->pPrivate->lUsers = act_user_manager_list_users(pManager);
+        if (!pKeyboard->pPrivate->lUsers)
+        {
+            pKeyboard->pPrivate->lUsers = act_user_manager_list_users(pManager);
+        }
 
         for (GSList *lUser = pKeyboard->pPrivate->lUsers; lUser; lUser = lUser->next)
         {
@@ -191,7 +230,7 @@ static void onManagerLoaded(Keyboard *pKeyboard)
 
             if (bIsUserLoaded)
             {
-                getAccountsService(pKeyboard);
+                getAccountsService(pKeyboard, pUser);
             }
             else
             {
@@ -317,14 +356,18 @@ void keyboard_AddSource(Keyboard *pKeyboard)
 
 guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
 {
+    guint nLayouts = 0;
+
     if (isGreeter())
     {
-        return g_slist_length(pKeyboard->pPrivate->lLayoutRec);
+        nLayouts = g_slist_length(pKeyboard->pPrivate->lLayoutRec);
     }
     else
     {
-        return g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts);
+        nLayouts = g_strv_length(pKeyboard->pPrivate->pConfigRec->layouts);
     }
+
+    return nLayouts;
 }
 
 void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription)
@@ -380,34 +423,29 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
     }
     else
     {
-        // TODO
-        gchar *sCommand;
         gchar *sId = g_slist_nth_data(pKeyboard->pPrivate->lLayoutRec, nLayout);
-        gchar **lParamas = g_strsplit(sId, "+", -1);
-        guint nParams = g_strv_length(lParamas);
+        gchar **lParams = g_strsplit(sId, "+", -1);
+        guint nParams = g_strv_length(lParams);
+        gchar *sVariant = "";
 
-        if (nParams == 1)
+        if (nParams == 2)
         {
-            sCommand = g_strdup_printf("setxkbmap -layout %s", lParamas[0]);
-        }
-        else
-        {
-            sCommand = g_strdup_printf("setxkbmap -layout %s -variant %s", lParamas[0], lParamas[1]);
+            sVariant = lParams[1];
         }
 
-        g_strfreev(lParamas);
-
-        gchar *sOutput = NULL;
         GError *pError = NULL;
-        gboolean bResult = g_spawn_command_line_sync(sCommand, &sOutput, NULL, NULL, &pError);
-        g_free(sCommand);
+        GVariant *pLayout = g_variant_new ("(ss)", lParams[0], sVariant);
+        g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, "org.ArcticaProject.ArcticaGreeter", "/org/ArcticaProject/ArcticaGreeter", "org.ArcticaProject.ArcticaGreeter", "SetLayout", pLayout, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
 
-        if (bResult == FALSE)
+        if (pError)
         {
-            g_message("COMMAND 01 %s: %s", sOutput, pError->message);
+            g_error ("Panic: Failed calling GetUser: %s", pError->message);
+            g_error_free (pError);
 
             return;
         }
+
+        g_strfreev (lParams);
     }
 
     pKeyboard->pPrivate->nLayout = nLayout;
@@ -416,7 +454,22 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 
 static void onDispose(GObject *pObject)
 {
-    Keyboard *self = G_KEYBOARD(pObject);
+    Keyboard *self = G_KEYBOARD (pObject);
+
+    if (self->pPrivate->nSubscription)
+    {
+        g_dbus_connection_signal_unsubscribe (self->pPrivate->pConnection, self->pPrivate->nSubscription);
+    }
+
+    if (self->pPrivate->lUsers)
+    {
+        g_slist_free(self->pPrivate->lUsers);
+    }
+
+    if (self->pPrivate->pConnection)
+    {
+        g_object_unref (self->pPrivate->pConnection);
+    }
 
     if (self->pPrivate->lLayouts)
     {
@@ -433,9 +486,9 @@ static void onDispose(GObject *pObject)
         g_slist_free_full(self->pPrivate->lLayoutRec, g_free);
     }
 
-    if (self->pPrivate->lUsers)
+    if (self->pPrivate->sSystemLayout)
     {
-        g_slist_free(self->pPrivate->lUsers);
+        g_free (self->pPrivate->sSystemLayout);
     }
 
     G_OBJECT_CLASS(keyboard_parent_class)->dispose(pObject);
@@ -454,6 +507,42 @@ Keyboard* keyboard_new()
     GObject *pObject = g_object_new(G_TYPE_KEYBOARD, NULL);
 
     return G_KEYBOARD(pObject);
+}
+
+static void onUserChanged (GDBusConnection *pConnection, const gchar *sSender, const gchar *sPath, const gchar *sInterface, const gchar *sSignal, GVariant *pParameters, gpointer pUserData)
+{
+    Keyboard *self = G_KEYBOARD (pUserData);
+    g_variant_get (pParameters, "(s)", &self->pPrivate->sUser);
+    ActUserManager *pManager = act_user_manager_get_default ();
+    gboolean bIsLoaded;
+    g_object_get (pManager, "is-loaded", &bIsLoaded, NULL);
+
+    if (bIsLoaded)
+    {
+        if (!self->pPrivate->lUsers)
+        {
+            self->pPrivate->lUsers = act_user_manager_list_users(pManager);
+        }
+
+        for (GSList *lUser = self->pPrivate->lUsers; lUser; lUser = lUser->next)
+        {
+            ActUser *pUser = lUser->data;
+            gboolean bIsUserLoaded = act_user_is_loaded (pUser);
+
+            if (bIsUserLoaded)
+            {
+                getAccountsService (self, pUser);
+            }
+            else
+            {
+                g_signal_connect_swapped (pUser, "notify::is-loaded", G_CALLBACK (onUserLoaded), self);
+            }
+        }
+    }
+    else
+    {
+        g_signal_connect_object (pManager, "notify::is-loaded", G_CALLBACK (onManagerLoaded), self, G_CONNECT_SWAPPED);
+    }
 }
 
 static void keyboard_init(Keyboard *self)
@@ -506,6 +595,18 @@ static void keyboard_init(Keyboard *self)
 
     rxkb_context_unref(pContext);
 
+    GError *pError = NULL;
+    self->pPrivate->sUser = NULL;
+    self->pPrivate->pConnection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &pError);
+
+    if (pError)
+    {
+        g_error ("Panic: Failed connecting to the session bus: %s", pError->message);
+        g_error_free (pError);
+
+        return;
+    }
+
     if (isGreeter() == FALSE)
     {
         self->pPrivate->pDisplay = XOpenDisplay(NULL);
@@ -527,6 +628,9 @@ static void keyboard_init(Keyboard *self)
     }
     else
     {
+        self->pPrivate->lUsers = NULL;
+        self->pPrivate->nSubscription = g_dbus_connection_signal_subscribe (self->pPrivate->pConnection, NULL, "org.ArcticaProject.ArcticaGreeter", "UserChanged", "/org/ArcticaProject/ArcticaGreeter", NULL, G_DBUS_SIGNAL_FLAGS_NONE, onUserChanged, self, NULL);
+
         // Get layouts from /etc/default/keyboard
         gchar *sFile;
         g_file_get_contents ("/etc/default/keyboard", &sFile, NULL, NULL);
@@ -589,7 +693,7 @@ static void keyboard_init(Keyboard *self)
 
         if (lVariants != NULL)
         {
-            g_strv_length(lVariants);
+            nVariants = g_strv_length(lVariants);
         }
 
         for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
@@ -615,6 +719,7 @@ static void keyboard_init(Keyboard *self)
             }
 
             self->pPrivate->lLayoutRec = g_slist_append(self->pPrivate->lLayoutRec, sId);
+            self->pPrivate->sSystemLayout = g_strdup(sId);
         }
 
         self->pPrivate->nLayout = 0;
@@ -644,7 +749,7 @@ static void keyboard_init(Keyboard *self)
 
                 if (bIsUserLoaded)
                 {
-                    getAccountsService(self);
+                    getAccountsService(self, pUser);
                 }
                 else
                 {
