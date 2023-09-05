@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Robert Tari <robert@tari.in>
+ * Copyright 2021-2023 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -32,7 +32,10 @@ Language LANGUAGES[] =
     {"En", "us+alt-intl"}, //English (US, alt. intl.)
     {"En", "us+colemak"}, //English (Colemak)
     {"En", "us+colemak_dh"}, //English (Colemak-DH)
+    {"En", "us+colemak_dh_wide"}, //English (Colemak-DH Wide)
+    {"En", "us+colemak_dh_ortho"}, //English (Colemak-DH Ortholinear)
     {"En", "us+colemak_dh_iso"}, //English (Colemak-DH ISO)
+    {"En", "us+colemak_dh_wide_iso"}, //English (Colemak-DH Wide ISO)
     {"En", "us+dvorak"}, //English (Dvorak)
     {"En", "us+dvorak-intl"}, //English (Dvorak, intl., with dead keys)
     {"En", "us+dvorak-alt-intl"}, //English (Dvorak, alt. intl.)
@@ -77,7 +80,7 @@ Language LANGUAGES[] =
     {"De", "at"}, //German (Austria)
     {"De", "at+nodeadkeys"}, //German (Austria, no dead keys)
     {"De", "at+mac"}, //German (Austria, Macintosh)
-    {"En", "au"}, //English (Australian)
+    {"En", "au"}, //English (Australia)
     {"Az", "az"}, //Azerbaijani
     {"Az", "az+cyrillic"}, //Azerbaijani (Cyrillic)
     {"Be", "by"}, //Belarusian
@@ -103,6 +106,7 @@ Language LANGUAGES[] =
     {"Bn", "in+ben_inscript"}, //Bangla (India, Baishakhi InScript)
     {"Ma", "in+eeyek"}, //Manipuri (Eeyek)
     {"Gu", "in+guj"}, //Gujarati
+    {"Gu", "in+guj-kagapa"}, //Gujarati (KaGaPa, phonetic)
     {"Pa", "in+guru"}, //Punjabi (Gurmukhi)
     {"Pa", "in+jhelum"}, //Punjabi (Gurmukhi Jhelum)
     {"Kn", "in+kan"}, //Kannada
@@ -110,6 +114,7 @@ Language LANGUAGES[] =
     {"Ml", "in+mal"}, //Malayalam
     {"Ml", "in+mal_lalitha"}, //Malayalam (Lalitha)
     {"Ml", "in+mal_enhanced"}, //Malayalam (enhanced InScript, with rupee)
+    {"Ml", "in+mal_poorna"}, //Malayalam (Poorna, extended InScript)
     {"Or", "in+ori"}, //Oriya
     {"Or", "in+ori-bolnagri"}, //Oriya (Bolnagri)
     {"Or", "in+ori-wx"}, //Oriya (Wx)
@@ -143,6 +148,7 @@ Language LANGUAGES[] =
     {"Pt", "br+nodeadkeys"}, //Portuguese (Brazil, no dead keys)
     {"Pt", "br+dvorak"}, //Portuguese (Brazil, Dvorak)
     {"Pt", "br+nativo"}, //Portuguese (Brazil, Nativo)
+    {"Ru", "br+rus"}, //Russian (Brazil, phonetic)
     {"Pt", "br+nativo-us"}, //Portuguese (Brazil, Nativo for US keyboards)
     {"Eo", "br+nativo-epo"}, //Esperanto (Brazil, Nativo)
     {"Pt", "br+thinkpad"}, //Portuguese (Brazil, IBM/Lenovo ThinkPad)
@@ -202,13 +208,15 @@ Language LANGUAGES[] =
     {"Hr", "hr+unicodeus"}, //Croatian (US, with Croatian digraphs)
     {"Hr", "hr+us"}, //Croatian (US)
     {"Cs", "cz"}, //Czech
-    {"Cs", "cz+bksl"}, //Czech (with <\|> key)
+    {"Cs", "cz+bksl"}, //Czech (extra backslash)
     {"Cs", "cz+qwerty"}, //Czech (QWERTY)
-    {"Cs", "cz+qwerty_bksl"}, //Czech (QWERTY, extended backslash)
+    {"Cs", "cz+qwerty_bksl"}, //Czech (QWERTY, extra backslash)
     {"Cs", "cz+qwerty-mac"}, //Czech (QWERTY, Macintosh)
     {"Cs", "cz+ucw"}, //Czech (UCW, only accented letters)
     {"Cs", "cz+dvorak-ucw"}, //Czech (US, Dvorak, UCW support)
-    {"Ru", "cz+rus"}, //Russian (Czech, phonetic)
+    {"Ru", "cz+rus"}, //Russian (Czechia, phonetic)
+    {"Cs", "cz+winkeys"}, //Czech (QWERTZ, Windows flavour)
+    {"Cs", "cz+winkeys-qwerty"}, //Czech (QWERTY, Windows flavour)
     {"Da", "dk"}, //Danish
     {"Da", "dk+nodeadkeys"}, //Danish (no dead keys)
     {"Da", "dk+winkeys"}, //Danish (Windows)
@@ -226,6 +234,7 @@ Language LANGUAGES[] =
     {"Et", "ee+us"}, //Estonian (US)
     {"Fa", "ir"}, //Persian
     {"Fa", "ir+pes_keypad"}, //Persian (with Persian keypad)
+    {"Fa", "ir+winkeys"}, //Persian (Windows)
     {"Az", "ir+azb"}, //Azerbaijani (Iran)
     {"Ku", "ir+ku"}, //Kurdish (Iran, Latin Q)
     {"Ku", "ir+ku_f"}, //Kurdish (Iran, F)
@@ -373,7 +382,8 @@ Language LANGUAGES[] =
     {"Lv", "lv+apostrophe"}, //Latvian (apostrophe)
     {"Lv", "lv+tilde"}, //Latvian (tilde)
     {"Lv", "lv+fkey"}, //Latvian (F)
-    {"Lv", "lv+modern"}, //Latvian (modern)
+    {"Lv", "lv+modern"}, //Latvian (Modern Latin)
+    {"Lv", "lv+modern-cyr"}, //Latvian (Modern Cyrillic)
     {"Lv", "lv+ergonomic"}, //Latvian (ergonomic, ŪGJRMV)
     {"Lv", "lv+adapted"}, //Latvian (adapted)
     {"Mi", "mao"}, //Maori
@@ -401,6 +411,8 @@ Language LANGUAGES[] =
     {"No", "no+mac"}, //Norwegian (Macintosh)
     {"No", "no+mac_nodeadkeys"}, //Norwegian (Macintosh, no dead keys)
     {"No", "no+colemak"}, //Norwegian (Colemak)
+    {"No", "no+colemak_dh"}, //Norwegian (Colemak-DH)
+    {"No", "no+colemak_dh_wide"}, //Norwegian (Colemak-DH Wide)
     {"Pl", "pl"}, //Polish
     {"Pl", "pl+legacy"}, //Polish (legacy)
     {"Pl", "pl+qwertz"}, //Polish (QWERTZ)
@@ -461,9 +473,9 @@ Language LANGUAGES[] =
     {"Sl", "si+alternatequotes"}, //Slovenian (with guillemets)
     {"Sl", "si+us"}, //Slovenian (US)
     {"Sk", "sk"}, //Slovak
-    {"Sk", "sk+bksl"}, //Slovak (extended backslash)
+    {"Sk", "sk+bksl"}, //Slovak (extra backslash)
     {"Sk", "sk+qwerty"}, //Slovak (QWERTY)
-    {"Sk", "sk+qwerty_bksl"}, //Slovak (QWERTY, extended backslash)
+    {"Sk", "sk+qwerty_bksl"}, //Slovak (QWERTY, extra backslash)
     {"Es", "es"}, //Spanish
     {"Es", "es+nodeadkeys"}, //Spanish (no dead keys)
     {"Es", "es+winkeys"}, //Spanish (Windows)
@@ -471,7 +483,6 @@ Language LANGUAGES[] =
     {"Es", "es+dvorak"}, //Spanish (Dvorak)
     {"As", "es+ast"}, //Asturian (Spain, with bottom-dot H and L)
     {"Ca", "es+cat"}, //Catalan (Spain, with middle-dot L)
-    {"Es", "es+mac"}, //Spanish (Macintosh)
     {"Sv", "se"}, //Swedish
     {"Sv", "se+nodeadkeys"}, //Swedish (no dead keys)
     {"Sv", "se+dvorak"}, //Swedish (Dvorak)
@@ -526,8 +537,6 @@ Language LANGUAGES[] =
     {"Uk", "ua+winkeys"}, //Ukrainian (Windows)
     {"Uk", "ua+macOS"}, //Ukrainian (macOS)
     {"Uk", "ua+legacy"}, //Ukrainian (legacy)
-    {"Uk", "ua+rstu"}, //Ukrainian (standard RSTU)
-    {"Ru", "ua+rstu_ru"}, //Russian (Ukraine, standard RSTU)
     {"Uk", "ua+homophonic"}, //Ukrainian (homophonic)
     {"Tt", "ua+crh"}, //Crimean Tatar (Turkish Q)
     {"Tt", "ua+crh_f"}, //Crimean Tatar (Turkish F)
@@ -598,7 +607,7 @@ Language LANGUAGES[] =
     {"Ph", "ph+dvorak"}, //Filipino (Dvorak, Latin)
     {"Ph", "ph+dvorak-bay"}, //Filipino (Dvorak, Baybayin)
     {"Ro", "md"}, //Moldavian
-    {"Ro", "md+gag"}, //Moldavian (Gagauz)
+    {"Ro", "md+gag"}, //Gagauz (Moldova)
     {"Id", "id"}, //Indonesian (Latin)
     {"Jv", "id+javanese"}, //Javanese
     {"Id", "id+melayu-phonetic"}, //Indonesian (Arab Melayu, phonetic)
@@ -607,6 +616,10 @@ Language LANGUAGES[] =
     {"Ms", "my"}, //Malay (Jawi, Arabic Keyboard)
     {"Ms", "my+phonetic"}, //Malay (Jawi, phonetic)
     {"custom", "custom"}, //A user-defined custom Layout
+    {"An", "ancient"}, //Ancient
+    {"Go", "ancient+got"}, //Gothic
+    {"Ua", "ancient+uga"}, //Ugaritic
+    {"Ae", "ancient+ave"}, //Avestan
     {"Ap", "apl"}, //APL
     {"Ap", "apl+dyalog"}, //APL symbols (Dyalog APL)
     {"Ap", "apl+sax"}, //APL symbols (SAX, Sharp APL for Unix)
@@ -633,7 +646,6 @@ Language LANGUAGES[] =
     {"Cp", "eg"}, //Coptic
     {"Hu", "hu+oldhun"}, //Old Hungarian
     {"Hu", "hu+oldhunlig"}, //Old Hungarian (for ligatures)
-    {"Ae", "ir+ave"}, //Avestan
     {"Lt", "lt+us_dvorak"}, //Lithuanian (Dvorak)
     {"Lt", "lt+sun_type6"}, //Lithuanian (Sun Type 6/7)
     {"Lv", "lv+dvorak"}, //Latvian (Dvorak)
@@ -650,7 +662,7 @@ Language LANGUAGES[] =
     {"En", "us+alt-intl-unicode"}, //English (US, intl., AltGr Unicode combining, alt.)
     {"At", "us+ats"}, //Atsina
     {"Sx", "us+crd"}, //Coeur d'Alene Salish
-    {"Cs", "us+cz_sk_de"}, //Czech Slovak and German (US)
+    {"Cs", "us+cz_sk_de"}, //Czech, Slovak and German (US)
     {"Cs", "us+cz_sk_pl_de_es_fi_sv"}, //Czech, Slovak, Polish, Spanish, Finnish, Swedish and German (US)
     {"En", "us+drix"}, //English (Drix)
     {"De", "us+de_se_fi"}, //German, Swedish and Finnish (US)
@@ -680,7 +692,7 @@ Language LANGUAGES[] =
     {"Ro", "ro+sun_type6"}, //Romanian (Sun Type 6/7)
     {"Sr", "rs+combiningkeys"}, //Serbian (combining accents instead of dead keys)
     {"Cu", "ru+chu"}, //Church Slavonic
-    {"Ru", "ru+ruu"}, //Russian (with Ukrainian-Belorussian layout)
+    {"Ru", "ru+ruu"}, //Russian (plus Ukrainian and Belarusian letters)
     {"Ru", "ru+rulemak"}, //Russian (Rulemak, phonetic Colemak)
     {"Ru", "ru+phonetic_mac"}, //Russian (phonetic Macintosh)
     {"Ru", "ru+sun_type6"}, //Russian (Sun Type 6/7)
@@ -689,20 +701,20 @@ Language LANGUAGES[] =
     {"Ru", "ru+gost-14289-88"}, //Russian (GOST 14289-88)
     {"Ru", "ru+prxn"}, //Russian (Polyglot and Reactionary)
     {"Ru", "ru+winkeys-p"}, //Russian (Programmer)
+    {"Ru", "ru+typo"}, //Russian (plus typographic symbols)
+    {"Ru", "ru+rtu"}, //Russian (plus Tatar letters)
     {"Hy", "am+olpc-phonetic"}, //Armenian (OLPC, phonetic)
     {"He", "il+biblicalSIL"}, //Hebrew (Biblical, SIL phonetic)
     {"Ar", "ara+sun_type6"}, //Arabic (Sun Type 6/7)
     {"Ar", "ara+basic_ext"}, //Arabic (Arabic numerals, extensions in the 4th level)
     {"Ar", "ara+basic_ext_digits"}, //Arabic (Eastern Arabic numerals, extensions in the 4th level)
-    {"Ua", "ara+uga"}, //Ugaritic instead of Arabic
     {"Ar", "ara+ergoarabic"}, //Arabic (ErgoArabic)
     {"Bl", "be+sun_type6"}, //Belgian (Sun Type 6/7)
     {"Pt", "br+sun_type6"}, //Portuguese (Brazil, Sun Type 6/7)
     {"Cs", "cz+sun_type6"}, //Czech (Sun Type 6/7)
     {"Cs", "cz+prog"}, //Czech (programming)
-    {"Cs", "cz+typo"}, //Czech (typographic)
-    {"Cs", "cz+coder"}, //Czech (coder)
     {"Cs", "cz+prog_typo"}, //Czech (programming, typographic)
+    {"Cs", "cz+coder"}, //Czech (coder)
     {"Cs", "cz+colemak-ucw"}, //Czech (US, Colemak, UCW support)
     {"Da", "dk+sun_type6"}, //Danish (Sun Type 6/7)
     {"Nl", "nl+sun_type6"}, //Dutch (Sun Type 6/7)
@@ -734,7 +746,6 @@ Language LANGUAGES[] =
     {"De", "ch+sun_type6_de"}, //German (Switzerland, Sun Type 6/7)
     {"Fr", "ch+sun_type6_fr"}, //French (Switzerland, Sun Type 6/7)
     {"Tr", "tr+sun_type6"}, //Turkish (Sun Type 6/7)
-    {"Tr", "tr+otk"}, //Old Turkic
     {"Tr", "tr+us"}, //Turkish (Turkey, Latin Q, Swap i and ı)
     {"Uk", "ua+sun_type6"}, //Ukrainian (Sun Type 6/7)
     {"En", "gb+sun_type6"}, //English (UK, Sun Type 6/7)
@@ -746,7 +757,7 @@ Language LANGUAGES[] =
     {"Ix", "trans+qwerty"}, //International Phonetic Alphabet (QWERTY)
     {"Md", "in+modi-kagapa"}, //Modi (KaGaPa phonetic)
     {"Sa", "in+san-misc"}, //Sanskrit symbols
-    {"Ur", "in+urd-navees"}, //Urdu (Navees)}
+    {"Ur", "in+urd-navees"}, //Urdu (Navees)
     {"emoji", "emoji"}, //Emoji
     {NULL, NULL}
 };
