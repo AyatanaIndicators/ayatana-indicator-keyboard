@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Robert Tari <robert@tari.in>
+ * Copyright 2021-2023 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -30,6 +30,7 @@ static void *m_pLibHandle = NULL;
 static Keyboard* (*m_fnKeyboardNew)();
 static void (*m_fnKeyboardAddSource)(Keyboard *pKeyboard);
 static guint (*m_fnKeyboardGetNumLayouts)(Keyboard *pKeyboard);
+static guint (*m_fnKeyboardGetLayoutIndex)(Keyboard *pKeyboard);
 static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription);
 static void (*m_fnKeyboardSetLayout)(Keyboard *pKeyboard, gint nLayout);
 
@@ -37,7 +38,8 @@ enum
 {
     SECTION_HEADER = (1 << 0),
     SECTION_LAYOUTS = (1 << 1),
-    SECTION_SETTINGS = (1 << 2)
+    SECTION_DISPLAY = (1 << 2),
+    SECTION_SETTINGS = (1 << 3)
 };
 
 enum
@@ -73,6 +75,7 @@ struct _IndicatorKeyboardServicePrivate
     struct ProfileMenuInfo lMenus[N_PROFILES];
     GSimpleActionGroup *pActionGroup;
     GSimpleAction *pSettingsAction;
+    GSimpleAction *pDisplayAction;
     GSimpleAction *pLayoutAction;
     GMenu *pLayoutSection;
     Keyboard *pKeyboard;
@@ -187,6 +190,14 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
     return G_MENU_MODEL(pMenu);
 }
 
+static GMenuModel* createDisplaySection (IndicatorKeyboardService *self)
+{
+    GMenu * pMenu = g_menu_new ();
+    g_menu_append (pMenu, _("Show Current Layout"), "indicator.display");
+
+    return G_MENU_MODEL (pMenu);
+}
+
 static void rebuildSection(GMenu *pMenu, int nPos, GMenuModel *pModel)
 {
     g_menu_remove(pMenu, nPos);
@@ -219,10 +230,15 @@ static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
         rebuildSection(pInfoGreeter->pSubmenu, 0, createLayoutSection(self));
     }
 
+    if (nSections & SECTION_DISPLAY)
+    {
+        rebuildSection (pInfoDesktop->pSubmenu, 1, createDisplaySection (self));
+    }
+
     if (nSections & SECTION_SETTINGS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 1, createSettingsSection(self));
-        rebuildSection(pInfoPhone->pSubmenu, 1, createSettingsSection(self));
+        rebuildSection(pInfoDesktop->pSubmenu, 2, createSettingsSection(self));
+        rebuildSection(pInfoPhone->pSubmenu, 2, createSettingsSection(self));
     }
 }
 
@@ -246,6 +262,7 @@ static void createMenu(IndicatorKeyboardService *self, int nProfile)
     else if (nProfile == PROFILE_DESKTOP)
     {
         lSections[nSection++] = createLayoutSection(self);
+        lSections[nSection++] = createDisplaySection(self);
         lSections[nSection++] = createSettingsSection(self);
     }
     else if (nProfile == PROFILE_GREETER)
@@ -310,6 +327,37 @@ static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pUse
     }
 }
 
+static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
+{
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+    guint nLayout = m_fnKeyboardGetLayoutIndex (self->pPrivate->pKeyboard);
+    gchar *sProgram = NULL;
+
+    if (ayatana_common_utils_is_mate ())
+    {
+        sProgram = "matekbd-keyboard-display";
+    }
+    else
+    {
+        sProgram = "gkbd-keyboard-display";
+    }
+
+    gboolean bHasProgram = ayatana_common_utils_have_program (sProgram);
+
+    if (!bHasProgram)
+    {
+        gchar *sMessage = g_strdup_printf ("The %s application is required to display keyboard layouts, but it was not found.", sProgram);
+        ayatana_common_utils_zenity_warning ("dialog-warning", _("Warning"), sMessage);
+        g_free (sMessage);
+
+        return;
+    }
+
+    gchar *sCommand = g_strdup_printf ("%s -g %i", sProgram, nLayout + 1);
+    ayatana_common_utils_execute_command (sCommand);
+    g_free (sCommand);
+}
+
 static void initActions(IndicatorKeyboardService *self)
 {
     GSimpleAction *pAction;
@@ -333,6 +381,11 @@ static void initActions(IndicatorKeyboardService *self)
     g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
     self->pPrivate->pSettingsAction = pAction;
     g_signal_connect(pAction, "activate", G_CALLBACK(onSettings), self);
+
+    pAction = g_simple_action_new ("display", NULL);
+    g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+    self->pPrivate->pDisplayAction = pAction;
+    g_signal_connect (pAction, "activate", G_CALLBACK (onDisplay), self);
 }
 
 static void onBusAcquired(GDBusConnection *pConnection, const gchar *sName, gpointer pData)
@@ -441,6 +494,7 @@ static void onDispose(GObject *pObject)
     }
 
     g_clear_object (&self->pPrivate->pSettingsAction);
+    g_clear_object (&self->pPrivate->pDisplayAction);
     g_clear_object (&self->pPrivate->pLayoutAction);
 
     for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
@@ -493,6 +547,7 @@ static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
 
     m_fnKeyboardAddSource = dlsym(m_pLibHandle, "keyboard_AddSource");
     m_fnKeyboardGetNumLayouts = dlsym(m_pLibHandle, "keyboard_GetNumLayouts");
+    m_fnKeyboardGetLayoutIndex = dlsym(m_pLibHandle, "keyboard_GetLayoutIndex");
     m_fnKeyboardGetLayout = dlsym(m_pLibHandle, "keyboard_GetLayout");
     m_fnKeyboardSetLayout = dlsym(m_pLibHandle, "keyboard_SetLayout");
     self->pPrivate = indicator_keyboard_service_get_instance_private(self);
