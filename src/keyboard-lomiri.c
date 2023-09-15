@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Robert Tari <robert@tari.in>
+ * Copyright 2021-2023 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -183,6 +183,11 @@ guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
         // TODO
         return 1;
     }
+}
+
+guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
+{
+    return pKeyboard->pPrivate->nLayout;
 }
 
 void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription)

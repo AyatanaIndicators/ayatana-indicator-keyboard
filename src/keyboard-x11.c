@@ -370,6 +370,11 @@ guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
     return nLayouts;
 }
 
+guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
+{
+    return pKeyboard->pPrivate->nLayout;
+}
+
 void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription)
 {
     if (nLayout == -1)
@@ -588,8 +593,14 @@ static void keyboard_init(Keyboard *self)
             pLayout->sDescription = g_strdup(sDescription);
         }
 
-        g_hash_table_replace(self->pPrivate->lLayouts, pLayout->sId, pLayout);
+        gboolean bContains = g_hash_table_contains (self->pPrivate->lLayouts, pLayout->sId);
 
+        if (!bContains)
+        {
+            g_debug ("    {\"%s\", \"%s\"}, //%s", pLayout->sLanguage, pLayout->sId, pLayout->sDescription);
+        }
+
+        g_hash_table_replace(self->pPrivate->lLayouts, pLayout->sId, pLayout);
         pRxkbLayout = rxkb_layout_next(pRxkbLayout);
     }
 
