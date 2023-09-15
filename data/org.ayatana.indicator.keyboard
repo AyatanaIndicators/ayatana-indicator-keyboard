@@ -12,3 +12,4 @@ ObjectPath=/org/ayatana/indicator/keyboard/desktop
 
 [desktop_greeter]
 ObjectPath=/org/ayatana/indicator/keyboard/greeter
+Position=1050
