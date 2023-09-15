@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-14 08:44+0200\n"
+"POT-Creation-Date: 2023-09-15 16:16+0200\n"
 "PO-Revision-Date: 2021-03-18 17:29+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ayatana-"
@@ -37,19 +37,28 @@ msgstr ""
 msgid "Show the language icon in the greeter."
 msgstr ""
 
-#: src/service.c:90
+#: src/service.c:93
 msgid "Keyboard"
 msgstr "Papan tik"
 
-#: src/service.c:91
+#: src/service.c:94
 msgid "Keyboard layout switcher and settings"
 msgstr ""
 
-#: src/service.c:128
+#: src/service.c:131
 msgid "Current keyboard layout"
 msgstr "Tata letak papan tik saat ini"
 
-#: src/service.c:185
+#: src/service.c:188
 #, fuzzy
 msgid "Keyboard Settings…"
 msgstr "Pengaturan papan tik..."
+
+#: src/service.c:196
+#, fuzzy
+msgid "Show Current Layout"
+msgstr "Tata letak papan tik saat ini"
+
+#: src/service.c:350
+msgid "Warning"
+msgstr ""

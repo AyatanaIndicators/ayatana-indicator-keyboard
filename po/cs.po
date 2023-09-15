@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-14 08:44+0200\n"
+"POT-Creation-Date: 2023-09-15 16:16+0200\n"
 "PO-Revision-Date: 2022-09-14 11:45+0000\n"
 "Last-Translator: Milan Korecky <milan.korecky@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/ayatana-indicators/"
@@ -39,18 +39,27 @@ msgstr "Zobrazit ikonu jazyka v režimu telefonu."
 msgid "Show the language icon in the greeter."
 msgstr "Zobrazit ikonu jazyka v uvítacím pozdravu."
 
-#: src/service.c:90
+#: src/service.c:93
 msgid "Keyboard"
 msgstr "Klávesnice"
 
-#: src/service.c:91
+#: src/service.c:94
 msgid "Keyboard layout switcher and settings"
 msgstr "Přepínač rozložení klávesnice a nastavení"
 
-#: src/service.c:128
+#: src/service.c:131
 msgid "Current keyboard layout"
 msgstr "Aktuální rozložení klávesnice"
 
-#: src/service.c:185
+#: src/service.c:188
 msgid "Keyboard Settings…"
 msgstr "Nastavení klávesnice…"
+
+#: src/service.c:196
+#, fuzzy
+msgid "Show Current Layout"
+msgstr "Aktuální rozložení klávesnice"
+
+#: src/service.c:350
+msgid "Warning"
+msgstr ""
