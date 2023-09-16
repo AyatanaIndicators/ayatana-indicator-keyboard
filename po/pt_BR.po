@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-15 16:16+0200\n"
-"PO-Revision-Date: 2022-09-15 21:17+0000\n"
+"PO-Revision-Date: 2023-09-16 20:12+0000\n"
 "Last-Translator: Wellington Terumi Uemura <wellingtonuemura@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "ayatana-indicators/keyboard-applet/pt_BR/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
@@ -56,10 +56,9 @@ msgid "Keyboard Settings…"
 msgstr "Configurações do teclado…"
 
 #: src/service.c:196
-#, fuzzy
 msgid "Show Current Layout"
-msgstr "Disposição atual do teclado"
+msgstr "Mostrar a disposição atual do teclado"
 
 #: src/service.c:350
 msgid "Warning"
-msgstr ""
+msgstr "Aviso"
