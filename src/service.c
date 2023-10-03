@@ -342,20 +342,9 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
         sProgram = "gkbd-keyboard-display";
     }
 
-    gboolean bHasProgram = ayatana_common_utils_have_program (sProgram);
-
-    if (!bHasProgram)
-    {
-        gchar *sMessage = g_strdup_printf ("The %s application is required to display keyboard layouts, but it was not found.", sProgram);
-        ayatana_common_utils_zenity_warning ("dialog-warning", _("Warning"), sMessage);
-        g_free (sMessage);
-
-        return;
-    }
-
-    gchar *sCommand = g_strdup_printf ("%s -g %i", sProgram, nLayout + 1);
-    ayatana_common_utils_execute_command (sCommand);
-    g_free (sCommand);
+    gchar *sArgs = g_strdup_printf ("-g %i", nLayout + 1);
+    ayatana_common_utils_execute_command_warn (sProgram, sArgs);
+    g_free (sArgs);
 }
 
 static void initActions(IndicatorKeyboardService *self)
