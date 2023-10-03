@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Robert Tari <robert@tari.in>
+ * Copyright 2021-2023 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -40,7 +40,7 @@ int main(int argc G_GNUC_UNUSED, char ** argv G_GNUC_UNUSED)
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     textdomain(GETTEXT_PACKAGE);
 
-    IndicatorKeyboardService *pService = indicator_keyboard_service_new(NULL);
+    IndicatorKeyboardService *pService = indicator_keyboard_service_new ();
     GMainLoop *pLoop = g_main_loop_new(NULL, FALSE);
 
     g_signal_connect(pService, "name-lost", G_CALLBACK(onNameLost), pLoop);
