@@ -40,7 +40,7 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}" -DLOCALEDIR="${CMAKE_INS
 find_package (PkgConfig REQUIRED)
 include (CheckIncludeFile)
 include (FindPkgConfig)
-pkg_check_modules(SERVICE_DEPS REQUIRED glib-2.0>=2.36 gio-2.0>=2.36 libayatana-common>=0.9.3 accountsservice xkbcommon>=1.0.3 xkbregistry>=1.0.3)
+pkg_check_modules(SERVICE_DEPS REQUIRED glib-2.0>=2.36 gio-2.0>=2.36 libayatana-common>=0.9.9 accountsservice xkbcommon>=1.0.3 xkbregistry>=1.0.3)
 pkg_check_modules(X11_DEPS REQUIRED x11>=1.6.5 libxklavier>=5.3)
 include_directories (SYSTEM ${SERVICE_DEPS_INCLUDE_DIRS})
 
