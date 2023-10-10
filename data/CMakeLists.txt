@@ -52,6 +52,10 @@ install(FILES org.ayatana.indicator.keyboard.AccountsService.policy DESTINATION 
 
 install(FILES 50-org.ayatana.indicator.keyboard.AccountsService.pkla DESTINATION "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/polkit-1/localauthority/10-vendor.d")
 
+# 50-org.ayatana.indicator.keyboard.AccountsService.rules
+
+install (FILES 50-org.ayatana.indicator.keyboard.AccountsService.rules DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/polkit-1/rules.d")
+
 # org.ayatana.indicator.keyboard.gschema.xml
 
 find_package (GSettings REQUIRED)
