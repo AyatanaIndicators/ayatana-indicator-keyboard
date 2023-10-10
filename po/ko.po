@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-15 16:16+0200\n"
+"POT-Creation-Date: 2023-10-10 23:57+0200\n"
 "PO-Revision-Date: 2022-09-30 18:19+0000\n"
 "Last-Translator: 이정희 <daemul72@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/ayatana-"
@@ -59,7 +59,3 @@ msgstr "키보드 설정…"
 #, fuzzy
 msgid "Show Current Layout"
 msgstr "현재 키보드 레이아웃"
-
-#: src/service.c:350
-msgid "Warning"
-msgstr ""

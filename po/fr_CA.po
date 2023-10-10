@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-15 16:16+0200\n"
+"POT-Creation-Date: 2023-10-10 23:57+0200\n"
 "PO-Revision-Date: 2021-02-20 01:50+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French (Canada) <https://hosted.weblate.org/projects/ayatana-"
@@ -58,7 +58,3 @@ msgstr "Paramètres du clavier…"
 #, fuzzy
 msgid "Show Current Layout"
 msgstr "Disposition actuelle du clavier"
-
-#: src/service.c:350
-msgid "Warning"
-msgstr ""
