@@ -21,6 +21,9 @@
 #include "languages.h"
 #include "keyboard.h"
 
+#define GREETER_BUS_NAME "org.ayatana.greeter"
+#define GREETER_BUS_PATH "/org/ayatana/greeter"
+
 enum
 {
     LAYOUT_CHANGED,
@@ -123,7 +126,7 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
     if (!pKeyboard->pPrivate->sUser)
     {
         GError *pError = NULL;
-        GVariant *pUser = g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, "org.ArcticaProject.ArcticaGreeter", "/org/ArcticaProject/ArcticaGreeter", "org.ArcticaProject.ArcticaGreeter", "GetUser", NULL, G_VARIANT_TYPE ("(s)"), G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
+        GVariant *pUser = g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, GREETER_BUS_NAME, GREETER_BUS_PATH, GREETER_BUS_NAME, "GetUser", NULL, G_VARIANT_TYPE ("(s)"), G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
 
         if (pError)
         {
@@ -440,7 +443,7 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 
         GError *pError = NULL;
         GVariant *pLayout = g_variant_new ("(ss)", lParams[0], sVariant);
-        g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, "org.ArcticaProject.ArcticaGreeter", "/org/ArcticaProject/ArcticaGreeter", "org.ArcticaProject.ArcticaGreeter", "SetLayout", pLayout, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
+        g_dbus_connection_call_sync (pKeyboard->pPrivate->pConnection, GREETER_BUS_NAME, GREETER_BUS_PATH, GREETER_BUS_NAME, "SetLayout", pLayout, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &pError);
 
         if (pError)
         {
@@ -640,7 +643,7 @@ static void keyboard_init(Keyboard *self)
     else
     {
         self->pPrivate->lUsers = NULL;
-        self->pPrivate->nSubscription = g_dbus_connection_signal_subscribe (self->pPrivate->pConnection, NULL, "org.ArcticaProject.ArcticaGreeter", "UserChanged", "/org/ArcticaProject/ArcticaGreeter", NULL, G_DBUS_SIGNAL_FLAGS_NONE, onUserChanged, self, NULL);
+        self->pPrivate->nSubscription = g_dbus_connection_signal_subscribe (self->pPrivate->pConnection, NULL, GREETER_BUS_NAME, "UserChanged", GREETER_BUS_PATH, NULL, G_DBUS_SIGNAL_FLAGS_NONE, onUserChanged, self, NULL);
 
         // Get layouts from /etc/default/keyboard
         gchar *sFile;
