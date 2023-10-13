@@ -1,6 +1,179 @@
+2023-10-13 Mike Gabriel
+
+        * release 23.10.0 (HEAD -> main, tag: 23.10.0)
+
+2023-10-11 Serhii Horichenko
+
+        * Translated using Weblate (Ukrainian) (d9015c87)
+
+2023-10-12 Serhii Horichenko
+
+        * Translated using Weblate (Russian) (cdf2aee9)
+
+2023-10-12 Mike Gabriel
+
+        * Merge branch 'tari01-pr/polkit-rules' (933deec8)
+
+2023-10-11 Robert Tari
+
+        * Add PolicyKit .rules file (ffd995cd)
+
+2023-10-10 Mike Gabriel
+
+        * po/: Update translation files. (a6e13834)
+        * Merge branch 'tari01-pr/drop-tests' (20db87cc)
+
+2023-10-07 Robert Tari
+
+        * src/keyboard-x11.c: Define new D-Bus name and path for greeter
+          (44483ffe)
+
+2023-10-10 Mike Gabriel
+
+        * Merge branch 'tari01-pr/define-greeter' (dce3e336)
+
+2023-10-06 Mike Gabriel
+
+        * CMakeLists.txt: Require libayatana-common >= 0.9.9. (a8867cf9)
+        * d/control: Bump B-D libayatana-common-dev to (>= 0.9.9). (2666f465)
+
+2023-10-10 Robert Tari
+
+        * CMakeLists.txt: Drop test options (a92d37c1)
+
+2023-10-07 Robert Tari
+
+        * src/keyboard-x11.c: Define new D-Bus name and path for greeter
+          (56311efd)
+        * Merge branch 'sunweaver-pr/depend-on-libayatana-common-0.9.9'
+          (f7afd417)
+
+2023-10-06 Mike Gabriel
+
+        * CMakeLists.txt: Require libayatana-common >= 0.9.9. (d9de2119)
+        * d/control: Bump B-D libayatana-common-dev to (>= 0.9.9). (e4978aee)
+
+2023-10-03 Robert Tari
+
+        * debian/control: Drop zenity dependency (1f2a0d20)
+        * src/service.c: Switch to execute_command_warn (d3c4ad8b)
+        * src/main.c: Do not pass NULL to functions without a prototype
+          (7be65c76)
+
+2023-09-20 Jozef Mlich
+
+        * Translated using Weblate (Czech) (a3792d52)
+
+2023-09-15 Oğuz Ersen
+
+        * Translated using Weblate (Turkish) (82b77132)
+
+2023-09-16 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (d38d8d0c)
+
+2023-09-15 Heimen Stoffels
+
+        * Translated using Weblate (Dutch) (5748ad84)
+
+2023-09-16 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (3f1fcb17)
+
+2023-09-15 gallegonovato
+
+        * Translated using Weblate (Spanish) (f16bc021)
+
+2023-09-15 Robert Tari
+
+        * Merge branch 'sunweaver-mr/greeter-pos-of-keyboard-indicator'
+          (60e41a1e)
+
+2023-09-15 Mike Gabriel
+
+        * Translated using Weblate (German) (da76f9b7)
+        * data/org.ayatana.indicator.keyboard: In greeter mode, move the
+          keyboard indicator between a11y indicator and network
+          indicator (so second from the left). (1706ca68)
+        * Translated using Weblate (German) (4a2137cd)
+        * po/: Translation template update. (0365c0ca)
+        * Merge branch 'tari01-pr/show-layout' (76141928)
+
+2023-09-06 Robert Tari
+
+        * debian/control: Add new dependencies (6cd61d67)
+        * Add layout display section (832d5f46)
+
+2023-09-05 Robert Tari
+
+        * Update language list and icons (b134dd7b)
+
+2023-08-07 Mike Gabriel
+
+        * Merge branch 'tari01-pr/greeter-keyboard-layout' (ecf5e442)
+
+2023-04-03 Robert Tari
+
+        * src/keyboard-x11.c: Set up D-Bus connection with Arctica Greeter
+          (6b67808c)
+
+2023-08-07 Mike Gabriel
+
+        * Merge branch 'tari01-pr/high-contrast-icons' (59057dfe)
+
+2023-08-02 Robert Tari
+
+        * Add high contrast icons (a5cb3f92)
+        * Fix build warnings + cleanup (794ebd1d)
+
+2023-07-01 spnux
+
+        * Translated using Weblate (French) (8a1b9c35)
+
+2023-06-27 Sylke Vicious
+
+        * Translated using Weblate (Italian) (3124f2d6)
+
+2023-06-22 Joan CiberSheep
+
+        * Translated using Weblate (Catalan) (fb5bb114)
+
+2023-05-20 Milo Ivir
+
+        * Translated using Weblate (Croatian) (ca102def)
+
+2023-04-25 Kristjan Räts
+
+        * Translated using Weblate (Estonian) (b34f6b85)
+
+2023-04-06 ssantos
+
+        * Translated using Weblate (Portuguese) (3a47ab60)
+
+2023-03-15 Heimen Stoffels
+
+        * Translated using Weblate (Dutch) (e7b11764)
+
+2023-03-03 gallegonovato
+
+        * Translated using Weblate (Spanish) (d6e9d3bb)
+
+2023-02-10 Luna Jernberg
+
+        * Translated using Weblate (Swedish) (4c8da09a)
+
+2023-01-06 Andy Chiang
+
+        * Translated using Weblate (Chinese (Simplified) (zh_LATN@pinyin))
+          (3cf860e8)
+
+2022-12-30 Milo Ivir
+
+        * Translated using Weblate (Croatian) (b93871ff)
+
 2022-12-15 Mike Gabriel
 
-        * release 22.9.1 (HEAD -> main, tag: 22.9.1)
+        * release 22.9.1 (74a11f92) (tag: 22.9.1)
 
 2022-12-03 Kevin Zhou
 

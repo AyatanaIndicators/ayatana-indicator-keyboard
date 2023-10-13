@@ -1,3 +1,19 @@
+Overview of changes in ayatana-indicator-keyboard 23.10.0
+
+  - Add high contrast icons.
+  - src/keyboard-x11.c: Set up D-Bus connection with Arctica Greeter.
+  - Update language list and icons.
+  - Add layout display section.
+  - data/org.ayatana.indicator.keyboard: In greeter mode, move the
+    keyboard indicator between a11y indicator and network indicator
+    (so second from the left).
+  - src/service.c: Switch to execute_command_warn.
+  - CMakeLists.txt: Require libayatana-common >= 0.9.9.
+  - src/keyboard-x11.c: Define new D-Bus name and path for greeter.
+  - CMakeLists.txt: Drop test options.
+  - Add PolicyKit .rules file
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 22.9.1
 
   - src/languages.h: Update the layout list + rewrite the code to use a
