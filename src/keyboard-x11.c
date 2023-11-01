@@ -139,9 +139,9 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
         g_variant_get (pUser, "(s)", &pKeyboard->pPrivate->sUser);
     }
 
-    gboolean bGuest = g_str_equal (pKeyboard->pPrivate->sUser, "*guest");
+    gboolean bPrefix = g_str_has_prefix (pKeyboard->pPrivate->sUser, "*");
 
-    if (bGuest)
+    if (bPrefix)
     {
         if (pKeyboard->pPrivate->lLayoutRec)
         {
