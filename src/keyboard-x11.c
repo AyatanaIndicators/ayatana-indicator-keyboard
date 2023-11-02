@@ -139,9 +139,9 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
         g_variant_get (pUser, "(s)", &pKeyboard->pPrivate->sUser);
     }
 
-    gboolean bGuest = g_str_equal (pKeyboard->pPrivate->sUser, "*guest");
+    gboolean bPrefix = g_str_has_prefix (pKeyboard->pPrivate->sUser, "*");
 
-    if (bGuest)
+    if (bPrefix)
     {
         if (pKeyboard->pPrivate->lLayoutRec)
         {
@@ -702,7 +702,6 @@ static void keyboard_init(Keyboard *self)
             }
         }
 
-        guint nLayouts = g_strv_length(lLayouts);
         guint nVariants = 0;
 
         if (lVariants != NULL)
@@ -710,35 +709,40 @@ static void keyboard_init(Keyboard *self)
             nVariants = g_strv_length(lVariants);
         }
 
-        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+        if (lLayouts != NULL)
         {
-            gchar *sId = NULL;
+            guint nLayouts = g_strv_length(lLayouts);
 
-            if (nVariants > nLayout)
+            for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
             {
-                guint nVariant = strlen(lVariants[nLayout]);
+                gchar *sId = NULL;
 
-                if (nVariants == nLayouts && nVariant > 0)
+                if (nVariants > nLayout)
                 {
-                    sId = g_strconcat(lLayouts[nLayout], "+", lVariants[nLayout], NULL);
+                    guint nVariant = strlen(lVariants[nLayout]);
+
+                    if (nVariants == nLayouts && nVariant > 0)
+                    {
+                        sId = g_strconcat(lLayouts[nLayout], "+", lVariants[nLayout], NULL);
+                    }
+                    else
+                    {
+                        sId = g_strdup(lLayouts[nLayout]);
+                    }
                 }
                 else
                 {
                     sId = g_strdup(lLayouts[nLayout]);
                 }
-            }
-            else
-            {
-                sId = g_strdup(lLayouts[nLayout]);
+
+                self->pPrivate->lLayoutRec = g_slist_append(self->pPrivate->lLayoutRec, sId);
+                self->pPrivate->sSystemLayout = g_strdup(sId);
             }
 
-            self->pPrivate->lLayoutRec = g_slist_append(self->pPrivate->lLayoutRec, sId);
-            self->pPrivate->sSystemLayout = g_strdup(sId);
+            self->pPrivate->nLayout = 0;
+
+            g_strfreev(lLayouts);
         }
-
-        self->pPrivate->nLayout = 0;
-
-        g_strfreev(lLayouts);
 
         if (lVariants != NULL)
         {
