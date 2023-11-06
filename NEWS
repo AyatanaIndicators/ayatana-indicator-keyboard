@@ -1,3 +1,9 @@
+Overview of changes in ayatana-indicator-keyboard 23.10.1
+
+  - Skip AccountsService operations for all prefixed users.
+  - Check if layout array is null before iterating it.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 23.10.0
 
   - Add high contrast icons.

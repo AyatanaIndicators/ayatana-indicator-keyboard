@@ -1,6 +1,37 @@
+2023-11-06 Mike Gabriel
+
+        * release 23.10.1 (HEAD -> main, tag: 23.10.1)
+
+2023-11-02 Mike Gabriel
+
+        * Merge branch 'tari01-pr/drop-test-options' (c76913a3)
+
+2023-11-01 Robert Tari
+
+        * debian/rules: Drop testing and coverage flags (6b1a64e4)
+        * .build.yml: Drop testing flag (9e8713de)
+
+2023-11-02 Mike Gabriel
+
+        * Merge branch 'tari01-pr/accoutsservice-prefixed' (982a0e9d)
+
+2023-11-01 Robert Tari
+
+        * Check if layout array is null before iterating it (76e4d65d)
+        * src/keyboard-x11.c: Skip AccountsService operations for all
+          prefixed users (465d686a)
+
+2023-10-24 Moo
+
+        * Translated using Weblate (Lithuanian) (d1091356)
+
+2023-10-14 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (9ccbd06e)
+
 2023-10-13 Mike Gabriel
 
-        * release 23.10.0 (HEAD -> main, tag: 23.10.0)
+        * release 23.10.0 (bd80cf8b) (tag: 23.10.0)
 
 2023-10-11 Serhii Horichenko
 
