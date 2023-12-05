@@ -130,7 +130,7 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
 
         if (pError)
         {
-            g_error ("Panic: Failed calling GetUser: %s", pError->message);
+            g_warning ("Failed calling GetUser, the greeter may not be ready yet: %s", pError->message);
             g_error_free (pError);
 
             return;
@@ -447,7 +447,7 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 
         if (pError)
         {
-            g_error ("Panic: Failed calling GetUser: %s", pError->message);
+            g_error ("Panic: Failed calling SetLayout: %s", pError->message);
             g_error_free (pError);
 
             return;
@@ -645,112 +645,145 @@ static void keyboard_init(Keyboard *self)
         self->pPrivate->lUsers = NULL;
         self->pPrivate->nSubscription = g_dbus_connection_signal_subscribe (self->pPrivate->pConnection, NULL, GREETER_BUS_NAME, "UserChanged", GREETER_BUS_PATH, NULL, G_DBUS_SIGNAL_FLAGS_NONE, onUserChanged, self, NULL);
 
-        // Get layouts from /etc/default/keyboard
-        gchar *sFile;
-        g_file_get_contents ("/etc/default/keyboard", &sFile, NULL, NULL);
-        gchar **lLines = g_strsplit(sFile, "\n", -1);
-        guint nLines = g_strv_length(lLines);
-        gchar **lLayouts = NULL;
-        gchar **lVariants = NULL;
+        // Get system layout
+        gboolean bDefaultLocation = g_file_test ("/etc/default/keyboard", G_FILE_TEST_EXISTS);
+        gchar *sLocation = NULL;
 
-        for (guint nLine = 0; nLine < nLines; nLine++)
+        if (bDefaultLocation)
         {
-            gboolean bIsLayout = g_str_has_prefix(lLines[nLine], "XKBLAYOUT");
+            sLocation = "/etc/default/keyboard";
+        }
+        else
+        {
+            sLocation = "/etc/X11/xorg.conf.d/00-keyboard.conf";
+        }
 
-            if (bIsLayout == TRUE)
+        gchar *sFile = NULL;
+        GError *pError = NULL;
+        g_file_get_contents (sLocation, &sFile, NULL, &pError);
+        gchar *sLayout = NULL;
+        gchar *sVariant = NULL;
+
+        if (!pError)
+        {
+            GRegex *pRegex = NULL;
+
+            if (bDefaultLocation)
             {
-                gboolean bQuoted = g_strrstr(lLines[nLine], "\"") != NULL;
-                gchar *sLayout = NULL;
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                #else
+                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                #endif
+            }
+            else
+            {
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                #else
+                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                #endif
+            }
 
-                if (bQuoted == TRUE)
+            if (!pError)
+            {
+                GMatchInfo *pMatchInfo = NULL;
+
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    gboolean bMatch = g_regex_match (pRegex, sFile, G_REGEX_MATCH_DEFAULT, &pMatchInfo);
+                #else
+                    gboolean bMatch = g_regex_match (pRegex, sFile, (GRegexMatchFlags) 0, &pMatchInfo);
+                #endif
+
+                if (bMatch)
                 {
-                    sLayout = (lLines[nLine] + 11);
-                    guint nLength = strlen(sLayout);
-                    sLayout[nLength - 1] = '\0';
+                    sLayout = g_match_info_fetch (pMatchInfo, 1);
                 }
                 else
                 {
-                    sLayout = (lLines[nLine] + 10);
+                    g_error ("PANIC: No system XkbLayout found");
                 }
 
-                lLayouts = g_strsplit(sLayout, ",", -1);
-
-                continue;
+                g_match_info_free (pMatchInfo);
+                g_regex_unref (pRegex);
             }
-
-            gboolean bIsVariant = g_str_has_prefix(lLines[nLine], "XKBVARIANT");
-
-            if (bIsVariant == TRUE)
+            else
             {
-                gboolean bQuoted = g_strrstr(lLines[nLine], "\"") != NULL;
-                gchar *sVariant = NULL;
-
-                if (bQuoted == TRUE)
-                {
-                    sVariant = (lLines[nLine] + 12);
-                    guint nLength = strlen(sVariant);
-                    sVariant[nLength - 1] = '\0';
-                }
-                else
-                {
-                    sVariant = (lLines[nLine] + 11);
-                }
-
-                lVariants = g_strsplit(sVariant, ",", -1);
-
-                continue;
+                g_error ("PANIC: Failed to compile regex: %s", pError->message);
+                g_error_free (pError);
             }
-        }
 
-        guint nVariants = 0;
-
-        if (lVariants != NULL)
-        {
-            nVariants = g_strv_length(lVariants);
-        }
-
-        if (lLayouts != NULL)
-        {
-            guint nLayouts = g_strv_length(lLayouts);
-
-            for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+            if (bDefaultLocation)
             {
-                gchar *sId = NULL;
-
-                if (nVariants > nLayout)
-                {
-                    guint nVariant = strlen(lVariants[nLayout]);
-
-                    if (nVariants == nLayouts && nVariant > 0)
-                    {
-                        sId = g_strconcat(lLayouts[nLayout], "+", lVariants[nLayout], NULL);
-                    }
-                    else
-                    {
-                        sId = g_strdup(lLayouts[nLayout]);
-                    }
-                }
-                else
-                {
-                    sId = g_strdup(lLayouts[nLayout]);
-                }
-
-                self->pPrivate->lLayoutRec = g_slist_append(self->pPrivate->lLayoutRec, sId);
-                self->pPrivate->sSystemLayout = g_strdup(sId);
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    pRegex = g_regex_new (" *XKBVARIANT *= *\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                #else
+                    pRegex = g_regex_new (" *XKBVARIANT *= *\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                #endif
+            }
+            else
+            {
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    pRegex = g_regex_new (" *Option +\"*XkbVariant\"* +\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                #else
+                    pRegex = g_regex_new (" *Option +\"*XkbVariant\"* +\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                #endif
             }
 
-            self->pPrivate->nLayout = 0;
+            if (!pError)
+            {
+                GMatchInfo *pMatchInfo = NULL;
 
-            g_strfreev(lLayouts);
+                #if GLIB_CHECK_VERSION(2, 73, 0)
+                    gboolean bMatch = g_regex_match (pRegex, sFile, G_REGEX_MATCH_DEFAULT, &pMatchInfo);
+                #else
+                    gboolean bMatch = g_regex_match (pRegex, sFile, (GRegexMatchFlags) 0, &pMatchInfo);
+                #endif
+
+                if (bMatch)
+                {
+                    sVariant = g_match_info_fetch (pMatchInfo, 1);
+                }
+
+                g_match_info_free (pMatchInfo);
+                g_regex_unref (pRegex);
+            }
+            else
+            {
+                g_error ("PANIC: Failed to compile regex: %s", pError->message);
+                g_error_free (pError);
+            }
+
+            g_free(sFile);
         }
-
-        if (lVariants != NULL)
+        else
         {
-            g_strfreev(lVariants);
+            g_error ("PANIC: Failed to get %s contents: %s", sLocation, pError->message);
+            g_error_free (pError);
         }
 
-        g_strfreev(lLines);
-        g_free(sFile);
+        gchar *sId = NULL;
+        guint nVariant = 0;
+
+        if (sVariant)
+        {
+            nVariant = strlen (sVariant);
+        }
+
+        if (nVariant)
+        {
+            sId = g_strconcat (sLayout, "+", sVariant, NULL);
+        }
+        else
+        {
+            sId = g_strdup (sLayout);
+        }
+
+        g_free (sLayout);
+        g_free (sVariant);
+        self->pPrivate->lLayoutRec = g_slist_append (self->pPrivate->lLayoutRec, sId);
+        self->pPrivate->sSystemLayout = g_strdup (sId);
+        self->pPrivate->nLayout = 0;
 
         ActUserManager *pManager = act_user_manager_get_default();
         gboolean bIsLoaded;
