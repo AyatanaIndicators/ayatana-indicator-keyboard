@@ -1,6 +1,42 @@
+2023-12-26 Mike Gabriel
+
+        * release 23.10.2 (HEAD -> main, tag: 23.10.2)
+
+2023-12-06 Mike Gabriel
+
+        * Merge branch 'tari01-pr/update-languages' (eaa1b53f)
+
+2023-11-19 Robert Tari
+
+        * src/languages.h: Update language list (1c25eb1b)
+        * Add missing icons (ed32932d)
+
+2023-12-05 Mike Gabriel
+
+        * Merge branch 'tari01-pr/fix-system-layout-parser' (526d70f5)
+
+2023-11-29 bittin1ddc447d824349b2
+
+        * Translated using Weblate (Swedish) (5e086630)
+        * Translated using Weblate (Swedish) (ae555134)
+
+2023-11-19 Robert Tari
+
+        * src/keyboard-x11.c: Also parse
+          /etc/X11/xorg.conf.d/00-keyboard.conf for system layout
+          (93c068eb)
+
+2023-11-08 bittin1ddc447d824349b2
+
+        * Translated using Weblate (Swedish) (1586aae7)
+
+2023-11-08 Ivo Xavier
+
+        * Translated using Weblate (Portuguese) (1864eccd)
+
 2023-11-06 Mike Gabriel
 
-        * release 23.10.1 (HEAD -> main, tag: 23.10.1)
+        * release 23.10.1 (2b96145b) (tag: 23.10.1)
 
 2023-11-02 Mike Gabriel
 

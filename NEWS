@@ -1,3 +1,11 @@
+Overview of changes in ayatana-indicator-keyboard 23.10.2
+
+  - src/keyboard-x11.c: Also parse /etc/X11/xorg.conf.d/00-keyboard.conf
+    for system layout.
+  - Add missing icons.
+  - src/languages.h: Update language list.
+  - Translation update.
+
 Overview of changes in ayatana-indicator-keyboard 23.10.1
 
   - Skip AccountsService operations for all prefixed users.
