@@ -1,3 +1,11 @@
+Overview of changes in ayatana-indicator-keyboard 24.2.0
+
+  - data/org.ayatana.indicator.keyboard.AccountsService.policy: Fix
+    policy message text
+  - Create a set of hicolor icons with improved visibility
+  - contrib/ayatana-indicator-keyboard-icon-generator.py: Update and
+    improve the script
+
 Overview of changes in ayatana-indicator-keyboard 23.10.2
 
   - src/keyboard-x11.c: Also parse /etc/X11/xorg.conf.d/00-keyboard.conf

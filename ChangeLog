@@ -1,6 +1,26 @@
+2024-02-24 Mike Gabriel
+
+        * release 24.2.0 (HEAD -> main, tag: 24.2.0)
+        * Merge branch 'tari01-pr/improved-icons' (0abb75dd)
+
+2024-02-16 Robert Tari
+
+        * contrib/ayatana-indicator-keyboard-icon-generator.py: Update and
+          improve the script (bbf0a26a)
+        * Create a set of hicolor icons with improved visibility (2a238439)
+
+2024-02-24 Mike Gabriel
+
+        * Merge branch 'tari01-pr/policy-message' (a584d9d3)
+
+2024-02-23 Robert Tari
+
+        * data/org.ayatana.indicator.keyboard.AccountsService.policy: Fix
+          policy message text (2b8f77e2)
+
 2023-12-26 Mike Gabriel
 
-        * release 23.10.2 (HEAD -> main, tag: 23.10.2)
+        * release 23.10.2 (f0d04781) (tag: 23.10.2)
 
 2023-12-06 Mike Gabriel
 
