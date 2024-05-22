@@ -1,3 +1,9 @@
+Overview of changes in ayatana-indicator-keyboard 24.5.0
+
+  - data/ayatana-indicator-keyboard.service.in: Become part of
+    lomiri-indicators.target.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 24.2.0
 
   - data/org.ayatana.indicator.keyboard.AccountsService.policy: Fix
