@@ -671,17 +671,17 @@ static void keyboard_init(Keyboard *self)
             if (bDefaultLocation)
             {
                 #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
                 #else
-                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
                 #endif
             }
             else
             {
                 #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([a-zA-Z]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
+                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
                 #else
-                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([a-zA-Z]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
+                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
                 #endif
             }
 
