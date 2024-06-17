@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Robert Tari <robert@tari.in>
+ * Copyright 2021-2024 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -35,6 +35,7 @@ struct _KeyboardPrivate
     guint nLayout;
     GSList *lLayoutRec;
     GSList *lUsers;
+    GSettings *pSettings;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -61,11 +62,6 @@ static gboolean isGreeter()
     const char *sUser = g_get_user_name();
 
     return g_str_equal(sUser, "lightdm");
-}
-
-static void setAccountsService(Keyboard *pKeyboard)
-{
-    // TODO
 }
 
 static void getAccountsService(Keyboard *pKeyboard)
@@ -174,15 +170,7 @@ void keyboard_AddSource(Keyboard *pKeyboard)
 
 guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
 {
-    if (isGreeter())
-    {
-        return g_slist_length(pKeyboard->pPrivate->lLayoutRec);
-    }
-    else
-    {
-        // TODO
-        return 1;
-    }
+    return g_slist_length (pKeyboard->pPrivate->lLayoutRec);
 }
 
 guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
@@ -197,31 +185,9 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
         nLayout = pKeyboard->pPrivate->nLayout;
     }
 
-    gchar *sId = NULL;
-
-    if (isGreeter() == TRUE)
-    {
-        gchar *sLayout = g_slist_nth_data(pKeyboard->pPrivate->lLayoutRec, nLayout);
-        sId = g_strdup(sLayout);
-    }
-    else
-    {
-        // TODO
-        gchar *sLayout = "us";
-        gchar *sVariant = "";
-
-        if (sVariant && strlen(sVariant))
-        {
-            sId = g_strconcat(sLayout, "+", sVariant, NULL);
-        }
-        else
-        {
-            sId = g_strdup(sLayout);
-        }
-    }
-
+    gchar *sLayout = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRec, nLayout);
     const Layout *pLayout;
-    g_hash_table_lookup_extended(pKeyboard->pPrivate->lLayouts, sId, NULL, (gpointer*)&pLayout);
+    g_hash_table_lookup_extended(pKeyboard->pPrivate->lLayouts, sLayout, NULL, (gpointer*)&pLayout);
 
     if (pLanguage != NULL)
     {
@@ -232,15 +198,63 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
     {
         *pDescription = g_strdup(pLayout->sDescription);
     }
-
-    g_free(sId);
 }
 
 void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 {
     if (isGreeter() == FALSE)
     {
-        // TODO
+        gchar *sId = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRec, nLayout);
+
+        GVariantBuilder cSettingsBuilder;
+        g_variant_builder_init (&cSettingsBuilder, G_VARIANT_TYPE ("a(ss)"));
+        g_variant_builder_add (&cSettingsBuilder, "(ss)", "xkb", sId);
+
+        GVariantBuilder cAccountsBuilder;
+        g_variant_builder_init (&cAccountsBuilder, G_VARIANT_TYPE ("aa{ss}"));
+        GVariantBuilder cDictBuilder;
+        g_variant_builder_init (&cDictBuilder, G_VARIANT_TYPE ("a{ss}"));
+        g_variant_builder_add (&cDictBuilder, "{ss}", "xkb", sId);
+        GVariant *pDict = g_variant_builder_end (&cDictBuilder);
+        g_variant_builder_add_value (&cAccountsBuilder, pDict);
+
+        guint nSources = g_slist_length (pKeyboard->pPrivate->lLayoutRec);
+
+        for (guint nSource = 0; nSource < nSources; nSource++)
+        {
+            if (nSource != nLayout)
+            {
+                gchar *sId = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRec, nSource);
+
+                g_variant_builder_add (&cSettingsBuilder, "(ss)", "xkb", sId);
+
+                GVariantBuilder cDictBuilder;
+                g_variant_builder_init (&cDictBuilder, G_VARIANT_TYPE ("a{ss}"));
+                g_variant_builder_add (&cDictBuilder, "{ss}", "xkb", sId);
+                GVariant *pDict = g_variant_builder_end (&cDictBuilder);
+                g_variant_builder_add_value (&cAccountsBuilder, pDict);
+            }
+        }
+
+        GVariant *pSettingsSources = g_variant_builder_end (&cSettingsBuilder);
+        g_settings_set_value (pKeyboard->pPrivate->pSettings, "sources", pSettingsSources);
+
+        GDBusConnection *pConnection = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
+        gint nUid = geteuid ();
+        gchar *sPath = g_strdup_printf ("/org/freedesktop/Accounts/User%i", nUid);
+        GDBusProxy *pProxy = g_dbus_proxy_new_sync (pConnection, G_DBUS_PROXY_FLAGS_NONE, NULL, "org.freedesktop.Accounts", sPath, "org.freedesktop.DBus.Properties", NULL, NULL);
+        g_free (sPath);
+        GVariant *pAccountsSources = g_variant_builder_end (&cAccountsBuilder);
+
+        #ifdef ENABLE_UBUNTU_ACCOUNTSSERVICE
+            gchar *sInterface = "org.freedesktop.Accounts.User";
+        #else
+            gchar *sInterface = "com.lomiri.shell.AccountsService";
+        #endif
+
+        GVariant *pRet = g_dbus_proxy_call_sync (pProxy, "Set", g_variant_new ("(ssv)", sInterface, "InputSources", pAccountsSources), G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL);
+        g_variant_unref (pRet);
+        g_object_unref (pConnection);
     }
     else
     {
@@ -272,15 +286,17 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
 
             return;
         }
-    }
 
-    pKeyboard->pPrivate->nLayout = nLayout;
-    g_signal_emit(pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
+        pKeyboard->pPrivate->nLayout = nLayout;
+        g_signal_emit(pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
+    }
 }
 
 static void onDispose(GObject *pObject)
 {
     Keyboard *self = G_KEYBOARD(pObject);
+    g_signal_handlers_disconnect_by_data (self->pPrivate->pSettings, self);
+    g_clear_object (&self->pPrivate->pSettings);
 
     if (self->pPrivate->lLayouts)
     {
@@ -313,6 +329,45 @@ Keyboard* keyboard_new()
     GObject *pObject = g_object_new(G_TYPE_KEYBOARD, NULL);
 
     return G_KEYBOARD(pObject);
+}
+
+static void onSourcesChanged (GSettings *pSettings, const gchar *sKey, gpointer pData)
+{
+    Keyboard *pKeyboard = G_KEYBOARD (pData);
+    gboolean bsignal = FALSE;
+
+    if (pKeyboard->pPrivate->lLayoutRec)
+    {
+        g_slist_free_full (g_steal_pointer (&pKeyboard->pPrivate->lLayoutRec), g_free);
+        bsignal = TRUE;
+    }
+
+    GVariant *pList = g_settings_get_value (pSettings, "sources");
+    gsize nSources = g_variant_n_children (pList);
+
+    if (nSources)
+    {
+        GVariantIter cIter;
+        g_variant_iter_init (&cIter, pList);
+        gchar *sLayout = NULL;
+
+        while (g_variant_iter_loop (&cIter, "(ss)", NULL, &sLayout))
+        {
+            pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (sLayout));
+        }
+    }
+    else
+    {
+        pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup ("us"));
+    }
+
+    g_variant_unref (pList);
+
+    if (bsignal)
+    {
+        g_signal_emit (pKeyboard, m_lSignals[CONFIG_CHANGED], 0);
+        g_signal_emit (pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
+    }
 }
 
 static void keyboard_init(Keyboard *self)
@@ -367,10 +422,26 @@ static void keyboard_init(Keyboard *self)
 
     if (isGreeter() == FALSE)
     {
-        // TODO
         self->pPrivate->nLayout = 0;
+        GSettingsSchemaSource *pSource = g_settings_schema_source_get_default ();
+        GSettingsSchema *pSchema = NULL;
 
-        setAccountsService(self);
+        if (pSource)
+        {
+            pSchema = g_settings_schema_source_lookup (pSource, "org.gnome.desktop.input-sources", FALSE);
+
+            if (pSchema)
+            {
+                g_settings_schema_unref (pSchema);
+                self->pPrivate->pSettings = g_settings_new ("org.gnome.desktop.input-sources");
+                g_signal_connect (self->pPrivate->pSettings, "changed::sources", G_CALLBACK (onSourcesChanged), self);
+                onSourcesChanged (self->pPrivate->pSettings, "sources", self);
+            }
+            else
+            {
+                g_error ("Panic: no org.gnome.desktop.input-sources schema found");
+            }
+        }
     }
     else
     {
