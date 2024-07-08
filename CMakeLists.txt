@@ -9,11 +9,16 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Options
 option(ENABLE_WERROR "Treat all build warnings as errors" OFF)
+option(ENABLE_UBUNTU_ACCOUNTSSERVICE "Build with Ubuntu's fork of accountsservice" OFF)
 
 set(CMAKE_BUILD_TYPE "Release")
 
 if(ENABLE_WERROR)
     add_definitions("-Werror")
+endif()
+
+if(ENABLE_UBUNTU_ACCOUNTSSERVICE)
+    add_compile_definitions(ENABLE_UBUNTU_ACCOUNTSSERVICE)
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -51,4 +56,5 @@ add_subdirectory(po)
 
 # Display config info
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Build with Ubuntu's fork of accountsservice: ${ENABLE_UBUNTU_ACCOUNTSSERVICE}")
 message(STATUS "Build with -Werror: ${ENABLE_WERROR}")
