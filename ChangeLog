@@ -1,6 +1,37 @@
+2024-07-10 Mike Gabriel
+
+        * release 24.7.0 (HEAD -> main, tag: 24.7.0)
+
+2024-07-08 Mike Gabriel
+
+        * Merge branch 'tari01-pr/lomiri-session' (340ef997)
+
+2024-07-05 Robert Tari
+
+        * debian/rules: Build with ENABLE_UBUNTU_ACCOUNTSSERVICE on Ubuntu
+          and derivatives (6357866d)
+
+2024-06-17 Robert Tari
+
+        * Fix integration with Lomiri session (a7045072)
+
+2024-06-13 Robert Tari
+
+        * Merge branch
+          'sunweaver-pr/support-more-characters-in-Xkb-parameters'
+          (a630e4bb)
+
+2024-05-28 Mike Gabriel
+
+        * src/keyboard-x11.c: Add ',' and '0-9' as allowed characters to
+          regexp for XkbLayout. (b18f267f)
+        * src/keyboard-x11.c: Add ',' and '0-9' as allowed characters to
+          regexp for XkbVariant. (5bb69d76)
+        * src/keyboard-x11.c: Amend file permissions (a-x). (fa22c11a)
+
 2024-05-22 Mike Gabriel
 
-        * release 24.5.0 (HEAD -> main, tag: 24.5.0)
+        * release 24.5.0 (a5c5b784) (tag: 24.5.0)
 
 2024-05-21 Robert Tari
 
