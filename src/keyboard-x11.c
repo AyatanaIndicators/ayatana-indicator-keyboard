@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Robert Tari <robert@tari.in>
+ * Copyright 2021-2024 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -48,7 +48,7 @@ struct _KeyboardPrivate
     GDBusConnection *pConnection;
     guint nSubscription;
     gchar *sUser;
-    gchar *sSystemLayout;
+    GStrv lSystemLayouts;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -148,7 +148,13 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
             g_slist_free_full (g_steal_pointer (&pKeyboard->pPrivate->lLayoutRec), g_free);
         }
 
-        pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->sSystemLayout));
+        guint nLayouts = g_strv_length (pKeyboard->pPrivate->lSystemLayouts);
+
+        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+        {
+            pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->lSystemLayouts[nLayout]));
+        }
+
         g_timeout_add(500, (GSourceFunc)emitDelayedSignal, pKeyboard);
     }
     else
@@ -187,7 +193,12 @@ static void getAccountsService(Keyboard *pKeyboard, ActUser *pUser)
 
             if (!nLayouts)
             {
-                pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->sSystemLayout));
+                guint nLayouts = g_strv_length (pKeyboard->pPrivate->lSystemLayouts);
+
+                for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+                {
+                    pKeyboard->pPrivate->lLayoutRec = g_slist_append (pKeyboard->pPrivate->lLayoutRec, g_strdup (pKeyboard->pPrivate->lSystemLayouts[nLayout]));
+                }
             }
 
             g_variant_iter_free(pIter);
@@ -494,9 +505,9 @@ static void onDispose(GObject *pObject)
         g_slist_free_full(self->pPrivate->lLayoutRec, g_free);
     }
 
-    if (self->pPrivate->sSystemLayout)
+    if (self->pPrivate->lSystemLayouts)
     {
-        g_free (self->pPrivate->sSystemLayout);
+        g_strfreev (self->pPrivate->lSystemLayouts);
     }
 
     G_OBJECT_CLASS(keyboard_parent_class)->dispose(pObject);
@@ -645,7 +656,7 @@ static void keyboard_init(Keyboard *self)
         self->pPrivate->lUsers = NULL;
         self->pPrivate->nSubscription = g_dbus_connection_signal_subscribe (self->pPrivate->pConnection, NULL, GREETER_BUS_NAME, "UserChanged", GREETER_BUS_PATH, NULL, G_DBUS_SIGNAL_FLAGS_NONE, onUserChanged, self, NULL);
 
-        // Get system layout
+        // Get system layouts
         gboolean bDefaultLocation = g_file_test ("/etc/default/keyboard", G_FILE_TEST_EXISTS);
         gchar *sLocation = NULL;
 
@@ -661,8 +672,8 @@ static void keyboard_init(Keyboard *self)
         gchar *sFile = NULL;
         GError *pError = NULL;
         g_file_get_contents (sLocation, &sFile, NULL, &pError);
-        gchar *sLayout = NULL;
-        gchar *sVariant = NULL;
+        GStrv lLayouts = NULL;
+        GStrv lVariants = NULL;
 
         if (!pError)
         {
@@ -697,7 +708,9 @@ static void keyboard_init(Keyboard *self)
 
                 if (bMatch)
                 {
-                    sLayout = g_match_info_fetch (pMatchInfo, 1);
+                    gchar *sLayouts = g_match_info_fetch (pMatchInfo, 1);
+                    lLayouts = g_strsplit (sLayouts, ",", -1);
+                    g_free (sLayouts);
                 }
                 else
                 {
@@ -742,7 +755,9 @@ static void keyboard_init(Keyboard *self)
 
                 if (bMatch)
                 {
-                    sVariant = g_match_info_fetch (pMatchInfo, 1);
+                    gchar *sVariants = g_match_info_fetch (pMatchInfo, 1);
+                    lVariants = g_strsplit (sVariants, ",", -1);
+                    g_free (sVariants);
                 }
 
                 g_match_info_free (pMatchInfo);
@@ -762,28 +777,38 @@ static void keyboard_init(Keyboard *self)
             g_error_free (pError);
         }
 
-        gchar *sId = NULL;
-        guint nVariant = 0;
+        guint nLayouts = g_strv_length (lLayouts);
+        GStrvBuilder *pBuilder = g_strv_builder_new ();
 
-        if (sVariant)
+        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
         {
-            nVariant = strlen (sVariant);
+            gchar *sId = NULL;
+            guint nVariantLength = 0;
+
+            if (lVariants && lVariants[nLayout])
+            {
+                nVariantLength = strlen (lVariants[nLayout]);
+            }
+
+            if (nVariantLength)
+            {
+                sId = g_strconcat (lLayouts[nLayout], "+", lVariants[nLayout], NULL);
+            }
+            else
+            {
+                sId = g_strdup (lLayouts[nLayout]);
+            }
+
+            self->pPrivate->lLayoutRec = g_slist_append (self->pPrivate->lLayoutRec, sId);
+            g_strv_builder_add (pBuilder, sId);
         }
 
-        if (nVariant)
-        {
-            sId = g_strconcat (sLayout, "+", sVariant, NULL);
-        }
-        else
-        {
-            sId = g_strdup (sLayout);
-        }
-
-        g_free (sLayout);
-        g_free (sVariant);
-        self->pPrivate->lLayoutRec = g_slist_append (self->pPrivate->lLayoutRec, sId);
-        self->pPrivate->sSystemLayout = g_strdup (sId);
+        self->pPrivate->lSystemLayouts = g_strv_builder_end (pBuilder);
+        g_strv_builder_unref (pBuilder);
+        g_strfreev (lLayouts);
+        g_strfreev (lVariants);
         self->pPrivate->nLayout = 0;
+        //~ Get system layouts
 
         ActUserManager *pManager = act_user_manager_get_default();
         gboolean bIsLoaded;
