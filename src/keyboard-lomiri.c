@@ -19,6 +19,7 @@
 #include <glib-object.h>
 #include "languages.h"
 #include "keyboard.h"
+#include "system-layouts.h"
 
 enum
 {
@@ -373,6 +374,7 @@ static void onSourcesChanged (GSettings *pSettings, const gchar *sKey, gpointer 
 static void keyboard_init(Keyboard *self)
 {
     self->pPrivate = keyboard_get_instance_private(self);
+    self->pPrivate->lLayoutRec = NULL;
     self->pPrivate->lLayouts = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeLayout);
 
     // Read all available layouts
@@ -446,152 +448,19 @@ static void keyboard_init(Keyboard *self)
     else
     {
         // Get system layouts
-        gboolean bDefaultLocation = g_file_test ("/etc/default/keyboard", G_FILE_TEST_EXISTS);
-        gchar *sLocation = NULL;
+        getSystemLayouts ("/etc/default/keyboard", &self->pPrivate->lLayoutRec, NULL, FALSE);
 
-        if (bDefaultLocation)
+        if (!self->pPrivate->lLayoutRec)
         {
-            sLocation = "/etc/default/keyboard";
-        }
-        else
-        {
-            sLocation = "/etc/X11/xorg.conf.d/00-keyboard.conf";
+            getSystemLayouts ("/etc/X11/xorg.conf.d/00-keyboard.conf", &self->pPrivate->lLayoutRec, NULL, FALSE);
         }
 
-        gchar *sFile = NULL;
-        GError *pError = NULL;
-        g_file_get_contents (sLocation, &sFile, NULL, &pError);
-        GStrv lLayouts = NULL;
-        GStrv lVariants = NULL;
-
-        if (!pError)
+        if (!self->pPrivate->lLayoutRec)
         {
-            GRegex *pRegex = NULL;
-
-            if (bDefaultLocation)
-            {
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
-                #else
-                    pRegex = g_regex_new (" *XKBLAYOUT *= *\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
-                #endif
-            }
-            else
-            {
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
-                #else
-                    pRegex = g_regex_new (" *Option +\"*XkbLayout\"* +\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
-                #endif
-            }
-
-            if (!pError)
-            {
-                GMatchInfo *pMatchInfo = NULL;
-
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    gboolean bMatch = g_regex_match (pRegex, sFile, G_REGEX_MATCH_DEFAULT, &pMatchInfo);
-                #else
-                    gboolean bMatch = g_regex_match (pRegex, sFile, (GRegexMatchFlags) 0, &pMatchInfo);
-                #endif
-
-                if (bMatch)
-                {
-                    gchar *sLayouts = g_match_info_fetch (pMatchInfo, 1);
-                    lLayouts = g_strsplit (sLayouts, ",", -1);
-                    g_free (sLayouts);
-                }
-                else
-                {
-                    g_error ("PANIC: No system XkbLayout found");
-                }
-
-                g_match_info_free (pMatchInfo);
-                g_regex_unref (pRegex);
-            }
-            else
-            {
-                g_error ("PANIC: Failed to compile regex: %s", pError->message);
-                g_error_free (pError);
-            }
-
-            if (bDefaultLocation)
-            {
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *XKBVARIANT *= *\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
-                #else
-                    pRegex = g_regex_new (" *XKBVARIANT *= *\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
-                #endif
-            }
-            else
-            {
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    pRegex = g_regex_new (" *Option +\"*XkbVariant\"* +\"*([,a-zA-Z0-9]*)\"*", G_REGEX_DEFAULT, G_REGEX_MATCH_DEFAULT, &pError);
-                #else
-                    pRegex = g_regex_new (" *Option +\"*XkbVariant\"* +\"*([,a-zA-Z0-9]*)\"*", (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, &pError);
-                #endif
-            }
-
-            if (!pError)
-            {
-                GMatchInfo *pMatchInfo = NULL;
-
-                #if GLIB_CHECK_VERSION(2, 73, 0)
-                    gboolean bMatch = g_regex_match (pRegex, sFile, G_REGEX_MATCH_DEFAULT, &pMatchInfo);
-                #else
-                    gboolean bMatch = g_regex_match (pRegex, sFile, (GRegexMatchFlags) 0, &pMatchInfo);
-                #endif
-
-                if (bMatch)
-                {
-                    gchar *sVariants = g_match_info_fetch (pMatchInfo, 1);
-                    lVariants = g_strsplit (sVariants, ",", -1);
-                    g_free (sVariants);
-                }
-
-                g_match_info_free (pMatchInfo);
-                g_regex_unref (pRegex);
-            }
-            else
-            {
-                g_error ("PANIC: Failed to compile regex: %s", pError->message);
-                g_error_free (pError);
-            }
-
-            g_free(sFile);
-        }
-        else
-        {
-            g_error ("PANIC: Failed to get %s contents: %s", sLocation, pError->message);
-            g_error_free (pError);
-        }
-
-        guint nLayouts = g_strv_length (lLayouts);
-
-        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
-        {
-            gchar *sId = NULL;
-            guint nVariantLength = 0;
-
-            if (lVariants && lVariants[nLayout])
-            {
-                nVariantLength = strlen (lVariants[nLayout]);
-            }
-
-            if (nVariantLength)
-            {
-                sId = g_strconcat (lLayouts[nLayout], "+", lVariants[nLayout], NULL);
-            }
-            else
-            {
-                sId = g_strdup (lLayouts[nLayout]);
-            }
-
+            gchar *sId = g_strdup ("us");
             self->pPrivate->lLayoutRec = g_slist_append (self->pPrivate->lLayoutRec, sId);
         }
 
-        g_strfreev (lLayouts);
-        g_strfreev (lVariants);
         self->pPrivate->nLayout = 0;
         //~ Get system layouts
 
