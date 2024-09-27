@@ -8,50 +8,54 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-10 23:57+0200\n"
-"PO-Revision-Date: 2021-01-22 23:28+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-09-29 00:16+0000\n"
+"Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
+"Language-Team: Romanian <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Afișează pictograma limbii în modul de birou."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Dacă este activată, indicatorul afișează pictograma aranjamentului curent. "
+"În caz contrar, este afișată o pictogramă generică de tastatură."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Afișează pictograma limbii în modul de telefon."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Afișează pictograma de limbă în fereastra de întâmpinare."
 
 #: src/service.c:93
 msgid "Keyboard"
-msgstr ""
+msgstr "Tastatură"
 
 #: src/service.c:94
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Comutator aranjament tastatură și configurarea acestuia"
 
 #: src/service.c:131
 msgid "Current keyboard layout"
-msgstr ""
+msgstr "Aranjamentul curent al tastaturii"
 
 #: src/service.c:188
 msgid "Keyboard Settings…"
-msgstr ""
+msgstr "Configurări tastatură…"
 
 #: src/service.c:196
 msgid "Show Current Layout"
-msgstr ""
+msgstr "Afișează aranjamentul curent"
