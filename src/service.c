@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Robert Tari <robert@tari.in>
+ * Copyright 2021-2025 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -80,6 +80,8 @@ struct _IndicatorKeyboardServicePrivate
     GMenu *pLayoutSection;
     Keyboard *pKeyboard;
     GSettings *pSettings;
+    GSettings *pLomiriSettings;
+    gboolean bLomiri;
 };
 
 typedef IndicatorKeyboardServicePrivate priv_t;
@@ -185,6 +187,15 @@ static GMenuModel* createLayoutSection(IndicatorKeyboardService *self)
 static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
 {
     GMenu * pMenu = g_menu_new();
+
+    if (self->pPrivate->bLomiri)
+    {
+        GMenuItem *pItem = g_menu_item_new (_("Always show OSK"), "indicator.osk(true)");
+        g_menu_item_set_attribute (pItem, "x-ayatana-type", "s", "org.ayatana.indicator.switch");
+        g_menu_append_item (pMenu, pItem);
+        g_object_unref (pItem);
+    }
+
     g_menu_append(pMenu, _("Keyboard Settings…"), "indicator.settings");
 
     return G_MENU_MODEL(pMenu);
@@ -315,13 +326,15 @@ static void onLayoutSelected(GSimpleAction *pAction, GVariant *pVariant, gpointe
     m_fnKeyboardSetLayout(self->pPrivate->pKeyboard, nLayout);
 }
 
-static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pUserData)
+static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
 {
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+
     if (ayatana_common_utils_is_mate())
     {
         ayatana_common_utils_execute_command("mate-keyboard-properties");
     }
-    else if (ayatana_common_utils_is_lomiri())
+    else if (self->pPrivate->bLomiri)
     {
         ayatana_common_utils_open_url("settings:///system/hw-keyboard-layouts");
     }
@@ -347,6 +360,20 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     g_free (sArgs);
 }
 
+static gboolean valueFromVariant (GValue *pValue, GVariant *pVariant, gpointer pUserData)
+{
+    g_value_set_variant (pValue, pVariant);
+
+    return TRUE;
+}
+
+static GVariant* valueToVariant (const GValue *pValue, const GVariantType *pType, gpointer pUserData)
+{
+    GVariant *pVariant = g_value_dup_variant (pValue);
+
+    return pVariant;
+}
+
 static void initActions(IndicatorKeyboardService *self)
 {
     GSimpleAction *pAction;
@@ -365,6 +392,16 @@ static void initActions(IndicatorKeyboardService *self)
     g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
     self->pPrivate->pLayoutAction = pAction;
     g_signal_connect(pAction, "activate", G_CALLBACK(onLayoutSelected), self);
+
+    if (self->pPrivate->bLomiri)
+    {
+        gboolean bOsk = g_settings_get_boolean (self->pPrivate->pLomiriSettings, "always-show-osk");
+        GVariant *pOsk = g_variant_new_boolean (bOsk);
+        pAction = g_simple_action_new_stateful ("osk", G_VARIANT_TYPE_BOOLEAN, pOsk);
+        g_settings_bind_with_mapping (self->pPrivate->pLomiriSettings, "always-show-osk", pAction, "state", G_SETTINGS_BIND_DEFAULT, valueFromVariant, valueToVariant, NULL, NULL);
+        g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+        g_object_unref (G_OBJECT (pAction));
+    }
 
     pAction = g_simple_action_new("settings", NULL);
     g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
@@ -462,6 +499,8 @@ static void onDispose(GObject *pObject)
         g_clear_object (&self->pPrivate->pSettings);
     }
 
+    g_clear_object (&self->pPrivate->pLomiriSettings);
+
     if (self->pPrivate->pKeyboard != NULL)
     {
         g_object_unref(G_OBJECT(self->pPrivate->pKeyboard));
@@ -512,8 +551,9 @@ static void onSettingsChanged(GSettings *pSettings, gchar *sKey, gpointer pData)
 static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
 {
     gchar *sLib = "libayatana-keyboard-x11.so.0";
+    gboolean bLomiri = ayatana_common_utils_is_lomiri ();
 
-    if (ayatana_common_utils_is_lomiri())
+    if (bLomiri)
     {
         sLib = "libayatana-keyboard-lomiri.so.0";
     }
@@ -540,9 +580,16 @@ static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
     m_fnKeyboardGetLayout = dlsym(m_pLibHandle, "keyboard_GetLayout");
     m_fnKeyboardSetLayout = dlsym(m_pLibHandle, "keyboard_SetLayout");
     self->pPrivate = indicator_keyboard_service_get_instance_private(self);
+    self->pPrivate->bLomiri = bLomiri;
     self->pPrivate->pCancellable = g_cancellable_new();
     self->pPrivate->pSettings = g_settings_new ("org.ayatana.indicator.keyboard");
     g_signal_connect(self->pPrivate->pSettings, "changed", G_CALLBACK(onSettingsChanged), self);
+
+    if (self->pPrivate->bLomiri)
+    {
+        self->pPrivate->pLomiriSettings = g_settings_new ("com.lomiri.Shell");
+    }
+
     self->pPrivate->pKeyboard = m_fnKeyboardNew();
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_LAYOUT_CHANGED, G_CALLBACK(onLayoutChanged), self);
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_CONFIG_CHANGED, G_CALLBACK(onConfigChanged), self);
