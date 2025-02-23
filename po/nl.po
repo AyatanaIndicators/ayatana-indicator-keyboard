@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 23:57+0200\n"
+"POT-Creation-Date: 2025-02-23 19:05+0100\n"
 "PO-Revision-Date: 2023-09-16 20:12+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/ayatana-indicators/"
@@ -39,23 +39,27 @@ msgstr "Toon het taalpictogram in de telefoonmodus."
 msgid "Show the language icon in the greeter."
 msgstr "Toon het taalpictogram op het aanmeldscherm."
 
-#: src/service.c:93
+#: src/service.c:95
 msgid "Keyboard"
 msgstr "Toetsenbord"
 
-#: src/service.c:94
+#: src/service.c:96
 msgid "Keyboard layout switcher and settings"
 msgstr "Toetsenbordindelingschakelaar en -instellingen"
 
-#: src/service.c:131
+#: src/service.c:133
 msgid "Current keyboard layout"
 msgstr "Huidige toetsenbordindeling"
 
-#: src/service.c:188
+#: src/service.c:193
+msgid "Always show OSK"
+msgstr ""
+
+#: src/service.c:199
 msgid "Keyboard Settings…"
 msgstr "Toetsenbordinstellingen…"
 
-#: src/service.c:196
+#: src/service.c:207
 msgid "Show Current Layout"
 msgstr "Huidige indeling tonen"
 

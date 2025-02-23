@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 23:57+0200\n"
+"POT-Creation-Date: 2025-02-23 19:05+0100\n"
 "PO-Revision-Date: 2024-11-09 09:00+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/ayatana-indicators/"
@@ -28,8 +28,8 @@ msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
-"இயக்கப்பட்டால், காட்டி தற்போதைய தளவமைப்பு ஐகானைக் காட்டுகிறது. இல்லையெனில், இது ஒரு பொதுவான விசைப்பலகை ஐகானைக் "
-"காட்டுகிறது."
+"இயக்கப்பட்டால், காட்டி தற்போதைய தளவமைப்பு ஐகானைக் காட்டுகிறது. இல்லையெனில், இது ஒரு "
+"பொதுவான விசைப்பலகை ஐகானைக் காட்டுகிறது."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
@@ -39,22 +39,26 @@ msgstr "தொலைபேசி பயன்முறையில் மொழ�
 msgid "Show the language icon in the greeter."
 msgstr "வாழ்த்து நிறத்தில் மொழி ஐகானைக் காட்டு."
 
-#: src/service.c:93
+#: src/service.c:95
 msgid "Keyboard"
 msgstr "விசைப்பலகை"
 
-#: src/service.c:94
+#: src/service.c:96
 msgid "Keyboard layout switcher and settings"
 msgstr "விசைப்பலகை தளவமைப்பு ச்விட்சர் மற்றும் அமைப்புகள்"
 
-#: src/service.c:131
+#: src/service.c:133
 msgid "Current keyboard layout"
 msgstr "தற்போதைய விசைப்பலகை தளவமைப்பு"
 
-#: src/service.c:188
+#: src/service.c:193
+msgid "Always show OSK"
+msgstr ""
+
+#: src/service.c:199
 msgid "Keyboard Settings…"
 msgstr "விசைப்பலகை அமைப்புகள்…"
 
-#: src/service.c:196
+#: src/service.c:207
 msgid "Show Current Layout"
 msgstr "தற்போதைய தளவமைப்பைக் காட்டு"

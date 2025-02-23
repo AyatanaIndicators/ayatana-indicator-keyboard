@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 23:57+0200\n"
+"POT-Creation-Date: 2025-02-23 19:05+0100\n"
 "PO-Revision-Date: 2024-04-01 22:37+0000\n"
 "Last-Translator: 复予 <clonewith@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -37,22 +37,26 @@ msgstr "在移动设备模式上显示语言图标。"
 msgid "Show the language icon in the greeter."
 msgstr "新用户显示语言图标。"
 
-#: src/service.c:93
+#: src/service.c:95
 msgid "Keyboard"
 msgstr "键盘"
 
-#: src/service.c:94
+#: src/service.c:96
 msgid "Keyboard layout switcher and settings"
 msgstr "键盘布局切换器和设置"
 
-#: src/service.c:131
+#: src/service.c:133
 msgid "Current keyboard layout"
 msgstr "当前键盘布局"
 
-#: src/service.c:188
+#: src/service.c:193
+msgid "Always show OSK"
+msgstr ""
+
+#: src/service.c:199
 msgid "Keyboard Settings…"
 msgstr "键盘设置…"
 
-#: src/service.c:196
+#: src/service.c:207
 msgid "Show Current Layout"
 msgstr "显示当前布局"
