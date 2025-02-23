@@ -1,3 +1,11 @@
+Overview of changes in ayatana-indicator-keyboard 24.7.1
+
+  - Support multiple system keyboard layouts.
+  - Never crash when getting system layouts.
+  - Drop the deprecated PolicyKit *.pkla file.
+  - src/service.c: Add Always show OSK switch.
+  - Translation updates.
+
 Overview of changes in ayatana-indicator-keyboard 24.7.0
 
   - src/keyboard-x11.c: Amend file permissions (a-x).

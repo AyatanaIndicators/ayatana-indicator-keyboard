@@ -1,6 +1,53 @@
+2025-02-23 Mike Gabriel
+
+        * release 24.7.1 (HEAD -> main, tag: 24.7.1)
+        * Merge branch 'tari01-pr/osk-switch' (df9de377)
+
+2025-02-20 Robert Tari
+
+        * src/service.c: Add Always show OSK switch (35c5c001)
+
+2025-02-23 Mike Gabriel
+
+        * Merge branch 'tari01-pr/drop-pkla' (bbdd2b6d)
+
+2025-01-15 Robert Tari
+
+        * Drop the deprecated PolicyKit *.pkla file (20507c3d)fixes:
+          https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1093061
+
+2025-02-23 Mike Gabriel
+
+        * Merge branch 'tari01-pr/system-layouts' (95e94abd)
+
+2024-07-18 Robert Tari
+
+        * Never crash when getting system layouts (95eb5965)
+
+2024-11-08 தமிழ்நேரம்
+
+        * Translated using Weblate (Tamil) (270798fb)
+
+2024-10-30 hugoalh
+
+        * Translated using Weblate (Chinese (Traditional Han script))
+          (4e821b0d)
+
+2024-09-27 Remus-Gabriel Chelu
+
+        * Translated using Weblate (Romanian) (617bde70)
+
+2024-07-15 Mike Gabriel
+
+        * Merge branch 'tari01-pr/multiple-system-layouts' (2da4c6e9)
+
+2024-07-11 Robert Tari
+
+        * Support multiple system layouts (907c32c0)
+
 2024-07-10 Mike Gabriel
 
-        * release 24.7.0 (HEAD -> main, tag: 24.7.0)
+        * release 24.7.0 (b5eecfc6) (tag: 24.7.0)
 
 2024-07-08 Mike Gabriel
 
