@@ -188,7 +188,7 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
 {
     GMenu * pMenu = g_menu_new();
 
-    if (self->pPrivate->bLomiri)
+    if (self->pPrivate->bLomiri && (!ayatana_common_utils_is_ubuntutouch()))
     {
         GMenuItem *pItem = g_menu_item_new (_("Always show OSK"), "indicator.osk(true)");
         g_menu_item_set_attribute (pItem, "x-ayatana-type", "s", "org.ayatana.indicator.switch");
@@ -393,7 +393,7 @@ static void initActions(IndicatorKeyboardService *self)
     self->pPrivate->pLayoutAction = pAction;
     g_signal_connect(pAction, "activate", G_CALLBACK(onLayoutSelected), self);
 
-    if (self->pPrivate->bLomiri)
+    if (self->pPrivate->bLomiri && (!ayatana_common_utils_is_ubuntutouch()))
     {
         gboolean bOsk = g_settings_get_boolean (self->pPrivate->pLomiriSettings, "always-show-osk");
         GVariant *pOsk = g_variant_new_boolean (bOsk);
