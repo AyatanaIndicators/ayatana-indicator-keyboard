@@ -1,3 +1,11 @@
+Overview of changes in ayatana-indicator-keyboard 24.7.2
+
+  - CMakeLists.txt: Require libayatana-common (>= 0.9.11).
+    Ubuntu Touch.
+  - src/service.c: Don't show 'always-show-osk' toggle switch when on
+    0.9.11).
+  - Update translation files.
+
 Overview of changes in ayatana-indicator-keyboard 24.7.1
 
   - Support multiple system keyboard layouts.

@@ -1,6 +1,37 @@
+2025-03-02 Mike Gabriel
+
+        * release 24.7.2 (HEAD -> main, tag: 24.7.2)
+        * debian/control: Bump versioned B-D: on libayatana-common to (>=
+          0.9.11). (371fbc2b)
+
+2025-02-28 Robert Tari
+
+        * Merge branch 'sunweaver-pr/hide-osk-toggle-on-ubuntutouch'
+          (2870762e)
+
+2025-02-28 Mike Gabriel
+
+        * src/service.c: Don't show 'always-show-osk' toggle switch when on
+          Ubuntu Touch. (cfa3db55)
+        * CMakeLists.txt: Require libayatana-common (>= 0.9.11). (c2bc6d02)
+        * Translated using Weblate (German) (fc481b15)
+
+2025-02-24 Heimen Stoffels
+
+        * Translated using Weblate (Dutch) (892166cf)
+
+2025-02-23 Remus-Gabriel Chelu
+
+        * Translated using Weblate (Romanian) (7a0303ee)
+
+2025-02-24 Wellington Terumi Uemura
+
+        * Translated using Weblate (Portuguese (Brazil)) (6ae6432f)
+
 2025-02-23 Mike Gabriel
 
-        * release 24.7.1 (HEAD -> main, tag: 24.7.1)
+        * po/: Update translation files. (2fca7abb)
+        * release 24.7.1 (beb2f01c) (tag: 24.7.1)
         * Merge branch 'tari01-pr/osk-switch' (df9de377)
 
 2025-02-20 Robert Tari
