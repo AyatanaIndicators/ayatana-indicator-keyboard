@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2024-11-09 09:00+0000\n"
+"PO-Revision-Date: 2025-04-27 02:17+0000\n"
 "Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/ayatana-indicators/"
 "keyboard-applet/ta/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
@@ -53,7 +53,7 @@ msgstr "தற்போதைய விசைப்பலகை தளவமை�
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "எப்போதும் ஓஎச்கே-ஐக் காட்டு"
 
 #: src/service.c:199
 msgid "Keyboard Settings…"
