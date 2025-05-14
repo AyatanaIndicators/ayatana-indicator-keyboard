@@ -31,7 +31,7 @@ static Keyboard* (*m_fnKeyboardNew)();
 static void (*m_fnKeyboardAddSource)(Keyboard *pKeyboard);
 static guint (*m_fnKeyboardGetNumLayouts)(Keyboard *pKeyboard);
 static guint (*m_fnKeyboardGetLayoutIndex)(Keyboard *pKeyboard);
-static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription);
+static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
 static void (*m_fnKeyboardSetLayout)(Keyboard *pKeyboard, gint nLayout);
 
 enum
@@ -121,7 +121,7 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
     else
     {
         gchar *sLanguage;
-        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, -1, &sLanguage, NULL);
+        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, -1, &sLanguage, NULL, NULL);
 
         gchar *sIcon = g_strconcat("ayatana-indicator-keyboard-", sLanguage, NULL);
         g_free(sLanguage);
@@ -158,7 +158,7 @@ static GMenuModel* createLayoutSection(IndicatorKeyboardService *self)
     {
         gchar *sLanguage;
         gchar *sDescription;
-        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, nLayout, &sLanguage, &sDescription);
+        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, nLayout, &sLanguage, &sDescription, NULL);
         GMenuItem *pItem = g_menu_item_new(sDescription, NULL);
         g_free(sDescription);
         g_menu_item_set_action_and_target_value(pItem, "indicator.layout", g_variant_new_byte(nLayout));
@@ -345,17 +345,27 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
     guint nLayout = m_fnKeyboardGetLayoutIndex (self->pPrivate->pKeyboard);
     gchar *sProgram = NULL;
+    gchar *sArgs = NULL;
+    gboolean bMate = ayatana_common_utils_is_mate ();
+    gboolean bLomiri = ayatana_common_utils_is_lomiri ();
 
-    if (ayatana_common_utils_is_mate ())
+    if (bMate)
     {
         sProgram = "matekbd-keyboard-display";
+        sArgs = g_strdup_printf ("-g %i", nLayout + 1);
+    }
+    else if (bLomiri)
+    {
+
+        sProgram = "tecla";
+        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, -1, NULL, NULL, &sArgs);
     }
     else
     {
         sProgram = "gkbd-keyboard-display";
+        sArgs = g_strdup_printf ("-g %i", nLayout + 1);
     }
 
-    gchar *sArgs = g_strdup_printf ("-g %i", nLayout + 1);
     ayatana_common_utils_execute_command_warn (sProgram, sArgs);
     g_free (sArgs);
 }

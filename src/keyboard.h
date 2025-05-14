@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Robert Tari <robert@tari.in>
+ * Copyright 2021-2025 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -48,7 +48,7 @@ Keyboard* keyboard_new();
 void keyboard_AddSource(Keyboard *pKeyboard);
 guint keyboard_GetNumLayouts(Keyboard *pKeyboard);
 guint keyboard_GetLayoutIndex (Keyboard *pKeyboard);
-void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription);
+void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
 void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout);
 
 G_END_DECLS
