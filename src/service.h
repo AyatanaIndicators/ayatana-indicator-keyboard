@@ -40,12 +40,12 @@ struct _IndicatorKeyboardService
 struct _IndicatorKeyboardServiceClass
 {
     GObjectClass parent_class;
-    void (*pNameLost)(IndicatorKeyboardService *self);
+    void (*pNameLost) (IndicatorKeyboardService *self);
 };
 
-GType indicator_keyboard_service_get_type(void);
-IndicatorKeyboardService* indicator_keyboard_service_new();
-void indicator_keyboard_service_AddKeyboardSource(IndicatorKeyboardService *pService);
+GType indicator_keyboard_service_get_type ();
+IndicatorKeyboardService* indicator_keyboard_service_new ();
+void indicator_keyboard_service_AddKeyboardSource (IndicatorKeyboardService *pService);
 
 G_END_DECLS
 

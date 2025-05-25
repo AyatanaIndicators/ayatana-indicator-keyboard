@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Robert Tari <robert@tari.in>
+ * Copyright 2021-2025 Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -765,13 +765,15 @@ Language LANGUAGES[] =
     {NULL, NULL}
 };
 
-gchar* lookupLanguage(const gchar* sId)
+gchar* lookupLanguage (const gchar* sId)
 {
     guint nId = 0;
 
     while (LANGUAGES[nId].sLanguage != NULL)
     {
-        if (g_str_equal(LANGUAGES[nId].sId, sId))
+        gboolean bEqual = g_str_equal (LANGUAGES[nId].sId, sId);
+
+        if (bEqual)
         {
             return LANGUAGES[nId].sLanguage;
         }

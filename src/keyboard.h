@@ -43,13 +43,13 @@ struct _KeyboardClass
     GObjectClass parent_class;
 };
 
-GType keyboard_get_type(void);
-Keyboard* keyboard_new();
-void keyboard_AddSource(Keyboard *pKeyboard);
-guint keyboard_GetNumLayouts(Keyboard *pKeyboard);
+GType keyboard_get_type (void);
+Keyboard* keyboard_new ();
+void keyboard_AddSource (Keyboard *pKeyboard);
+guint keyboard_GetNumLayouts (Keyboard *pKeyboard);
 guint keyboard_GetLayoutIndex (Keyboard *pKeyboard);
-void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
-void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout);
+void keyboard_GetLayout (Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
+void keyboard_SetLayout (Keyboard *pKeyboard, gint nLayout);
 
 G_END_DECLS
 
