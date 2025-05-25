@@ -9,6 +9,7 @@ endif (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 option (ENABLE_WERROR "Treat all build warnings as errors" OFF)
 option (ENABLE_UBUNTU_ACCOUNTSSERVICE "Build with Ubuntu's fork of accountsservice" OFF)
+option (ENABLE_LOMIRI_FEATURES "Build with Lomiri-specific libraries, schemas and media" OFF)
 
 set (CMAKE_BUILD_TYPE "Release")
 
@@ -27,8 +28,13 @@ endif ()
 include (GNUInstallDirs)
 find_package (PkgConfig REQUIRED)
 include (FindPkgConfig)
-pkg_check_modules (SERVICE_DEPS REQUIRED glib-2.0 gio-2.0 libayatana-common accountsservice xkbcommon xkbregistry
-pkg_check_modules (X11_DEPS REQUIRED x11 libxklavier)
+set (SERVICE_DEPS glib-2.0 gio-2.0 libayatana-common accountsservice xkbcommon xkbregistry)
+
+if (NOT ENABLE_LOMIRI_FEATURES)
+    list (APPEND SERVICE_DEPS x11 libxklavier)
+endif ()
+
+pkg_check_modules (SERVICE_DEPS REQUIRED ${SERVICE_DEPS})
 
 # Build
 
@@ -41,6 +47,7 @@ add_subdirectory (po)
 message (STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
 message (STATUS "Build with Ubuntu's fork of accountsservice: ${ENABLE_UBUNTU_ACCOUNTSSERVICE}")
 message (STATUS "Build with -Werror: ${ENABLE_WERROR}")
+message (STATUS "Build with Lomiri features: ${ENABLE_LOMIRI_FEATURES}")
 
 # Needed by the translation helper shell scripts
 set (GETTEXT_PACKAGE "ayatana-indicator-keyboard")

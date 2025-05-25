@@ -1,25 +1,23 @@
-# libayatana-keyboard-backend-x11.so
-
-add_library ("ayatana-keyboard-x11" SHARED keyboard-x11.c)
-target_link_libraries ("ayatana-keyboard-x11" ${SERVICE_DEPS_LIBRARIES} ${X11_DEPS_LIBRARIES})
-set_target_properties ("ayatana-keyboard-x11" PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install (TARGETS "ayatana-keyboard-x11" DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
-
-# libayatana-keyboard-backend-lomiri.so
-
-add_library ("ayatana-keyboard-lomiri" SHARED keyboard-lomiri.c)
-target_link_libraries ("ayatana-keyboard-lomiri" ${SERVICE_DEPS_LIBRARIES})
-set_target_properties ("ayatana-keyboard-lomiri" PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install (TARGETS "ayatana-keyboard-lomiri" DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
-
 # libayatanaindicatorkeyboardservice.a
 
-add_library ("ayatanaindicatorkeyboardservice" STATIC service.c)
+set (SOURCES service.c)
+
+if (ENABLE_LOMIRI_FEATURES)
+    list (APPEND SOURCES keyboard-lomiri.c)
+else ()
+    list (APPEND SOURCES keyboard-x11.c)
+endif ()
+
+add_library ("ayatanaindicatorkeyboardservice" STATIC ${SOURCES})
 target_compile_definitions ("ayatanaindicatorkeyboardservice" PUBLIC G_LOG_DOMAIN="${CMAKE_PROJECT_NAME}" LOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}" GETTEXT_PACKAGE="${CMAKE_PROJECT_NAME}")
 target_include_directories ("ayatanaindicatorkeyboardservice" PUBLIC ${SERVICE_DEPS_INCLUDE_DIRS})
+
+if (ENABLE_UBUNTU_ACCOUNTSSERVICE)
+    target_compile_definitions ("ayatanaindicatorkeyboardservice" PUBLIC ENABLE_UBUNTU_ACCOUNTSSERVICE)
+endif ()
 
 # ayatana-indicator-keyboard-service
 
 add_executable ("ayatana-indicator-keyboard-service" main.c)
-target_link_libraries ("ayatana-indicator-keyboard-service" "ayatanaindicatorkeyboardservice" "${SERVICE_DEPS_LIBRARIES} -ldl")
+target_link_libraries ("ayatana-indicator-keyboard-service" "ayatanaindicatorkeyboardservice" ${SERVICE_DEPS_LIBRARIES})
 install (TARGETS "ayatana-indicator-keyboard-service" RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")

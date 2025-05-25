@@ -17,7 +17,6 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <ayatana/common/utils.h>
-#include <dlfcn.h>
 #include "service.h"
 
 #define BUS_NAME "org.ayatana.indicator.keyboard"
@@ -26,13 +25,6 @@
 #define ICON_DEFAULT "input-keyboard"
 
 static guint m_nSignal = 0;
-static void *m_pLibHandle = NULL;
-static Keyboard* (*m_fnKeyboardNew)();
-static void (*m_fnKeyboardAddSource)(Keyboard *pKeyboard);
-static guint (*m_fnKeyboardGetNumLayouts)(Keyboard *pKeyboard);
-static guint (*m_fnKeyboardGetLayoutIndex)(Keyboard *pKeyboard);
-static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
-static void (*m_fnKeyboardSetLayout)(Keyboard *pKeyboard, gint nLayout);
 
 enum
 {
@@ -121,7 +113,7 @@ static GVariant* createHeaderState (IndicatorKeyboardService *self, int nProfile
     else
     {
         gchar *sLanguage;
-        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, -1, &sLanguage, NULL, NULL);
+        keyboard_GetLayout (self->pPrivate->pKeyboard, -1, &sLanguage, NULL, NULL);
 
         gchar *sIcon = g_strconcat ("ayatana-indicator-keyboard-", sLanguage, NULL);
         g_free (sLanguage);
@@ -152,13 +144,13 @@ static GMenuModel* createLayoutSection (IndicatorKeyboardService *self)
 {
     self->pPrivate->pLayoutSection = g_menu_new ();
 
-    guint nLayouts = m_fnKeyboardGetNumLayouts (self->pPrivate->pKeyboard);
+    guint nLayouts = keyboard_GetNumLayouts (self->pPrivate->pKeyboard);
 
     for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
     {
         gchar *sLanguage;
         gchar *sDescription;
-        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, nLayout, &sLanguage, &sDescription, NULL);
+        keyboard_GetLayout (self->pPrivate->pKeyboard, nLayout, &sLanguage, &sDescription, NULL);
         GMenuItem *pItem = g_menu_item_new (sDescription, NULL);
         g_free (sDescription);
         g_menu_item_set_action_and_target_value (pItem, "indicator.layout", g_variant_new_byte (nLayout));
@@ -269,7 +261,7 @@ static void onLayoutSelected (GSimpleAction *pAction, GVariant *pVariant, gpoint
 {
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
     const guint8 nLayout = g_variant_get_byte (pVariant);
-    m_fnKeyboardSetLayout (self->pPrivate->pKeyboard, nLayout);
+    keyboard_SetLayout (self->pPrivate->pKeyboard, nLayout);
 }
 
 static void onSettings (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
@@ -289,7 +281,7 @@ static void onSettings (GSimpleAction *pAction, GVariant *pVariant, gpointer pDa
 static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
 {
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
-    guint nLayout = m_fnKeyboardGetLayoutIndex (self->pPrivate->pKeyboard);
+    guint nLayout = keyboard_GetLayoutIndex (self->pPrivate->pKeyboard);
     gchar *sProgram = NULL;
     gchar *sArgs = NULL;
     gboolean bMate = ayatana_common_utils_is_mate ();
@@ -304,7 +296,7 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     {
 
         sProgram = "tecla";
-        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, -1, NULL, NULL, &sArgs);
+        keyboard_GetLayout (self->pPrivate->pKeyboard, -1, NULL, NULL, &sArgs);
     }
     else
     {
@@ -449,12 +441,6 @@ static void onDispose (GObject *pObject)
     g_clear_object (&self->pPrivate->pActionGroup);
     g_clear_object (&self->pPrivate->pConnection);
 
-    if (m_pLibHandle)
-    {
-        dlclose (m_pLibHandle);
-        m_pLibHandle = NULL;
-    }
-
     G_OBJECT_CLASS (indicator_keyboard_service_parent_class)->dispose (pObject);
 }
 
@@ -466,37 +452,8 @@ static void onSettingsChanged (GSettings *pSettings, gchar *sKey, gpointer pData
 
 static void indicator_keyboard_service_init (IndicatorKeyboardService *self)
 {
-    gchar *sLib = "libayatana-keyboard-x11.so.0";
-    gboolean bLomiri = ayatana_common_utils_is_lomiri ();
-
-    if (bLomiri)
-    {
-        sLib = "libayatana-keyboard-lomiri.so.0";
-    }
-
-    m_pLibHandle = dlopen (sLib, RTLD_NOW);
-
-    if (!m_pLibHandle)
-    {
-        g_error ("%s", dlerror());
-    }
-
-    m_fnKeyboardNew = dlsym (m_pLibHandle, "keyboard_new");
-
-    gchar *sError = dlerror ();
-
-    if (sError != NULL)
-    {
-        g_error ("%s", sError);
-    }
-
-    m_fnKeyboardAddSource = dlsym (m_pLibHandle, "keyboard_AddSource");
-    m_fnKeyboardGetNumLayouts = dlsym (m_pLibHandle, "keyboard_GetNumLayouts");
-    m_fnKeyboardGetLayoutIndex = dlsym (m_pLibHandle, "keyboard_GetLayoutIndex");
-    m_fnKeyboardGetLayout = dlsym (m_pLibHandle, "keyboard_GetLayout");
-    m_fnKeyboardSetLayout = dlsym (m_pLibHandle, "keyboard_SetLayout");
     self->pPrivate = indicator_keyboard_service_get_instance_private (self);
-    self->pPrivate->bLomiri = bLomiri;
+    self->pPrivate->bLomiri = ayatana_common_utils_is_lomiri ();
     self->pPrivate->pCancellable = g_cancellable_new ();
     self->pPrivate->pSettings = g_settings_new ("org.ayatana.indicator.keyboard");
     g_signal_connect (self->pPrivate->pSettings, "changed", G_CALLBACK (onSettingsChanged), self);
@@ -506,7 +463,7 @@ static void indicator_keyboard_service_init (IndicatorKeyboardService *self)
         self->pPrivate->pLomiriSettings = g_settings_new ("com.lomiri.Shell");
     }
 
-    self->pPrivate->pKeyboard = m_fnKeyboardNew ();
+    self->pPrivate->pKeyboard = keyboard_new ();
     g_signal_connect (self->pPrivate->pKeyboard, KEYBOARD_LAYOUT_CHANGED, G_CALLBACK (onLayoutChanged), self);
     g_signal_connect (self->pPrivate->pKeyboard, KEYBOARD_CONFIG_CHANGED, G_CALLBACK (onConfigChanged), self);
 
@@ -621,5 +578,5 @@ IndicatorKeyboardService *indicator_keyboard_service_new ()
 
 void indicator_keyboard_service_AddKeyboardSource (IndicatorKeyboardService *self)
 {
-    m_fnKeyboardAddSource(self->pPrivate->pKeyboard);
+    keyboard_AddSource (self->pPrivate->pKeyboard);
 }
