@@ -17,9 +17,36 @@
 #include <act/act.h>
 #include <xkbcommon/xkbregistry.h>
 #include <glib-object.h>
+#include <libudev.h>
 #include "languages.h"
 #include "keyboard.h"
 #include "system-layouts.h"
+
+gchar *LOMIRI_TO_ISO[][2] =
+{
+    {"ar", "ara"},
+    {"bn", "bd"},
+    {"bn-probhat", "bd+probhat"},
+    {"bs", "ba"},
+    {"cs", "cz"},
+    {"da", "dk"},
+    {"el", "gr"},
+    {"en", "us"},
+    {"endv", "us+dvorak"},
+    {"eo", "epo"},
+    {"fa", "ir"},
+    {"fr-ch", "ch+fr"},
+    {"gd", "gb+gla"},
+    {"he", "il"},
+    {"ja", "jp"},
+    {"ko", "kr"},
+    {"nb", "no"},
+    {"sl", "si"},
+    {"sr", "rs"},
+    {"sv", "se"},
+    {"uk", "ua"},
+    {NULL, NULL}
+};
 
 enum
 {
@@ -35,8 +62,16 @@ struct _KeyboardPrivate
     GHashTable *lLayouts;
     guint nLayout;
     GSList *lLayoutRec;
+    GSList *lLayoutRecOSK;
     GSList *lUsers;
     GSettings *pSettings;
+    struct udev *pUdev;
+    struct udev_monitor *pMonitor;
+    GIOChannel *pChannel;
+    gboolean bHardwareKeyboard;
+    gboolean bSoftwareKeyboard;
+    GSettings *pLomiriSettings;
+    GSettings *pMaliitSettings;
 };
 
 typedef KeyboardPrivate priv_t;
@@ -169,9 +204,20 @@ void keyboard_AddSource(Keyboard *pKeyboard)
     return;
 }
 
-guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
+guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bOSK)
 {
-    return g_slist_length (pKeyboard->pPrivate->lLayoutRec);
+    guint nLayouts = 0;
+
+    if (bOSK)
+    {
+        nLayouts = g_slist_length (pKeyboard->pPrivate->lLayoutRecOSK);
+    }
+    else
+    {
+        nLayouts = g_slist_length (pKeyboard->pPrivate->lLayoutRec);
+    }
+
+    return nLayouts;
 }
 
 guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
@@ -179,14 +225,25 @@ guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
     return pKeyboard->pPrivate->nLayout;
 }
 
-void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId)
+void keyboard_GetLayout(Keyboard *pKeyboard, gboolean bOSK, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId)
 {
     if (nLayout == -1)
     {
         nLayout = pKeyboard->pPrivate->nLayout;
     }
 
-    gchar *sLayout = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRec, nLayout);
+    GSList *lLayoutRec = NULL;
+
+    if (bOSK)
+    {
+        lLayoutRec = pKeyboard->pPrivate->lLayoutRecOSK;
+    }
+    else
+    {
+        lLayoutRec = pKeyboard->pPrivate->lLayoutRec;
+    }
+
+    gchar *sLayout = g_slist_nth_data (lLayoutRec, nLayout);
     const Layout *pLayout;
     g_hash_table_lookup_extended(pKeyboard->pPrivate->lLayouts, sLayout, NULL, (gpointer*)&pLayout);
 
@@ -206,7 +263,7 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
     }
 }
 
-void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
+void keyboard_SetLayoutHardware(Keyboard *pKeyboard, gint nLayout)
 {
     if (isGreeter() == FALSE)
     {
@@ -298,11 +355,62 @@ void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
     }
 }
 
+void keyboard_SetLayoutSoftware(Keyboard *pKeyboard, gint nLayout)
+{
+    if (isGreeter() == FALSE)
+    {
+        gchar *sId = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRecOSK, nLayout);
+        guint nId = 0;
+        gchar *sLayout = NULL;
+
+        while (LOMIRI_TO_ISO[nId][0] != NULL)
+        {
+            gboolean bEqual = g_str_equal (LOMIRI_TO_ISO[nId][1], sId);
+
+            if (bEqual)
+            {
+                sLayout = LOMIRI_TO_ISO[nId][0];
+
+                break;
+            }
+
+            nId++;
+        }
+
+        if (!sLayout)
+        {
+            sLayout = sId;
+        }
+
+        g_settings_set_string (pKeyboard->pPrivate->pMaliitSettings, "active-language", sLayout);
+    }
+    else
+    {
+        // TODO
+    }
+}
+
+void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout, gboolean bOSK)
+{
+    if (bOSK)
+    {
+        keyboard_SetLayoutSoftware(pKeyboard, nLayout);
+    }
+    else
+    {
+        keyboard_SetLayoutHardware(pKeyboard, nLayout);
+    }
+}
+
 static void onDispose(GObject *pObject)
 {
     Keyboard *self = G_KEYBOARD(pObject);
     g_signal_handlers_disconnect_by_data (self->pPrivate->pSettings, self);
     g_clear_object (&self->pPrivate->pSettings);
+    g_signal_handlers_disconnect_by_data (self->pPrivate->pLomiriSettings, self);
+    g_clear_object (&self->pPrivate->pLomiriSettings);
+    g_signal_handlers_disconnect_by_data (self->pPrivate->pMaliitSettings, self);
+    g_clear_object (&self->pPrivate->pMaliitSettings);
 
     if (self->pPrivate->lLayouts)
     {
@@ -314,9 +422,29 @@ static void onDispose(GObject *pObject)
         g_slist_free_full(self->pPrivate->lLayoutRec, g_free);
     }
 
+    if (self->pPrivate->lLayoutRecOSK)
+    {
+        g_slist_free_full (self->pPrivate->lLayoutRecOSK, g_free);
+    }
+
     if (self->pPrivate->lUsers)
     {
         g_slist_free(self->pPrivate->lUsers);
+    }
+
+    if (self->pPrivate->pChannel)
+    {
+        g_io_channel_unref (self->pPrivate->pChannel);
+    }
+
+    if (self->pPrivate->pMonitor)
+    {
+        udev_monitor_unref (self->pPrivate->pMonitor);
+    }
+
+    if (self->pPrivate->pUdev)
+    {
+        udev_unref (self->pPrivate->pUdev);
     }
 
     G_OBJECT_CLASS(keyboard_parent_class)->dispose(pObject);
@@ -376,10 +504,150 @@ static void onSourcesChanged (GSettings *pSettings, const gchar *sKey, gpointer 
     }
 }
 
+static void onSoftwareKeyboardEnabled (GSettings *pSettings, const gchar *sKey, gpointer pData)
+{
+    Keyboard *self = G_KEYBOARD (pData);
+    self->pPrivate->bSoftwareKeyboard = g_settings_get_boolean (pSettings, "always-show-osk");
+    g_signal_emit (self, m_lSignals[CONFIG_CHANGED], 0);
+    g_signal_emit (self, m_lSignals[LAYOUT_CHANGED], 0);
+}
+
+static void onSoftwareLayoutChanged (GSettings *pSettings, const gchar *sKey, gpointer pData)
+{
+    Keyboard *pKeyboard = G_KEYBOARD (pData);
+    g_signal_emit (pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
+}
+
+static void onSoftwareLayoutsChanged (GSettings *pSettings, const gchar *sKey, gpointer pData)
+{
+    Keyboard *pKeyboard = G_KEYBOARD (pData);
+    gboolean bsignal = FALSE;
+
+    if (pKeyboard->pPrivate->lLayoutRecOSK)
+    {
+        g_slist_free_full (g_steal_pointer (&pKeyboard->pPrivate->lLayoutRecOSK), g_free);
+        bsignal = TRUE;
+    }
+
+    GStrv lLayouts = g_settings_get_strv (pSettings, "enabled-languages");
+    guint nLayouts = g_strv_length (lLayouts);
+
+    if (lLayouts)
+    {
+        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+        {
+            guint nId = 0;
+            gchar *sLayout = NULL;
+
+            while (LOMIRI_TO_ISO[nId][0] != NULL)
+            {
+                gboolean bEqual = g_str_equal (LOMIRI_TO_ISO[nId][0], lLayouts[nLayout]);
+
+                if (bEqual)
+                {
+                    sLayout = g_strdup (LOMIRI_TO_ISO[nId][1]);
+
+                    break;
+                }
+
+                nId++;
+            }
+
+            if (!sLayout)
+            {
+                sLayout = g_strdup (lLayouts[nLayout]);
+            }
+
+            pKeyboard->pPrivate->lLayoutRecOSK = g_slist_append (pKeyboard->pPrivate->lLayoutRecOSK, sLayout);
+        }
+
+        g_strfreev (lLayouts);
+    }
+
+    if (bsignal)
+    {
+        g_signal_emit (pKeyboard, m_lSignals[CONFIG_CHANGED], 0);
+        g_signal_emit (pKeyboard, m_lSignals[LAYOUT_CHANGED], 0);
+    }
+}
+
+static bool udevDeviceIsHardwareKeyboard (struct udev_device *pDevice)
+{
+    const gchar *sValue = udev_device_get_property_value (pDevice, "ID_INPUT_KEYBOARD");
+    gint nCompared = g_strcmp0 (sValue, "1");
+
+    return nCompared == 0;
+}
+
+static gboolean udevHasHardwareKeyboard (struct udev *pUdev)
+{
+    struct udev_enumerate *pEnumerate = udev_enumerate_new (pUdev);
+    udev_enumerate_add_match_subsystem (pEnumerate, "input");
+    udev_enumerate_scan_devices (pEnumerate);
+    struct udev_list_entry *lEntries = udev_enumerate_get_list_entry (pEnumerate);
+    struct udev_list_entry *pEntry;
+    gboolean bFound = FALSE;
+
+    udev_list_entry_foreach (pEntry, lEntries)
+    {
+        const gchar *sPath = udev_list_entry_get_name (pEntry);
+        struct udev_device *pDevice = udev_device_new_from_syspath (pUdev, sPath);
+        gboolean bKeyboard = udevDeviceIsHardwareKeyboard (pDevice);
+
+        if (bKeyboard)
+        {
+            bFound = TRUE;
+            udev_device_unref (pDevice);
+
+            break;
+        }
+
+        udev_device_unref (pDevice);
+    }
+
+    udev_enumerate_unref (pEnumerate);
+
+    return bFound;
+}
+
+static gboolean onUdevEvent (GIOChannel *pChannel, GIOCondition nCondition, gpointer pData)
+{
+    Keyboard *self = G_KEYBOARD (pData);
+    struct udev_device *pDevice = udev_monitor_receive_device (self->pPrivate->pMonitor);
+
+    if (pDevice)
+    {
+        gboolean bKeyboard = udevDeviceIsHardwareKeyboard (pDevice);
+
+        if (bKeyboard)
+        {
+            struct udev *pUdev = udev_device_get_udev (pDevice);
+            self->pPrivate->bHardwareKeyboard = udevHasHardwareKeyboard (pUdev);
+            g_signal_emit (self, m_lSignals[CONFIG_CHANGED], 0);
+            g_signal_emit (self, m_lSignals[LAYOUT_CHANGED], 0);
+        }
+
+        udev_device_unref (pDevice);
+    }
+
+    return TRUE;
+}
+
+gboolean keyboard_hasHardwareKeyboard (Keyboard *self)
+{
+    return self->pPrivate->bHardwareKeyboard;
+}
+
+gboolean keyboard_hasSoftwareKeyboard (Keyboard *self)
+{
+    return self->pPrivate->bSoftwareKeyboard;
+}
+
 static void keyboard_init(Keyboard *self)
 {
     self->pPrivate = keyboard_get_instance_private(self);
     self->pPrivate->lLayoutRec = NULL;
+    self->pPrivate->lLayoutRecOSK = NULL;
     self->pPrivate->lLayouts = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeLayout);
 
     // Read all available layouts
@@ -426,6 +694,25 @@ static void keyboard_init(Keyboard *self)
     }
 
     rxkb_context_unref(pContext);
+
+    // Lomiri-specific layouts
+    const gchar *LAYOUTS[][3] =
+    {
+        {"emoji", "emoji", "Emoji"},
+        {"Bn", "bn-avro", "Bangla (Avro)"},
+        {"Zn", "chewing", "Chinese (Chewing)"},
+        {"Zn", "pinyin", "Chinese (Pinyin)"}
+    };
+
+    for (guint nLayout = 0; nLayout < 3; nLayout++)
+    {
+        Layout *pLayout = g_slice_new0 (Layout);
+        pLayout->sId = g_strdup (LAYOUTS[nLayout][1]);
+        pLayout->sLanguage = g_strdup (LAYOUTS[nLayout][0]);
+        pLayout->sDescription = g_strdup (LAYOUTS[nLayout][2]);
+        g_hash_table_replace (self->pPrivate->lLayouts, pLayout->sId, pLayout);
+    }
+    //~Lomiri-specific layouts
 
     if (isGreeter() == FALSE)
     {
@@ -497,4 +784,53 @@ static void keyboard_init(Keyboard *self)
             g_signal_connect_object(pManager, "notify::is-loaded", G_CALLBACK(onManagerLoaded), self, G_CONNECT_SWAPPED);
         }
     }
+
+    // Watch for a hardware keyboard
+    self->pPrivate->pUdev = udev_new ();
+    self->pPrivate->pMonitor = udev_monitor_new_from_netlink (self->pPrivate->pUdev, "udev");
+    udev_monitor_filter_add_match_subsystem_devtype (self->pPrivate->pMonitor, "input", NULL);
+    udev_monitor_enable_receiving (self->pPrivate->pMonitor);
+    gint nFd = udev_monitor_get_fd (self->pPrivate->pMonitor);
+    self->pPrivate->bHardwareKeyboard = udevHasHardwareKeyboard (self->pPrivate->pUdev);
+    self->pPrivate->pChannel = g_io_channel_unix_new (nFd);
+    g_io_add_watch (self->pPrivate->pChannel, G_IO_IN, onUdevEvent, self);
+    //~Watch for a hardware keyboard
+
+    // Watch software keyboard
+    GSettingsSchemaSource *pSource = g_settings_schema_source_get_default ();
+    GSettingsSchema *pSchema = NULL;
+
+    if (pSource)
+    {
+        pSchema = g_settings_schema_source_lookup (pSource, "com.lomiri.Shell", FALSE);
+
+        if (pSchema)
+        {
+            g_settings_schema_unref (pSchema);
+            self->pPrivate->pLomiriSettings = g_settings_new ("com.lomiri.Shell");
+            g_signal_connect (self->pPrivate->pLomiriSettings, "changed::always-show-osk", G_CALLBACK (onSoftwareKeyboardEnabled), self);
+            onSoftwareKeyboardEnabled (self->pPrivate->pLomiriSettings, "always-show-osk", self);
+        }
+        else
+        {
+            g_error ("Panic: no com.lomiri.Shell schema found");
+        }
+
+        pSchema = g_settings_schema_source_lookup (pSource, "com.lomiri.keyboard.maliit", FALSE);
+
+        if (pSchema)
+        {
+            g_settings_schema_unref (pSchema);
+            self->pPrivate->pMaliitSettings = g_settings_new ("com.lomiri.keyboard.maliit");
+            g_signal_connect (self->pPrivate->pMaliitSettings, "changed::enabled-languages", G_CALLBACK (onSoftwareLayoutsChanged), self);
+            onSoftwareLayoutsChanged (self->pPrivate->pMaliitSettings, "enabled-languages", self);
+            g_signal_connect (self->pPrivate->pMaliitSettings, "changed::active-language", G_CALLBACK (onSoftwareLayoutChanged), self);
+            onSoftwareLayoutChanged (self->pPrivate->pMaliitSettings, "active-language", self);
+        }
+        else
+        {
+            g_error ("Panic: no com.lomiri.keyboard.maliit schema found");
+        }
+    }
+    //~Watch software keyboard
 }
