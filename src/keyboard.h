@@ -46,10 +46,12 @@ struct _KeyboardClass
 GType keyboard_get_type(void);
 Keyboard* keyboard_new();
 void keyboard_AddSource(Keyboard *pKeyboard);
-guint keyboard_GetNumLayouts(Keyboard *pKeyboard);
+guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bOSK);
 guint keyboard_GetLayoutIndex (Keyboard *pKeyboard);
-void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
-void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout);
+void keyboard_GetLayout(Keyboard *pKeyboard, gboolean bOSK, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
+void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout, gboolean bOSK);
+gboolean keyboard_hasHardwareKeyboard(Keyboard *pKeyboard);
+gboolean keyboard_hasSoftwareKeyboard(Keyboard *pKeyboard);
 
 G_END_DECLS
 
