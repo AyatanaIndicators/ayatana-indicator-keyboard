@@ -369,7 +369,7 @@ void keyboard_AddSource(Keyboard *pKeyboard)
     }
 }
 
-guint keyboard_GetNumLayouts(Keyboard *pKeyboard)
+guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bSoftware)
 {
     guint nLayouts = 0;
 
@@ -390,7 +390,7 @@ guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
     return pKeyboard->pPrivate->nLayout;
 }
 
-void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId)
+void keyboard_GetLayout(Keyboard *pKeyboard, gboolean bSoftware, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId)
 {
     if (nLayout == -1)
     {
@@ -442,7 +442,7 @@ void keyboard_GetLayout(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gc
     }
 }
 
-void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout)
+void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout, gboolean bSoftware)
 {
     if (isGreeter() == FALSE)
     {
@@ -570,6 +570,16 @@ static void onUserChanged (GDBusConnection *pConnection, const gchar *sSender, c
     {
         g_signal_connect_object (pManager, "notify::is-loaded", G_CALLBACK (onManagerLoaded), self, G_CONNECT_SWAPPED);
     }
+}
+
+gboolean keyboard_hasHardwareKeyboard (Keyboard *self)
+{
+    return TRUE;
+}
+
+gboolean keyboard_hasSoftwareKeyboard (Keyboard *self)
+{
+    return FALSE;
 }
 
 static void keyboard_init(Keyboard *self)

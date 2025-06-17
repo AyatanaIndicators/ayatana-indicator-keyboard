@@ -29,10 +29,12 @@ static guint m_nSignal = 0;
 static void *m_pLibHandle = NULL;
 static Keyboard* (*m_fnKeyboardNew)();
 static void (*m_fnKeyboardAddSource)(Keyboard *pKeyboard);
-static guint (*m_fnKeyboardGetNumLayouts)(Keyboard *pKeyboard);
+static guint (*m_fnKeyboardGetNumLayouts)(Keyboard *pKeyboard, gboolean bSoftware);
 static guint (*m_fnKeyboardGetLayoutIndex)(Keyboard *pKeyboard);
-static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
-static void (*m_fnKeyboardSetLayout)(Keyboard *pKeyboard, gint nLayout);
+static void (*m_fnKeyboardGetLayout)(Keyboard *pKeyboard, gboolean bSoftware, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
+static void (*m_fnKeyboardSetLayout)(Keyboard *pKeyboard, gint nLayout, gboolean bSoftware);
+static gboolean (*m_fnKeyboardHasHardwareKeyboard)(Keyboard *pKeyboard);
+static gboolean (*m_fnKeyboardHasSoftwareKeyboard)(Keyboard *pKeyboard);
 
 enum
 {
@@ -76,7 +78,8 @@ struct _IndicatorKeyboardServicePrivate
     GSimpleActionGroup *pActionGroup;
     GSimpleAction *pSettingsAction;
     GSimpleAction *pDisplayAction;
-    GSimpleAction *pLayoutAction;
+    GSimpleAction *pHardwareLayoutAction;
+    GSimpleAction *pSoftwareLayoutAction;
     GMenu *pLayoutSection;
     Keyboard *pKeyboard;
     GSettings *pSettings;
@@ -120,8 +123,9 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
     }
     else
     {
+        gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
         gchar *sLanguage;
-        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, -1, &sLanguage, NULL, NULL);
+        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, self->pPrivate->bLomiri && !bHardwareKeyboard, -1, &sLanguage, NULL, NULL);
 
         gchar *sIcon = g_strconcat("ayatana-indicator-keyboard-", sLanguage, NULL);
         g_free(sLanguage);
@@ -148,47 +152,94 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
     return g_variant_builder_end(&cBuilder);
 }
 
-static GMenuModel* createLayoutSection(IndicatorKeyboardService *self)
+static GMenuModel* createLayoutSection(IndicatorKeyboardService *self, gboolean bSoftware)
 {
     self->pPrivate->pLayoutSection = g_menu_new();
+    gboolean bCreate = TRUE;
 
-    guint nLayouts = m_fnKeyboardGetNumLayouts(self->pPrivate->pKeyboard);
-
-    for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+    if (self->pPrivate->bLomiri)
     {
-        gchar *sLanguage;
-        gchar *sDescription;
-        m_fnKeyboardGetLayout(self->pPrivate->pKeyboard, nLayout, &sLanguage, &sDescription, NULL);
-        GMenuItem *pItem = g_menu_item_new(sDescription, NULL);
-        g_free(sDescription);
-        g_menu_item_set_action_and_target_value(pItem, "indicator.layout", g_variant_new_byte(nLayout));
-        g_menu_item_set_attribute_value(pItem, "x-ayatana-layout", g_variant_new_byte(nLayout));
-        gchar *sIcon = g_strconcat("ayatana-indicator-keyboard-", sLanguage, NULL);
-        g_free(sLanguage);
-        GIcon *pIcon = g_themed_icon_new_with_default_fallbacks(sIcon);
-        g_free(sIcon);
-        GVariant *pSerialized = g_icon_serialize(pIcon);
-
-        if (pSerialized != NULL)
+        if (!bSoftware)
         {
-            g_menu_item_set_attribute_value(pItem, G_MENU_ATTRIBUTE_ICON, pSerialized);
-            g_variant_unref(pSerialized);
+            gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
+
+            if (bHardwareKeyboard)
+            {
+                g_menu_append (self->pPrivate->pLayoutSection, _("External Keyboard"), NULL);
+            }
+            else
+            {
+                bCreate = FALSE;
+            }
         }
+        else if (bSoftware)
+        {
+            gboolean bSoftwareKeyboard = m_fnKeyboardHasSoftwareKeyboard (self->pPrivate->pKeyboard);
+            g_menu_append (self->pPrivate->pLayoutSection, _("On-Screen Keyboard"), NULL);
 
-        g_object_unref(pIcon);
+            if (!bSoftwareKeyboard)
+            {
+                bCreate = FALSE;
+            }
+        }
+    }
+    else if (bSoftware)
+    {
+        bCreate = FALSE;
+    }
 
-        g_menu_append_item(self->pPrivate->pLayoutSection, pItem);
-        g_object_unref(pItem);
+    if (bCreate)
+    {
+        guint nLayouts = m_fnKeyboardGetNumLayouts (self->pPrivate->pKeyboard, bSoftware);
+
+        for (guint nLayout = 0; nLayout < nLayouts; nLayout++)
+        {
+            gchar *sLanguage;
+            gchar *sDescription;
+            m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, bSoftware, nLayout, &sLanguage, &sDescription, NULL);
+            GMenuItem *pItem = g_menu_item_new (sDescription, NULL);
+            g_free (sDescription);
+            gchar *sAction = NULL;
+
+            if (bSoftware)
+            {
+                sAction = "indicator.softwarelayout";
+            }
+            else
+            {
+                sAction = "indicator.hardwarelayout";
+            }
+
+            g_menu_item_set_action_and_target_value (pItem, sAction, g_variant_new_byte (nLayout));
+            g_menu_item_set_attribute_value (pItem, "x-ayatana-layout", g_variant_new_byte (nLayout));
+            gchar *sIcon = g_strconcat ("ayatana-indicator-keyboard-", sLanguage, NULL);
+            g_free (sLanguage);
+            GIcon *pIcon = g_themed_icon_new_with_default_fallbacks (sIcon);
+            g_free (sIcon);
+            GVariant *pSerialized = g_icon_serialize (pIcon);
+
+            if (pSerialized != NULL)
+            {
+                g_menu_item_set_attribute_value (pItem, G_MENU_ATTRIBUTE_ICON, pSerialized);
+                g_variant_unref (pSerialized);
+            }
+
+            g_object_unref (pIcon);
+
+            g_menu_append_item(self->pPrivate->pLayoutSection, pItem);
+            g_object_unref(pItem);
+        }
     }
 
     return G_MENU_MODEL(self->pPrivate->pLayoutSection);
 }
 
-static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
+static GMenuModel* createSettingsSection(IndicatorKeyboardService *self, gboolean bSoftware)
 {
     GMenu * pMenu = g_menu_new();
+    gboolean bUbuntuTouch = ayatana_common_utils_is_ubuntutouch ();
 
-    if (self->pPrivate->bLomiri && (!ayatana_common_utils_is_ubuntutouch()))
+    if (self->pPrivate->bLomiri && bSoftware && !bUbuntuTouch)
     {
         GMenuItem *pItem = g_menu_item_new (_("Always show OSK"), "indicator.osk(true)");
         g_menu_item_set_attribute (pItem, "x-ayatana-type", "s", "org.ayatana.indicator.switch");
@@ -196,7 +247,33 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
         g_object_unref (pItem);
     }
 
-    g_menu_append(pMenu, _("Keyboard Settings…"), "indicator.settings");
+    gchar *sAction = NULL;
+
+    if (self->pPrivate->bLomiri)
+    {
+        if (!bSoftware)
+        {
+            gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
+
+            if (bHardwareKeyboard)
+            {
+                sAction = "indicator.hardwaresettings";
+            }
+        }
+        else if (bSoftware)
+        {
+            sAction = "indicator.softwaresettings";
+        }
+    }
+    else if (!bSoftware)
+    {
+        sAction = "indicator.hardwaresettings";
+    }
+
+    if (sAction)
+    {
+        g_menu_append(pMenu, _("Keyboard Settings…"), sAction);
+    }
 
     return G_MENU_MODEL(pMenu);
 }
@@ -204,7 +281,22 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self)
 static GMenuModel* createDisplaySection (IndicatorKeyboardService *self)
 {
     GMenu * pMenu = g_menu_new ();
-    g_menu_append (pMenu, _("Show Current Layout"), "indicator.display");
+    gboolean bDisplay = TRUE;
+
+    if (self->pPrivate->bLomiri)
+    {
+        gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
+
+        if (!bHardwareKeyboard)
+        {
+            bDisplay = FALSE;
+        }
+    }
+
+    if (bDisplay)
+    {
+        g_menu_append (pMenu, _("Show Current Layout"), "indicator.display");
+    }
 
     return G_MENU_MODEL (pMenu);
 }
@@ -236,9 +328,12 @@ static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
 
     if (nSections & SECTION_LAYOUTS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 0, createLayoutSection(self));
-        rebuildSection(pInfoPhone->pSubmenu, 0, createLayoutSection(self));
-        rebuildSection(pInfoGreeter->pSubmenu, 0, createLayoutSection(self));
+        rebuildSection(pInfoDesktop->pSubmenu, 0, createLayoutSection(self, FALSE));
+        rebuildSection(pInfoDesktop->pSubmenu, 3, createLayoutSection(self, TRUE));
+        rebuildSection(pInfoPhone->pSubmenu, 0, createLayoutSection(self, FALSE));
+        rebuildSection(pInfoPhone->pSubmenu, 2, createLayoutSection(self, TRUE));
+        rebuildSection(pInfoGreeter->pSubmenu, 0, createLayoutSection(self, FALSE));
+        rebuildSection(pInfoGreeter->pSubmenu, 1, createLayoutSection(self, TRUE));
     }
 
     if (nSections & SECTION_DISPLAY)
@@ -248,89 +343,44 @@ static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
 
     if (nSections & SECTION_SETTINGS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 2, createSettingsSection(self));
-        rebuildSection(pInfoPhone->pSubmenu, 2, createSettingsSection(self));
+        rebuildSection(pInfoDesktop->pSubmenu, 2, createSettingsSection(self, FALSE));
+        rebuildSection(pInfoDesktop->pSubmenu, 4, createSettingsSection(self, TRUE));
+        rebuildSection(pInfoPhone->pSubmenu, 1, createSettingsSection(self, FALSE));
+        rebuildSection(pInfoPhone->pSubmenu, 3, createSettingsSection(self, TRUE));
     }
 }
 
-static void createMenu(IndicatorKeyboardService *self, int nProfile)
+static void onLayoutChanged (Keyboard *pKeyboard, gpointer pData)
 {
-    GMenu *pMenu;
-    GMenu *pSubmenu;
-    GMenuItem *pItem;
-    GMenuModel *lSections[16];
-    guint nSection = 0;
-
-    g_assert(0 <= nProfile && nProfile < N_PROFILES);
-    g_assert(self->pPrivate->lMenus[nProfile].pMenu == NULL);
-
-    // Build the sections
-    if (nProfile == PROFILE_PHONE)
-    {
-        lSections[nSection++] = createLayoutSection(self);
-        lSections[nSection++] = createSettingsSection(self);
-    }
-    else if (nProfile == PROFILE_DESKTOP)
-    {
-        lSections[nSection++] = createLayoutSection(self);
-        lSections[nSection++] = createDisplaySection(self);
-        lSections[nSection++] = createSettingsSection(self);
-    }
-    else if (nProfile == PROFILE_GREETER)
-    {
-        lSections[nSection++] = createLayoutSection(self);
-    }
-
-    // Add sections to the submenu
-    pSubmenu = g_menu_new();
-
-    for (guint i = 0; i < nSection; ++i)
-    {
-        g_menu_append_section(pSubmenu, NULL, lSections[i]);
-        g_object_unref(lSections[i]);
-    }
-
-    // Add submenu to the header
-    gchar *sName = g_strdup_printf ("indicator._header-%s", m_lMenuNames[nProfile]);
-    pItem = g_menu_item_new(NULL, sName);
-    g_free (sName);
-    g_menu_item_set_attribute(pItem, "x-ayatana-type", "s", "org.ayatana.indicator.root");
-    g_menu_item_set_submenu(pItem, G_MENU_MODEL(pSubmenu));
-    g_object_unref(pSubmenu);
-
-    // Add header to the menu
-    pMenu = g_menu_new();
-    g_menu_append_item(pMenu, pItem);
-    g_object_unref(pItem);
-
-    self->pPrivate->lMenus[nProfile].pMenu = pMenu;
-    self->pPrivate->lMenus[nProfile].pSubmenu = pSubmenu;
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+    rebuildNow (self, SECTION_HEADER);
 }
 
-static void onLayoutChanged(Keyboard *pKeyboard, gpointer pData)
+static void onConfigChanged (Keyboard *pKeyboard, gpointer pData)
 {
-    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pData);
-    rebuildNow(self, SECTION_HEADER);
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+    rebuildNow (self, SECTION_LAYOUTS);
 }
 
-static void onConfigChanged(Keyboard *pKeyboard, gpointer pData)
+static void onHardwareLayoutSelected (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
 {
-    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pData);
-    rebuildNow(self, SECTION_LAYOUTS);
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+    const guint8 nLayout = g_variant_get_byte (pVariant);
+    m_fnKeyboardSetLayout (self->pPrivate->pKeyboard, nLayout, FALSE);
 }
 
-static void onLayoutSelected(GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
+static void onSoftwareLayoutSelected (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
 {
-    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pData);
-    const guint8 nLayout = g_variant_get_byte(pVariant);
-    m_fnKeyboardSetLayout(self->pPrivate->pKeyboard, nLayout);
+    IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
+    const guint8 nLayout = g_variant_get_byte (pVariant);
+    m_fnKeyboardSetLayout (self->pPrivate->pKeyboard, nLayout, TRUE);
 }
 
-static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
+static void onHardwareSettings (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
 {
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE (pData);
 
-    if (ayatana_common_utils_is_mate())
+    if (ayatana_common_utils_is_mate ())
     {
         ayatana_common_utils_execute_command("mate-keyboard-properties");
     }
@@ -338,6 +388,11 @@ static void onSettings(GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     {
         ayatana_common_utils_open_url("settings:///system/hw-keyboard-layouts");
     }
+}
+
+static void onSoftwareSettings (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
+{
+    ayatana_common_utils_open_url ("settings:///system/sw-keyboard-layouts");
 }
 
 static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
@@ -358,7 +413,7 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     {
 
         sProgram = "tecla";
-        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, -1, NULL, NULL, &sArgs);
+        m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, FALSE, -1, NULL, NULL, &sArgs);
     }
     else
     {
@@ -382,46 +437,6 @@ static GVariant* valueToVariant (const GValue *pValue, const GVariantType *pType
     GVariant *pVariant = g_value_dup_variant (pValue);
 
     return pVariant;
-}
-
-static void initActions(IndicatorKeyboardService *self)
-{
-    GSimpleAction *pAction;
-    self->pPrivate->pActionGroup = g_simple_action_group_new();
-
-    for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
-    {
-        gchar *sName = g_strdup_printf ("_header-%s", m_lMenuNames[nProfile]);
-        pAction = g_simple_action_new_stateful(sName, NULL, createHeaderState(self, nProfile));
-        g_free (sName);
-        g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
-        self->pPrivate->lMenus[nProfile].pHeaderAction = pAction;
-    }
-
-    pAction = g_simple_action_new("layout", G_VARIANT_TYPE_BYTE);
-    g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
-    self->pPrivate->pLayoutAction = pAction;
-    g_signal_connect(pAction, "activate", G_CALLBACK(onLayoutSelected), self);
-
-    if (self->pPrivate->bLomiri && (!ayatana_common_utils_is_ubuntutouch()))
-    {
-        gboolean bOsk = g_settings_get_boolean (self->pPrivate->pLomiriSettings, "always-show-osk");
-        GVariant *pOsk = g_variant_new_boolean (bOsk);
-        pAction = g_simple_action_new_stateful ("osk", G_VARIANT_TYPE_BOOLEAN, pOsk);
-        g_settings_bind_with_mapping (self->pPrivate->pLomiriSettings, "always-show-osk", pAction, "state", G_SETTINGS_BIND_DEFAULT, valueFromVariant, valueToVariant, NULL, NULL);
-        g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
-        g_object_unref (G_OBJECT (pAction));
-    }
-
-    pAction = g_simple_action_new("settings", NULL);
-    g_action_map_add_action(G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION(pAction));
-    self->pPrivate->pSettingsAction = pAction;
-    g_signal_connect(pAction, "activate", G_CALLBACK(onSettings), self);
-
-    pAction = g_simple_action_new ("display", NULL);
-    g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
-    self->pPrivate->pDisplayAction = pAction;
-    g_signal_connect (pAction, "activate", G_CALLBACK (onDisplay), self);
 }
 
 static void onBusAcquired(GDBusConnection *pConnection, const gchar *sName, gpointer pData)
@@ -533,7 +548,8 @@ static void onDispose(GObject *pObject)
 
     g_clear_object (&self->pPrivate->pSettingsAction);
     g_clear_object (&self->pPrivate->pDisplayAction);
-    g_clear_object (&self->pPrivate->pLayoutAction);
+    g_clear_object (&self->pPrivate->pHardwareLayoutAction);
+    g_clear_object (&self->pPrivate->pSoftwareLayoutAction);
 
     for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
     {
@@ -589,6 +605,8 @@ static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
     m_fnKeyboardGetLayoutIndex = dlsym(m_pLibHandle, "keyboard_GetLayoutIndex");
     m_fnKeyboardGetLayout = dlsym(m_pLibHandle, "keyboard_GetLayout");
     m_fnKeyboardSetLayout = dlsym(m_pLibHandle, "keyboard_SetLayout");
+    m_fnKeyboardHasHardwareKeyboard = dlsym(m_pLibHandle, "keyboard_hasHardwareKeyboard");
+    m_fnKeyboardHasSoftwareKeyboard = dlsym(m_pLibHandle, "keyboard_hasSoftwareKeyboard");
     self->pPrivate = indicator_keyboard_service_get_instance_private(self);
     self->pPrivate->bLomiri = bLomiri;
     self->pPrivate->pCancellable = g_cancellable_new();
@@ -603,11 +621,117 @@ static void indicator_keyboard_service_init(IndicatorKeyboardService *self)
     self->pPrivate->pKeyboard = m_fnKeyboardNew();
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_LAYOUT_CHANGED, G_CALLBACK(onLayoutChanged), self);
     g_signal_connect(self->pPrivate->pKeyboard, KEYBOARD_CONFIG_CHANGED, G_CALLBACK(onConfigChanged), self);
-    initActions(self);
+
+    GSimpleAction *pAction;
+    self->pPrivate->pActionGroup = g_simple_action_group_new ();
 
     for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
     {
-        createMenu(self, nProfile);
+        gchar *sName = g_strdup_printf ("_header-%s", m_lMenuNames[nProfile]);
+        pAction = g_simple_action_new_stateful (sName, NULL, createHeaderState (self, nProfile));
+        g_free (sName);
+        g_action_map_add_action (G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION (pAction));
+        self->pPrivate->lMenus[nProfile].pHeaderAction = pAction;
+    }
+
+    pAction = g_simple_action_new ("hardwarelayout", G_VARIANT_TYPE_BYTE);
+    g_action_map_add_action (G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION (pAction));
+    self->pPrivate->pHardwareLayoutAction = pAction;
+    g_signal_connect (pAction, "activate", G_CALLBACK (onHardwareLayoutSelected), self);
+
+    if (self->pPrivate->bLomiri)
+    {
+        pAction = g_simple_action_new ("softwarelayout", G_VARIANT_TYPE_BYTE);
+        g_action_map_add_action (G_ACTION_MAP(self->pPrivate->pActionGroup), G_ACTION (pAction));
+        self->pPrivate->pSoftwareLayoutAction = pAction;
+        g_signal_connect (pAction, "activate", G_CALLBACK (onSoftwareLayoutSelected), self);
+    }
+
+    if (self->pPrivate->bLomiri && (!ayatana_common_utils_is_ubuntutouch ()))
+    {
+        gboolean bOsk = g_settings_get_boolean (self->pPrivate->pLomiriSettings, "always-show-osk");
+        GVariant *pOsk = g_variant_new_boolean (bOsk);
+        pAction = g_simple_action_new_stateful ("osk", G_VARIANT_TYPE_BOOLEAN, pOsk);
+        g_settings_bind_with_mapping (self->pPrivate->pLomiriSettings, "always-show-osk", pAction, "state", G_SETTINGS_BIND_DEFAULT, valueFromVariant, valueToVariant, NULL, NULL);
+        g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+        g_object_unref (G_OBJECT (pAction));
+    }
+
+    pAction = g_simple_action_new ("hardwaresettings", NULL);
+    g_action_map_add_action(G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+    self->pPrivate->pSettingsAction = pAction;
+    g_signal_connect (pAction, "activate", G_CALLBACK (onHardwareSettings), self);
+
+    if (self->pPrivate->bLomiri)
+    {
+        pAction = g_simple_action_new ("softwaresettings", NULL);
+        g_action_map_add_action(G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+        self->pPrivate->pSettingsAction = pAction;
+        g_signal_connect (pAction, "activate", G_CALLBACK (onSoftwareSettings), self);
+    }
+
+    pAction = g_simple_action_new ("display", NULL);
+    g_action_map_add_action (G_ACTION_MAP (self->pPrivate->pActionGroup), G_ACTION (pAction));
+    self->pPrivate->pDisplayAction = pAction;
+    g_signal_connect (pAction, "activate", G_CALLBACK (onDisplay), self);
+
+    for (int nProfile = 0; nProfile < N_PROFILES; ++nProfile)
+    {
+        GMenu *pMenu;
+        GMenu *pSubmenu;
+        GMenuItem *pItem;
+        GMenuModel *lSections[16];
+        guint nSection = 0;
+
+        g_assert(0 <= nProfile && nProfile < N_PROFILES);
+        g_assert(self->pPrivate->lMenus[nProfile].pMenu == NULL);
+
+        // Build the sections
+        if (nProfile == PROFILE_PHONE)
+        {
+            lSections[nSection++] = createLayoutSection (self, FALSE);
+            lSections[nSection++] = createSettingsSection (self, FALSE);
+            lSections[nSection++] = createLayoutSection (self, TRUE);
+            lSections[nSection++] = createSettingsSection (self, TRUE);
+        }
+        else if (nProfile == PROFILE_DESKTOP)
+        {
+            lSections[nSection++] = createLayoutSection (self, FALSE);
+            lSections[nSection++] = createDisplaySection (self);
+            lSections[nSection++] = createSettingsSection (self, FALSE);
+            lSections[nSection++] = createLayoutSection (self, TRUE);
+            lSections[nSection++] = createSettingsSection (self, TRUE);
+        }
+        else if (nProfile == PROFILE_GREETER)
+        {
+            lSections[nSection++] = createLayoutSection (self, FALSE);
+            lSections[nSection++] = createLayoutSection (self, TRUE);
+        }
+
+        // Add sections to the submenu
+        pSubmenu = g_menu_new ();
+
+        for (guint i = 0; i < nSection; ++i)
+        {
+            g_menu_append_section (pSubmenu, NULL, lSections[i]);
+            g_object_unref (lSections[i]);
+        }
+
+        // Add submenu to the header
+        gchar *sName = g_strdup_printf ("indicator._header-%s", m_lMenuNames[nProfile]);
+        pItem = g_menu_item_new (NULL, sName);
+        g_free (sName);
+        g_menu_item_set_attribute (pItem, "x-ayatana-type", "s", "org.ayatana.indicator.root");
+        g_menu_item_set_submenu (pItem, G_MENU_MODEL(pSubmenu));
+        g_object_unref (pSubmenu);
+
+        // Add header to the menu
+        pMenu = g_menu_new ();
+        g_menu_append_item (pMenu, pItem);
+        g_object_unref (pItem);
+
+        self->pPrivate->lMenus[nProfile].pMenu = pMenu;
+        self->pPrivate->lMenus[nProfile].pSubmenu = pSubmenu;
     }
 
     self->pPrivate->bMenusBuilt = TRUE;
