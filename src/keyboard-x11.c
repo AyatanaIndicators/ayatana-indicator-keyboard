@@ -42,6 +42,7 @@ struct _KeyboardPrivate
     GHashTable *lLayouts;
     Display *pDisplay;
     guint nLayout;
+    guint nLayoutOSK;
     gint nXkbEventType;
     XklConfigRec *pConfigRec;
     GSList *lLayoutRec;
@@ -385,7 +386,7 @@ guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bOSK)
     return nLayouts;
 }
 
-guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
+guint keyboard_GetLayoutIndex (Keyboard *pKeyboard, gboolean bOSK)
 {
     return pKeyboard->pPrivate->nLayout;
 }

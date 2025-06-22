@@ -61,6 +61,7 @@ struct _KeyboardPrivate
 {
     GHashTable *lLayouts;
     guint nLayout;
+    guint nLayoutOSK;
     GSList *lLayoutRec;
     GSList *lLayoutRecOSK;
     GSList *lUsers;
@@ -220,26 +221,37 @@ guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bOSK)
     return nLayouts;
 }
 
-guint keyboard_GetLayoutIndex (Keyboard *pKeyboard)
+guint keyboard_GetLayoutIndex (Keyboard *pKeyboard, gboolean bOSK)
 {
-    return pKeyboard->pPrivate->nLayout;
+    if (bOSK)
+    {
+        return pKeyboard->pPrivate->nLayoutOSK;
+    }
+    else
+    {
+        return pKeyboard->pPrivate->nLayout;
+    }
 }
 
 void keyboard_GetLayout(Keyboard *pKeyboard, gboolean bOSK, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId)
 {
-    if (nLayout == -1)
-    {
-        nLayout = pKeyboard->pPrivate->nLayout;
-    }
 
     GSList *lLayoutRec = NULL;
 
     if (bOSK)
     {
+        if (nLayout == -1)
+        {
+            nLayout = pKeyboard->pPrivate->nLayoutOSK;
+        }
         lLayoutRec = pKeyboard->pPrivate->lLayoutRecOSK;
     }
     else
     {
+        if (nLayout == -1)
+        {
+            nLayout = pKeyboard->pPrivate->nLayout;
+        }
         lLayoutRec = pKeyboard->pPrivate->lLayoutRec;
     }
 
@@ -694,6 +706,8 @@ static void keyboard_init(Keyboard *self)
     }
 
     rxkb_context_unref(pContext);
+
+    self->pPrivate->nLayoutOSK = 0;
 
     // Lomiri-specific layouts
     const gchar *LAYOUTS[][3] =

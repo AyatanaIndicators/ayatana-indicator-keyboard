@@ -47,7 +47,7 @@ GType keyboard_get_type(void);
 Keyboard* keyboard_new();
 void keyboard_AddSource(Keyboard *pKeyboard);
 guint keyboard_GetNumLayouts(Keyboard *pKeyboard, gboolean bOSK);
-guint keyboard_GetLayoutIndex (Keyboard *pKeyboard);
+guint keyboard_GetLayoutIndex (Keyboard *pKeyboard, gboolean bOSK);
 void keyboard_GetLayout(Keyboard *pKeyboard, gboolean bOSK, gint nLayout, gchar **pLanguage, gchar **pDescription, gchar **pId);
 void keyboard_SetLayout(Keyboard *pKeyboard, gint nLayout, gboolean bOSK);
 gboolean keyboard_hasHardwareKeyboard(Keyboard *pKeyboard);
