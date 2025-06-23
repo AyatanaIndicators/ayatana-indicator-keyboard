@@ -11,6 +11,7 @@ Build-Depends: cmake,
                libxkbcommon-dev (>=1.0.3),
                libxkbregistry-dev (>=1.0.3),
                libaccountsservice-dev,
+               libudev-dev,
 # for packaging
                debhelper (>= 10),
                dh-systemd | hello,
