@@ -373,7 +373,7 @@ void keyboard_SetLayoutSoftware(Keyboard *pKeyboard, gint nLayout)
     {
         gchar *sId = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRecOSK, nLayout);
         guint nId = 0;
-        gchar *sLayout = NULL;
+        gchar *sLayoutOSK = NULL;
 
         while (LOMIRI_TO_ISO[nId][0] != NULL)
         {
@@ -381,7 +381,7 @@ void keyboard_SetLayoutSoftware(Keyboard *pKeyboard, gint nLayout)
 
             if (bEqual)
             {
-                sLayout = LOMIRI_TO_ISO[nId][0];
+                sLayoutOSK = LOMIRI_TO_ISO[nId][0];
 
                 break;
             }
@@ -389,12 +389,53 @@ void keyboard_SetLayoutSoftware(Keyboard *pKeyboard, gint nLayout)
             nId++;
         }
 
-        if (!sLayout)
+        if (!sLayoutOSK)
         {
-            sLayout = sId;
+            sLayoutOSK = sId;
         }
 
-        g_settings_set_string (pKeyboard->pPrivate->pMaliitSettings, "active-language", sLayout);
+        guint nEnabledLayoutsOSK = g_slist_length (pKeyboard->pPrivate->lLayoutRecOSK);
+
+        GVariantBuilder cLayoutsOSKBuilder;
+        g_variant_builder_init (&cLayoutsOSKBuilder, G_VARIANT_TYPE ("as"));
+        if (sLayoutOSK)
+        {
+            g_variant_builder_add (&cLayoutsOSKBuilder, "s", sLayoutOSK);
+        }
+
+        for (guint nLayout = 0; nLayout < nEnabledLayoutsOSK; nLayout++)
+        {
+            gchar *sIdIso = g_slist_nth_data (pKeyboard->pPrivate->lLayoutRecOSK, nLayout);
+
+            nId = 0;
+            gchar *sIdLomiri = NULL;
+            while (LOMIRI_TO_ISO[nId][0] != NULL)
+            {
+                gboolean bEqual = g_str_equal (LOMIRI_TO_ISO[nId][1], sIdIso);
+
+                if (bEqual)
+                {
+                    sIdLomiri = LOMIRI_TO_ISO[nId][0];
+
+                    break;
+                }
+
+                nId++;
+            }
+            if (!sIdLomiri)
+            {
+                sIdLomiri = sIdIso;
+            }
+
+            if (strcmp(sIdLomiri, sLayoutOSK))
+            {
+                g_variant_builder_add (&cLayoutsOSKBuilder, "s", sIdLomiri);
+            }
+        }
+        GVariant *pEnabledLayoutsOSK = g_variant_builder_end (&cLayoutsOSKBuilder);
+
+        g_settings_set_string (pKeyboard->pPrivate->pMaliitSettings, "active-language", sLayoutOSK);
+        g_settings_set_value (pKeyboard->pPrivate->pMaliitSettings, "enabled-languages", pEnabledLayoutsOSK);
     }
     else
     {
