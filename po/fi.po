@@ -8,34 +8,36 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2021-02-20 01:50+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: Finnish <https://hosted.weblate.org/projects/ayatana-"
-"indicators/keyboard-applet/fi/>\n"
+"PO-Revision-Date: 2025-07-18 20:08+0000\n"
+"Last-Translator: Ricky Tigg <ricky.tigg@gmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Näytä kielikuvake työpöytätilassa."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Jos käytössä, ilmaisin näyttää nykyisen asettelun kuvakkeen. Muussa "
+"tapauksessa se näyttää yleisen näppäimistökuvakkeen."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Näytä kielikuvake puhelintilassa."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Näytä kielikuvake tervehdysikkunassa."
 
 #: src/service.c:95
 msgid "Keyboard"
@@ -43,7 +45,7 @@ msgstr "Näppäimistö"
 
 #: src/service.c:96
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Näppäimistöasettelun vaihtaja ja asetukset"
 
 #: src/service.c:133
 msgid "Current keyboard layout"
@@ -51,14 +53,12 @@ msgstr "Nykyinen näppäimistöasettelu"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "Näytä aina OSK"
 
 #: src/service.c:199
-#, fuzzy
 msgid "Keyboard Settings…"
 msgstr "Näppäimistön asetukset…"
 
 #: src/service.c:207
-#, fuzzy
 msgid "Show Current Layout"
-msgstr "Nykyinen näppäimistöasettelu"
+msgstr "Näytä nykyinen asettelu"
