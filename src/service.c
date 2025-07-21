@@ -43,8 +43,7 @@ enum
 {
     SECTION_HEADER = (1 << 0),
     SECTION_LAYOUTS = (1 << 1),
-    SECTION_DISPLAY = (1 << 2),
-    SECTION_SETTINGS = (1 << 3)
+    SECTION_SETTINGS = (1 << 2)
 };
 
 enum
@@ -239,6 +238,7 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self, gboolea
 {
     GMenu * pMenu = g_menu_new();
     gboolean bUbuntuTouch = ayatana_common_utils_is_ubuntutouch ();
+    gboolean bDisplay = FALSE;
 
     if (self->pPrivate->bLomiri && bOSK && !bUbuntuTouch)
     {
@@ -259,6 +259,7 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self, gboolea
             if (bHardwareKeyboard)
             {
                 sAction = "indicator.settings";
+                bDisplay = TRUE;
             }
         }
         else if (bOSK)
@@ -274,37 +275,19 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self, gboolea
     else if (!bOSK)
     {
         sAction = "indicator.settings";
-    }
-
-    if (sAction)
-    {
-        g_menu_append(pMenu, _("Keyboard Settings…"), sAction);
-    }
-
-    return G_MENU_MODEL(pMenu);
-}
-
-static GMenuModel* createDisplaySection (IndicatorKeyboardService *self)
-{
-    GMenu * pMenu = g_menu_new ();
-    gboolean bDisplay = TRUE;
-
-    if (self->pPrivate->bLomiri)
-    {
-        gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
-
-        if (!bHardwareKeyboard)
-        {
-            bDisplay = FALSE;
-        }
+        bDisplay = TRUE;
     }
 
     if (bDisplay)
     {
         g_menu_append (pMenu, _("Show Current Layout"), "indicator.display");
     }
+    if (sAction)
+    {
+        g_menu_append(pMenu, _("Keyboard Settings…"), sAction);
+    }
 
-    return G_MENU_MODEL (pMenu);
+    return G_MENU_MODEL(pMenu);
 }
 
 static void rebuildSection(GMenu *pMenu, int nPos, GMenuModel *pModel)
@@ -335,22 +318,17 @@ static void rebuildNow(IndicatorKeyboardService *self, guint nSections)
     if (nSections & SECTION_LAYOUTS)
     {
         rebuildSection(pInfoDesktop->pSubmenu, 0, createLayoutSection(self, HWKBD));
-        rebuildSection(pInfoDesktop->pSubmenu, 3, createLayoutSection(self, OSK));
+        rebuildSection(pInfoDesktop->pSubmenu, 2, createLayoutSection(self, OSK));
         rebuildSection(pInfoPhone->pSubmenu, 0, createLayoutSection(self, HWKBD));
         rebuildSection(pInfoPhone->pSubmenu, 2, createLayoutSection(self, OSK));
         rebuildSection(pInfoGreeter->pSubmenu, 0, createLayoutSection(self, HWKBD));
         rebuildSection(pInfoGreeter->pSubmenu, 1, createLayoutSection(self, OSK));
     }
 
-    if (nSections & SECTION_DISPLAY)
-    {
-        rebuildSection (pInfoDesktop->pSubmenu, 1, createDisplaySection (self));
-    }
-
     if (nSections & SECTION_SETTINGS)
     {
-        rebuildSection(pInfoDesktop->pSubmenu, 2, createSettingsSection(self, HWKBD));
-        rebuildSection(pInfoDesktop->pSubmenu, 4, createSettingsSection(self, OSK));
+        rebuildSection(pInfoDesktop->pSubmenu, 1, createSettingsSection(self, HWKBD));
+        rebuildSection(pInfoDesktop->pSubmenu, 3, createSettingsSection(self, OSK));
         rebuildSection(pInfoPhone->pSubmenu, 1, createSettingsSection(self, HWKBD));
         rebuildSection(pInfoPhone->pSubmenu, 3, createSettingsSection(self, OSK));
     }
@@ -378,7 +356,6 @@ static void createMenu(IndicatorKeyboardService *self, int nProfile)
     else if (nProfile == PROFILE_DESKTOP)
     {
         lSections[nSection++] = createLayoutSection(self, HWKBD);
-        lSections[nSection++] = createDisplaySection(self);
         lSections[nSection++] = createSettingsSection(self, HWKBD);
         lSections[nSection++] = createLayoutSection(self, OSK);
         lSections[nSection++] = createSettingsSection(self, OSK);
