@@ -157,6 +157,7 @@ static GVariant* createHeaderState(IndicatorKeyboardService *self, int nProfile)
 static GMenuModel* createLayoutSection(IndicatorKeyboardService *self, gboolean bOSK)
 {
     self->pPrivate->pLayoutSection = g_menu_new();
+    gboolean bUbuntuTouch = ayatana_common_utils_is_ubuntutouch ();
     gboolean bCreate = FALSE;
 
     if (self->pPrivate->bLomiri)
@@ -171,7 +172,7 @@ static GMenuModel* createLayoutSection(IndicatorKeyboardService *self, gboolean 
                 bCreate = TRUE;
             }
         }
-        else if (bOSK)
+        else if (bOSK && !bUbuntuTouch)
         {
             gboolean bSoftwareKeyboard = m_fnKeyboardHasSoftwareKeyboard (self->pPrivate->pKeyboard);
 
@@ -262,7 +263,7 @@ static GMenuModel* createSettingsSection(IndicatorKeyboardService *self, gboolea
                 bDisplay = TRUE;
             }
         }
-        else if (bOSK)
+        else if (bOSK && !bUbuntuTouch)
         {
             gboolean bSoftwareKeyboard = m_fnKeyboardHasSoftwareKeyboard (self->pPrivate->pKeyboard);
 
