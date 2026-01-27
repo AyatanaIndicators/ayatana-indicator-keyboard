@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2025-11-15 03:51+0000\n"
+"PO-Revision-Date: 2026-01-28 00:35+0000\n"
 "Last-Translator: BoneNI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://hosted.weblate.org/projects/ayatana-indicators/"
 "keyboard-applet/lo/>\n"
@@ -17,25 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "ສະແດງໄອຄອນພາສາໃນໂໝດເດັສທັອບ."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"ຫາກເປີດໃຊ້ງານ, ຕົວບົ່ງຊີ້ຈະສະແດງໄອຄອນຜັງແປ້ນພິມປັດຈຸບັນ. ຖ້າບໍ່ດັ່ງນັ້ນ, ມັນຈະສະແດງໄອຄອນແປ້ນພິມທົ່ວໄປ."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "ສະແດງໄອຄອນພາສາໃນໂໝດໂທລະສັບ."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "ສະແດງໄອຄອນພາສາໃນໜ້າຈໍເຂົ້າສູ່ລະບົບ."
 
 #: src/service.c:95
 msgid "Keyboard"
@@ -43,20 +44,20 @@ msgstr "ແປ້ນພິມ"
 
 #: src/service.c:96
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "ຕົວສະລັບຜັງແປ້ນພິມ ແລະ ການຕັ້ງຄ່າ"
 
 #: src/service.c:133
 msgid "Current keyboard layout"
-msgstr ""
+msgstr "ຜັງແປ້ນພິມປັດຈຸບັນ"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "ສະແດງແປ້ນພິມເທິງໜ້າຈໍຕະຫຼອດເວລາ"
 
 #: src/service.c:199
 msgid "Keyboard Settings…"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າແປ້ນພິມ…"
 
 #: src/service.c:207
 msgid "Show Current Layout"
-msgstr ""
+msgstr "ສະແດງຜັງແປ້ນພິມປັດຈຸບັນ"
