@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2026-02-17 12:09+0000\n"
+"PO-Revision-Date: 2026-03-10 14:09+0000\n"
 "Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/ayatana-"
 "indicators/keyboard-applet/id/>\n"
@@ -17,48 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Tampilkan ikon bahasa dalam mode desktop."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Jika diaktifkan, indikator menampilkan ikon tata letak saat ini. Jika tidak, "
+"indikator menampilkan ikon papan ketik umum."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Tampilkan ikon bahasa dalam mode ponsel."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Tampilkan ikon bahasa pada layar penyambutan."
 
 #: src/service.c:95
 msgid "Keyboard"
-msgstr "Keyboard"
+msgstr "Papan Ketik"
 
 #: src/service.c:96
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Pengalih tata letak papan ketik dan pengaturan"
 
 #: src/service.c:133
 msgid "Current keyboard layout"
-msgstr "Tata letak papan tik saat ini"
+msgstr "Tata letak papan ketik saat ini"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "Selalu tampilkan OSK"
 
 #: src/service.c:199
-#, fuzzy
 msgid "Keyboard Settings…"
-msgstr "Pengaturan papan tik..."
+msgstr "Pengaturan Papan Ketik…"
 
 #: src/service.c:207
-#, fuzzy
 msgid "Show Current Layout"
-msgstr "Tata letak papan tik saat ini"
+msgstr "Tampilkan Tata Letak Saat Ini"
