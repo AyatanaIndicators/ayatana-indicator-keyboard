@@ -8,32 +8,36 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2021-01-22 23:28+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-03-19 11:09+0000\n"
+"Last-Translator: Andi Chandler <andi@gowling.com>\n"
+"Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
+"ayatana-indicators/keyboard-applet/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Show the language icon in desktop mode."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"If enabled, the indicator shows the current layout icon. Otherwise, it "
+"displays a generic keyboard icon."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Show the language icon in phone mode."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Show the language icon in the greeter."
 
 #: src/service.c:95
 msgid "Keyboard"
@@ -41,7 +45,7 @@ msgstr "Keyboard"
 
 #: src/service.c:96
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Keyboard layout switcher and settings"
 
 #: src/service.c:133
 msgid "Current keyboard layout"
@@ -49,14 +53,12 @@ msgstr "Current keyboard layout"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "Always show OSK"
 
 #: src/service.c:199
-#, fuzzy
 msgid "Keyboard Settings…"
-msgstr "Keyboard Settings..."
+msgstr "Keyboard Settings…"
 
 #: src/service.c:207
-#, fuzzy
 msgid "Show Current Layout"
-msgstr "Current keyboard layout"
+msgstr "Show Current Layout"
