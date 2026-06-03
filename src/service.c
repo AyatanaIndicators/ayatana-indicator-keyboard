@@ -289,12 +289,13 @@ static GMenuModel* createDisplaySection (IndicatorKeyboardService *self)
 
     if (self->pPrivate->bLomiri)
     {
-        gboolean bHardwareKeyboard = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
-
-        if (!bHardwareKeyboard)
-        {
-            bDisplay = FALSE;
-        }
+#if 0
+        /* Re-enable when a native Qt/Lomiri keyboard layout viewer is available.
+         * tecla (GTK4) does not work well on Lomiri */
+        bDisplay = m_fnKeyboardHasHardwareKeyboard (self->pPrivate->pKeyboard);
+#else
+        bDisplay = FALSE;
+#endif
     }
 
     if (bDisplay)
@@ -474,9 +475,12 @@ static void onDisplay (GSimpleAction *pAction, GVariant *pVariant, gpointer pDat
     }
     else if (bLomiri)
     {
-
+#if 0
+        /* Re-enable when a native Qt/Lomiri keyboard layout viewer is available.
+         * tecla (GTK4) does not work on Mir 1.x. */
         sProgram = "tecla";
         m_fnKeyboardGetLayout (self->pPrivate->pKeyboard, HWKBD, -1, NULL, NULL, &sArgs);
+#endif
     }
     else
     {
