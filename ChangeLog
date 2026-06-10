@@ -1,6 +1,152 @@
+2026-06-10 Mike Gabriel
+
+        * Release 26.6.0 (HEAD -> main, tag: 26.6.0)
+        * Merge branch
+          'personal/mariogrip/fix-sections-on-hw-keyboard-change'
+          (1493005b)
+        * Merge branch 'jbicha-personal/jbicha/remove-separator' (00b8d050)
+
+2025-07-21 Mike Gabriel
+
+        * src/service.c: Move 'Show Current Layout' menuitem closer HWK
+          settings (i.e. drop one menu separator). (03b9e52c)
+
+2026-06-03 Marius Gripsgard
+
+        * Rebuild display and settings sections on hardware keyboard state
+          change (89a3d230)
+
+2026-06-01 Andrei Stepanov
+
+        * Translated using Weblate (Russian) (aa4f9c31)
+
+2026-03-18 Andi Chandler
+
+        * Translated using Weblate (English (United Kingdom)) (e8368f33)
+
+2026-03-09 Arif Budiman
+
+        * Translated using Weblate (Indonesian) (abdaa3d1)
+
+2026-02-16 Arif Budiman
+
+        * Translated using Weblate (Indonesian) (cbe72157)
+
+2026-01-27 BoneNI
+
+        * Translated using Weblate (Lao) (5cb873f8)
+
+2025-12-27 Moo
+
+        * Translated using Weblate (Lithuanian) (bcc1b704)
+
+2025-11-14 BoneNI
+
+        * Translated using Weblate (Lao) (860d8ba4)
+
+2025-10-05 Quentin PAGÈS
+
+        * Translated using Weblate (Occitan) (ac343372)
+
+2025-10-04 Oğuz Ersen
+
+        * Translated using Weblate (Turkish) (b4baa891)
+
+2025-09-14 Milo Ivir
+
+        * Translated using Weblate (Croatian) (0591dd1b)
+
+2025-09-01 Mike Gabriel
+
+        * Merge branch 'sunweaver-pr/separate-sections-for-osk' (f716e013)
+
+2025-06-23 Mike Gabriel
+
+        * src/keyboard-lomiri.c: For OSK layouts, update 'enabled-languages'
+          gsettings and move the newly selected 'active-language' to
+          the top. (5134db80)
+
+2025-06-22 Mike Gabriel
+
+        * src/keyboard*: Remember nLayout and nLayoutOSK separately.
+          (a8a29623)
+
+2025-06-17 Robert Tari
+
+        * Separate layout and settings for hardware and on-screen keyboards
+          (9c26d598)
+          Fixes:
+          https://salsa.debian.org/ubports-team/lomiri-system-settings/-/issues/20
+
+2025-06-21 Robert Tari
+
+        * .build.yml: Add libudev dependency (3f5664fd)
+
+2025-06-17 Robert Tari
+
+        * debian/control: Add libudev-dev build dependency (70a39e7e)
+
+2025-08-25 Ida Brenna
+
+        * Translated using Weblate (Norwegian Bokmål) (5059bcbe)
+
+2025-07-18 Ricky Tigg
+
+        * Translated using Weblate (Finnish) (53824d33)
+
+2025-07-12 Alioc
+
+        * Translated using Weblate (Chinese (Simplified Han script))
+          (16f45c49)
+
+2025-06-29 DP
+
+        * Translated using Weblate (Spanish) (76cb2a59)
+
+2025-05-15 Mike Gabriel
+
+        * Merge branch 'tari01-pr/add-tecla' (d23f0fca)
+
+2025-05-14 Robert Tari
+
+        * debian/control: Add tecla as a runtime dependency (0228ae33)
+        * Fix showing current layout on Lomiri (17394a6f)
+
+2025-05-07 Priit Jõerüüt
+
+        * Translated using Weblate (Estonian) (70a3ea2b)
+
+2025-05-06 Yaron Shahrabani
+
+        * Translated using Weblate (Hebrew) (6cc2d169)
+
+2025-04-27 தமிழ்நேரம்
+
+        * Translated using Weblate (Tamil) (61d5994e)
+
+2025-04-11 bittin1ddc447d824349b2
+
+        * Translated using Weblate (Swedish) (5ac88c2b)
+
+2025-04-06 ssantos
+
+        * Translated using Weblate (Portuguese) (e580ea73)
+
+2025-03-15 Jozef Mlich
+
+        * Translated using Weblate (Czech) (161ce656)
+
+2025-03-11 Steve
+
+        * Translated using Weblate (French) (6d57b283)
+
+2025-03-03 Serhii Horichenko
+
+        * Translated using Weblate (Ukrainian) (f2f18606)
+
 2025-03-02 Mike Gabriel
 
-        * release 24.7.2 (HEAD -> main, tag: 24.7.2)
+        * release 24.7.2 (9c06dbd8) (tag: 24.7.2)
         * debian/control: Bump versioned B-D: on libayatana-common to (>=
           0.9.11). (371fbc2b)
 

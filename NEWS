@@ -1,3 +1,18 @@
+Overview of changes in ayatana-indicator-keyboard 26.6.0
+
+  - src/service.c: Move 'Show Current Layout' menuitem closer HWK
+    settings (i.e. drop one menu separator).
+  - Rebuild display and settings sections on hardware keyboard state
+    change.
+  - src/keyboard-lomiri.c: For OSK layouts, update 'enabled-languages'
+    gsettings and move the newly selected 'active-language' to the
+    top.
+  - src/keyboard*: Remember nLayout and nLayoutOSK separately.
+  - Separate layout and settings for hardware and on-screen keyboards.
+  - Fix showing current layout on Lomiri (using tecla).
+  - Translation updates (thanks to all contributors on
+    hosted.weblate.org).
+
 Overview of changes in ayatana-indicator-keyboard 24.7.2
 
   - CMakeLists.txt: Require libayatana-common (>= 0.9.11).
