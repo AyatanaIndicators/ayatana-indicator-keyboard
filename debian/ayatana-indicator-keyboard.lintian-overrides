@@ -1,0 +1,6 @@
+# ayatana-indicator-keyboard comes with dynamically loaded libraries
+ayatana-indicator-keyboard: link-to-shared-library-in-wrong-package usr/lib/*/libayatana-keyboard-lomiri.so.0.0.0 [usr/lib/x86_64-linux-gnu/libayatana-keyboard-lomiri.so]
+ayatana-indicator-keyboard: link-to-shared-library-in-wrong-package usr/lib/*/libayatana-keyboard-x11.so.0.0.0 [usr/lib/x86_64-linux-gnu/libayatana-keyboard-x11.so]
+ayatana-indicator-keyboard: package-name-doesnt-match-sonames libayatana-keyboard-lomiri0 libayatana-keyboard-x11-0
+ayatana-indicator-keyboard: no-symbols-control-file usr/lib/*/libayatana-keyboard-lomiri.so.0.0.0
+ayatana-indicator-keyboard: no-symbols-control-file usr/lib/*/libayatana-keyboard-x11.so.0.0.0
