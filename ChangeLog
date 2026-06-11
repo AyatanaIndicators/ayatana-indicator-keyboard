@@ -1,6 +1,15 @@
+2026-06-11 Mike Gabriel
+
+        * Release 26.6.1 (HEAD -> main, tag: 26.6.1)
+        * src/service.c: Only rebuild layouts and settings section.
+          (dd73aa59)
+        * debian/: Add more files (forgotten to be checked-in) (7e15af2f)
+        * debian/: Update from official Debian package. (ba926ef5)
+        * po/: Update translation files. (8f6ba441)
+
 2026-06-10 Mike Gabriel
 
-        * Release 26.6.0 (HEAD -> main, tag: 26.6.0)
+        * Release 26.6.0 (60c9cb85) (tag: 26.6.0)
         * Merge branch
           'personal/mariogrip/fix-sections-on-hw-keyboard-change'
           (1493005b)

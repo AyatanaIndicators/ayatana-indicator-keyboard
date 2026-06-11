@@ -1,3 +1,8 @@
+Overview of changes in ayatana-indicator-keyboard 26.6.1
+
+  - src/service.c: Only rebuild layouts and settings section.
+    Regression fix for a flaw in 26.6.0.
+
 Overview of changes in ayatana-indicator-keyboard 26.6.0
 
   - src/service.c: Move 'Show Current Layout' menuitem closer HWK
