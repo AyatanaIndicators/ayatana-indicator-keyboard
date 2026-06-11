@@ -1,38 +1,38 @@
 Source: ayatana-indicator-keyboard
-Section: misc
-Priority: optional
+Standards-Version: 4.7.4
 Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
-Build-Depends: cmake,
-               cmake-extras (>= 0.10),
-               libglib2.0-dev (>= 2.36),
-               libx11-dev (>=1.7.0),
-               libxklavier-dev (>=5.4),
-               libayatana-common-dev (>= 0.9.11),
-               libxkbcommon-dev (>=1.0.3),
-               libxkbregistry-dev (>=1.0.3),
-               libaccountsservice-dev,
-               libudev-dev,
-# for packaging
-               debhelper (>= 10),
-               dh-systemd | hello,
-               dpkg-dev (>= 1.16.1.1),
-               intltool,
-# for systemd unit
-               systemd [linux-any],
-Standards-Version: 4.5.1
+Section: misc
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ cmake-extras,
+ intltool,
+ libaccountsservice-dev,
+ libayatana-common-dev,
+ libglib2.0-dev,
+ libudev-dev,
+ libx11-dev,
+ libxkbcommon-dev,
+ libxkbregistry-dev,
+ libxklavier-dev,
+ systemd-dev [linux-any],
+Vcs-Browser: https://salsa.debian.org/debian-ayatana-team/ayatana-indicator-keyboard
+Vcs-Git: https://salsa.debian.org/debian-ayatana-team/ayatana-indicator-keyboard.git
 Homepage: https://github.com/AyatanaIndicators/ayatana-indicator-keyboard
-Vcs-Git: https://github.com/AyatanaIndicators/ayatana-indicator-keyboard
-Vcs-Browser: https://github.com/AyatanaIndicators/ayatana-indicator-keyboard
 
 Package: ayatana-indicator-keyboard
 Architecture: any
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         ayatana-indicator-common,
-         matekbd-keyboard-display | gkbd-capplet | tecla,
-Description: Ayatana Indicator Keyboard Applet
- This package contains the keyboard indicator, which should show as an
- icon in the top panel of indicator aware destkop environments.
+Depends:
+ ayatana-indicator-common,
+ matekbd-keyboard-display | tecla,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Ayatana Indicator for managing keyboard layout and desktop language
+ This Ayatana Indicator for keyboard layout configuration shows as an
+ icon in the top panel of indicator aware destkop environments. It should
+ appear on the very left (or the very right for RTL desktop layouts) and
+ present itself to the user with a language letter symbol.
  .
- It can be used to switch key layouts or languages, and helps the user
- identifying which layouts are currently in use.
+ With the keyboard indicator, you can switch between keyboard layouts or
+ languages, and it helps you identifying which layouts are currently in
+ use.
