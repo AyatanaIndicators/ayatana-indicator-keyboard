@@ -399,7 +399,7 @@ static void onLayoutChanged(Keyboard *pKeyboard, gpointer pData)
 static void onConfigChanged(Keyboard *pKeyboard, gpointer pData)
 {
     IndicatorKeyboardService *self = INDICATOR_KEYBOARD_SERVICE(pData);
-    rebuildNow(self, SECTION_LAYOUTS | SECTION_DISPLAY | SECTION_SETTINGS);
+    rebuildNow(self, SECTION_LAYOUTS | SECTION_SETTINGS);
 }
 
 static void onLayoutSelected(GSimpleAction *pAction, GVariant *pVariant, gpointer pData)
