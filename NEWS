@@ -1,3 +1,8 @@
+Overview of changes in ayatana-indicator-keyboard 26.6.2
+
+  - Translation updates (thanks to all contributors on
+    hosted.weblate.org).
+
 Overview of changes in ayatana-indicator-keyboard 26.6.1
 
   - src/service.c: Only rebuild layouts and settings section.

@@ -1,6 +1,22 @@
+2026-06-13 Mike Gabriel
+
+        * Release 26.6.2 (HEAD -> main, tag: 26.6.2)
+
+2026-06-13 Grzegorz Szymaszek
+
+        * Translated using Weblate (Polish) (312ae5ec)
+
+2026-06-13 Lorenzo Torracchi
+
+        * Translated using Weblate (Italian) (078a3ef9)
+
+2026-06-11 Priit Jõerüüt
+
+        * Translated using Weblate (Estonian) (85f1f2c5)
+
 2026-06-11 Mike Gabriel
 
-        * Release 26.6.1 (HEAD -> main, tag: 26.6.1)
+        * Release 26.6.1 (d1a6f285) (tag: 26.6.1)
         * src/service.c: Only rebuild layouts and settings section.
           (dd73aa59)
         * debian/: Add more files (forgotten to be checked-in) (7e15af2f)
