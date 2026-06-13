@@ -364,7 +364,6 @@ Files: src/keyboard-lomiri.c
  src/system-layouts.h
 Copyright: 2021, Robert Tari <robert@tari.in>
   2021-2022, Robert Tari <robert@tari.in>
-  2021-2024, Robert Tari <robert@tari.in>
   2021-2025, Robert Tari <robert@tari.in>
   2024, Robert Tari <robert@tari.in>
 License: GPL-3
@@ -376,7 +375,7 @@ License: GPL-3
 
 Files: debian/*
 Copyright: 2021, Robert Tari <robert@tari.in>
-           2021-2025, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+           2021-2026, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 License: GPL-3
 
 License: GPL-3
