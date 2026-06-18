@@ -1,11 +1,10 @@
 [Indicator Service]
 Name=ayatana-indicator-keyboard
 ObjectPath=/org/ayatana/indicator/keyboard
-Position=-10
+Position=110
 
 [phone]
 ObjectPath=/org/ayatana/indicator/keyboard/phone
-Position=1000
 
 [desktop]
 ObjectPath=/org/ayatana/indicator/keyboard/desktop
