@@ -10,9 +10,6 @@
  - libxklavier (>=5.4)
  - intltool
  - systemd
- - gcovr (>= 2.4)
- - lcov (>= 1.9)
- - gtest (>= 1.6.0)
 
 ## For end-users and packagers
 
@@ -26,26 +23,3 @@ sudo make install
 ```
 
 **The install prefix defaults to `/usr`, change it with `-DCMAKE_INSTALL_PREFIX=/some/path`**
-
-## For testers - unit tests only
-
-```
-cd ayatana-indicator-keyboard-X.Y.Z
-mkdir build
-cd build
-cmake .. -DENABLE_TESTS=ON
-make
-make test
-make cppcheck
-```
-
-## For testers - both unit tests and code coverage
-
-```
-cd ayatana-indicator-keyboard-X.Y.Z
-mkdir build-coverage
-cd build-coverage
-cmake .. -DENABLE_COVERAGE=ON
-make
-make coverage-html
-```
