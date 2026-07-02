@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2026-06-13 18:05+0000\n"
-"Last-Translator: Grzegorz Szymaszek <gszymaszek@short.pl>\n"
+"PO-Revision-Date: 2026-07-03 09:01+0000\n"
+"Last-Translator: NooB9496 <noob9496@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/ayatana-"
 "indicators/keyboard-applet/pl/>\n"
 "Language: pl\n"
@@ -18,25 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.7.1.dev0\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr ""
+msgstr "Pokaż ikonę języka w trybie pulpitu."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
+"Jeśli ta opcja jest włączona, wskaźnik pokazuje ikonę bieżącego układu. W "
+"przeciwnym razie wyświetla ogólną ikonę klawiatury."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr ""
+msgstr "Pokaż ikonę języka w trybie telefonu."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
-msgstr ""
+msgstr "Pokaż ikonę języka w oknie powitalnym."
 
 #: src/service.c:95
 msgid "Keyboard"
@@ -44,20 +46,20 @@ msgstr "Klawiatura"
 
 #: src/service.c:96
 msgid "Keyboard layout switcher and settings"
-msgstr ""
+msgstr "Przełącznik i ustawienia układu klawiatury"
 
 #: src/service.c:133
 msgid "Current keyboard layout"
-msgstr ""
+msgstr "Aktualny układ klawiatury"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr ""
+msgstr "Zawsze pokazuj OSK"
 
 #: src/service.c:199
 msgid "Keyboard Settings…"
-msgstr ""
+msgstr "Ustawienia klawiatury…"
 
 #: src/service.c:207
 msgid "Show Current Layout"
-msgstr ""
+msgstr "Pokaż aktualny układ"
