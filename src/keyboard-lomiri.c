@@ -693,7 +693,7 @@ gboolean keyboard_hasHardwareKeyboard (Keyboard *self)
 
 gboolean keyboard_hasSoftwareKeyboard (Keyboard *self)
 {
-    return self->pPrivate->bSoftwareKeyboard;
+    return ((!self->pPrivate->bHardwareKeyboard) | self->pPrivate->bSoftwareKeyboard);
 }
 
 static void keyboard_init(Keyboard *self)
