@@ -1,29 +1,14 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-
-DEB_CMAKE_EXTRA_FLAGS = \
-	-DENABLE_TESTS=ON \
-	-DENABLE_COVERAGE=OFF \
-	$(NULL)
-
-ifeq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
-	DEB_CMAKE_EXTRA_FLAGS = "-DENABLE_UBUNTU_ACCOUNTSSERVICE=ON"
-endif
 
 %:
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- $(DEB_CMAKE_EXTRA_FLAGS)
-
-execute_before_dh_install:
-	find debian/ayatana-indicator-keyboard -name \*.la -delete
-	find debian/ayatana-indicator-keyboard -name \*.a -delete
+	dh_auto_configure -- \
+		-DENABLE_UBUNTU_ACCOUNTSSERVICE=$(if $(shell dpkg-vendor --derives-from Ubuntu && echo y),ON,OFF)
 
 override_dh_installchangelogs:
 	dh_installchangelogs NEWS
