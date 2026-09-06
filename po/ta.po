@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2026-08-21 17:51+0000\n"
+"PO-Revision-Date: 2026-09-07 16:51+0000\n"
 "Last-Translator: Alagirisamy Rengaraj <radhaalagirisamy@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/ayatana-indicators/"
 "keyboard-applet/ta/>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.dev0\n"
+"X-Generator: Weblate 2026.9.1.dev0\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
-msgstr "மேசைக்கணினி செயல்முறையில் மொழிச் சிறுபடம் காட்டு."
+msgstr "மேசைக்கணினி முறையில் மொழிச் சின்னம் காட்டு."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:2
 msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
-"செயலாக்கப்பட்டால், குறியீடு தற்போதைய தளஅமைப்பு சின்னம் காட்டும். இல்லையெனில், அது ஒரு பொதுவான "
-"விசைப்பலகை சின்னம் காட்டுகிறது."
+"இயக்கப்பட்டால், குறியீடு தற்போதைய தளஅமைப்பின் சின்னம் காட்டும். மாற்றாக, அது ஒரு பொதுவான "
+"விசைப்பலகை சின்னம் காட்டும்."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
 msgid "Show the language icon in phone mode."
-msgstr "தொலைபேசி செயல்முறையில் மொழிச்சின்னம் காட்டு."
+msgstr "தொலைபேசி முறையில் மொழிச்சின்னம் காட்டு."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:4
 msgid "Show the language icon in the greeter."
@@ -53,7 +53,7 @@ msgstr "தற்போதைய விசைப்பலகை தளஅமை�
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr "எப்போதும் திரைமேல் விசைப்பலகை-ஐக் காட்டு"
+msgstr "எப்போதும் திரை விசைப்பலகை-ஐக் காட்டு"
 
 #: src/service.c:199
 msgid "Keyboard Settings…"
