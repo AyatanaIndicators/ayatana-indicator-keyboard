@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-23 19:05+0100\n"
-"PO-Revision-Date: 2026-09-07 16:51+0000\n"
+"PO-Revision-Date: 2026-10-04 08:51+0000\n"
 "Last-Translator: Alagirisamy Rengaraj <radhaalagirisamy@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/ayatana-indicators/"
 "keyboard-applet/ta/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.9.1.dev0\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:1
 msgid "Show the language icon in desktop mode."
@@ -28,7 +28,7 @@ msgid ""
 "If enabled, the indicator shows the current layout icon. Otherwise, it "
 "displays a generic keyboard icon."
 msgstr ""
-"இயக்கப்பட்டால், குறியீடு தற்போதைய தளஅமைப்பின் சின்னம் காட்டும். மாற்றாக, அது ஒரு பொதுவான "
+"இயலச்செய்தால், குறியீடு தற்போதைய தளஅமைப்பின் சின்னம் காட்டும். மாற்றாக, அது ஒரு பொதுவான "
 "விசைப்பலகை சின்னம் காட்டும்."
 
 #: data/org.ayatana.indicator.keyboard.gschema.xml:3
@@ -49,11 +49,11 @@ msgstr "விசைப்பலகை தளஅமைப்பு நிலை�
 
 #: src/service.c:133
 msgid "Current keyboard layout"
-msgstr "தற்போதைய விசைப்பலகை தளஅமைப்பு"
+msgstr "நடப்பு விசைப்பலகை தளஅமைப்பு"
 
 #: src/service.c:193
 msgid "Always show OSK"
-msgstr "எப்போதும் திரை விசைப்பலகை-ஐக் காட்டு"
+msgstr "எப்போதும் தி.வி.ப( திரை விசைப்பலகை)-ஐக் காட்டு"
 
 #: src/service.c:199
 msgid "Keyboard Settings…"
@@ -61,4 +61,4 @@ msgstr "விசைப்பலகை அமைப்புகள்…"
 
 #: src/service.c:207
 msgid "Show Current Layout"
-msgstr "தற்போதைய தளஅமைப்பைக் காட்டு"
+msgstr "நடப்பு தளஅமைப்பைக் காட்டு"
