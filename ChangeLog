@@ -1,6 +1,81 @@
+2026-10-13 Mike Gabriel
+
+        * Release 26.6.3 (HEAD -> main, tag: 26.6.3)
+
+2026-10-12 Mike Gabriel
+
+        * Merge branch 'pr/osk-layouts-if-no-hwkbd' (6a0f96f0)
+
+2026-06-16 Mike Gabriel
+
+        * src/keyboard-lomiri.c: Show OSK layouts also if no hardware
+          keyboard is present (b8504c7e)
+
+2026-10-12 Mike Gabriel
+
+        * Merge branch 'jbicha-personal/jbicha/lomiri-mapping-20260808'
+          (e30d7abc)
+
+2026-08-08 Jeremy Bícha
+
+        * lomiri: Update language code mapping (3161ebc4)
+          Fixes: #90
+
+2026-10-12 Mike Gabriel
+
+        * Merge branch 'jbicha-personal/jbicha/remove-unused-build-options'
+          (6eaa3c87)
+
+2026-06-26 Jeremy Bícha
+
+        * debian: Simplify configure options (cc5e48ae)
+        * docs: Don't document running tests since this project doesn't have
+          tests (13b6019f)
+
+2026-10-03 Alagirisamy Rengaraj
+
+        * Translated using Weblate (Tamil) (72077db9)
+
+2026-09-08 Temuri Doghonadze
+
+        * Translated using Weblate (Georgian) (e4c8cb3a)
+
+2026-09-06 Alagirisamy Rengaraj
+
+        * Translated using Weblate (Tamil) (d6cc7dcf)
+
+2026-08-20 Alagirisamy Rengaraj
+
+        * Translated using Weblate (Tamil) (dd36515e)
+
+2026-08-08 SeyhaLite
+
+        * Translated using Weblate (Khmer (Central)) (fd3989c3)
+
+2026-08-05 SeyhaLite
+
+        * Translated using Weblate (Khmer (Central)) (d05546d3)
+
+2026-07-23 Walter Garcia-Fontes
+
+        * Translated using Weblate (Catalan) (c226f3fd)
+
+2026-07-07 Arif Budiman
+
+        * Translated using Weblate (Indonesian) (939fe4a6)
+
+2026-07-02 NooB9496
+
+        * Translated using Weblate (Polish) (55c76392)
+
+2026-06-16 Ida Brenna
+
+        * Translated using Weblate (Norwegian Bokmål) (85335c89)
+
 2026-06-13 Mike Gabriel
 
-        * Release 26.6.2 (HEAD -> main, tag: 26.6.2)
+        * debian/: Sync from official Debian package. (1846461f)
+        * Release 26.6.2 (712bc108) (tag: 26.6.2)
 
 2026-06-13 Grzegorz Szymaszek
 

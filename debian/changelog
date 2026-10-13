@@ -1,3 +1,10 @@
+ayatana-indicator-keyboard (26.6.3) unstable; urgency=medium
+
+  * Upstream-provided Debian package for ayatana-indicator-keyboard. See
+    upstream ChangeLog for recent changes.
+
+ -- UBports developers <developers@ubports.com>  Tue, 13 Oct 2026 10:06:31 +0200
+
 ayatana-indicator-keyboard (26.6.2) unstable; urgency=medium
 
   * Upstream-provided Debian package for ayatana-indicator-keyboard. See
